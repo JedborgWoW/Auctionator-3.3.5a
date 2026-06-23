@@ -1,0 +1,48 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame name="AuctionatorConfigAdvancedFrameTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorConfigAdvancedFrameMixin); self:OnLoad()</OnLoad>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:Save()</OnHide>
+    </Scripts>
+    <Frames>
+      <Frame inherits="AuctionatorConfigurationTitleFrame" parentKey="TitleArea">
+        
+        
+          
+        
+      <Scripts><OnLoad>self.titleText = AUCTIONATOR_L_CONFIG_ADVANCED_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_ADVANCED_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ReplicateScan">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="DebugHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ReplicateScan" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_CONFIG_DEVELOPER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="Debug">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DebugHeading" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_DEBUG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_DEBUG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_DEBUG_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+    </Frames>
+  </Frame>
+</Ui>

@@ -1,0 +1,62 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame
+    name="AuctionatorConfigShoppingFrameTemplate"
+    virtual="true">
+
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorConfigShoppingFrameMixin); self:OnLoad()</OnLoad>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:Save()</OnHide>
+    </Scripts>
+
+    <Frames>
+      <Frame inherits="AuctionatorConfigurationTitleFrame" parentKey="TitleArea">
+        
+          
+          
+        
+      <Scripts><OnLoad>self.titleText = AUCTIONATOR_L_CONFIG_SHOPPING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="AutoListSearch">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="DefaultListHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.AutoListSearch" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_DEFAULT_LIST_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorDropDown" parentKey="DefaultShoppingList">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DefaultListHeading" relativePoint="BOTTOMLEFT"/>
+          <Anchor point="RIGHT" relativePoint="LEFT" x="50"/>
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = ""; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ListMissingTerms">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DefaultShoppingList" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+   </Frames>
+  </Frame>
+</Ui>

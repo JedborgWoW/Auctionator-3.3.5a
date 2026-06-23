@@ -1,0 +1,65 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<EditBox name="AuctionatorRetailImportLargeMoneyInputBoxTemplate" inherits="AuctionatorRetailImportLargeInputBoxTemplate" numeric="true" autoFocus="false" virtual="true">
+		<!-- iconAtlas: The atlas to use for the money icon.
+		<KeyValues>
+			<KeyValue key="iconAtlas" value="auctionhouse-icon-coin-gold" type="string"/>
+		</KeyValues>
+		-->
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon">
+					<Size  x="12" y="14"/>
+					<Anchors>
+						<Anchor point="RIGHT" x="-10" y="2"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad()</OnLoad>
+			<OnTextChanged>self:OnTextChanged(userInput, ...)</OnTextChanged>
+		</Scripts>
+	</EditBox>
+
+	<Frame name="AuctionatorRetailImportLargeMoneyInputFrameTemplate" virtual="true">
+		<!-- hideCopper: Hide the copper display for this input frame.
+		<KeyValues>
+			<KeyValue key="hideCopper" value="true" type="boolean"/>
+		</KeyValues>
+		-->
+		<Frames>
+			<EditBox parentKey="CopperBox" letters="2" inherits="AuctionatorRetailImportLargeMoneyInputBoxTemplate">
+				
+					
+				
+				<Size x="50" y="33"/>
+				<Anchors>
+					<Anchor point="RIGHT"/>
+				</Anchors>
+			<Scripts><OnLoad>self.iconAtlas = "auctionhouse-icon-coin-copper"; </OnLoad></Scripts></EditBox>
+			<EditBox parentKey="SilverBox" letters="2" inherits="AuctionatorRetailImportLargeMoneyInputBoxTemplate">
+				
+					
+				
+				<Size x="50" y="33"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.CopperBox" relativePoint="LEFT" x="-6" y="0"/>
+				</Anchors>
+			<Scripts><OnLoad>self.iconAtlas = "auctionhouse-icon-coin-silver"; </OnLoad></Scripts></EditBox>
+      <!-- XXX: Changed letters to "6" rather than the original "7" -->
+			<EditBox parentKey="GoldBox" letters="6" inherits="AuctionatorRetailImportLargeMoneyInputBoxTemplate">
+				
+					
+				
+				<Anchors>
+					<Anchor point="LEFT"/>
+					<Anchor point="RIGHT" relativeKey="$parent.SilverBox" relativePoint="LEFT" x="-6" y="0"/>
+				</Anchors>
+			<Scripts><OnLoad>self.iconAtlas = "auctionhouse-icon-coin-gold"; </OnLoad></Scripts></EditBox>
+		</Frames>
+		<Scripts>
+			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputFrameMixin); self:OnLoad()</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>

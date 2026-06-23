@@ -1,0 +1,24 @@
+<!-- WotLK 3.3.5a compatibility: ScrollBox templates (backed by ScrollBox.lua).
+     Written in native 3.3.5a form (Mixin applied in OnLoad). All three are
+     <Frame> so they can be inherited by <Frame .../> and created via
+     CreateFrame("Frame", ...) the way Auctionator uses them. -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame name="WowScrollBoxList" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, ScrollBoxListMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+
+  <Frame name="WowScrollBox" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+
+  <Frame name="WowTrimScrollBar" virtual="true">
+    <Size x="16" y="0"/>
+    <Scripts>
+      <OnLoad>Mixin(self, ScrollBarMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+</Ui>

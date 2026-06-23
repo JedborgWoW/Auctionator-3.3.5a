@@ -1,0 +1,20 @@
+<!-- WotLK 3.3.5a compatibility layer. Loaded first (see Auctionator.toc) so that
+     Enum, WOW_PROJECT_*, Mixin, pools, C_* shims and the ScrollBox framework
+     exist before Imports_LegacyAH and Source run. -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Script file="Globals.lua" />
+  <Script file="Enum.lua" />
+  <Script file="Color.lua" />
+  <Script file="Pools.lua" />
+  <Script file="Timer.lua" />
+  <Script file="CallbackRegistry.lua" />
+  <Script file="Widgets.lua" />
+  <Script file="Items.lua" />
+  <Script file="CAPI.lua" />
+  <Script file="AuctionHouse.lua" />
+  <Script file="Menu.lua" />
+  <Script file="Templates.lua" />
+  <Script file="ScrollBox.lua" />
+  <Include file="Templates.xml" />
+  <Include file="ScrollBox.xml" />
+</Ui>

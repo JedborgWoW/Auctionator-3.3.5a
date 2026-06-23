@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame name="AuctionatorConfigurationTooltip" virtual="true">
+    <!--
+      <KeyValues>
+        <KeyValue key="tooltipTitleText" value="" type="string"/>
+        <KeyValue key="tooltipText" value="" type="string"/>
+      </KeyValues>
+    -->
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad()</OnLoad>
+      <OnEnter>self:OnEnter(motion)</OnEnter>
+      <OnLeave>self:OnLeave(motion)</OnLeave>
+    </Scripts>
+  </Frame>
+</Ui>

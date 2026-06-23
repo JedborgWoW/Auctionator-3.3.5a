@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame name="AuctionatorAHThrottlingFrameTemplate" parent="UIParent" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorAHThrottlingFrameMixin); self:OnLoad()</OnLoad>
+      <OnEvent>self:OnEvent(event, ...)</OnEvent>
+      <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
+    </Scripts>
+  </Frame>
+</Ui>

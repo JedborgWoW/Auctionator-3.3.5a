@@ -1,0 +1,26 @@
+<Ui>
+  <Frame name="AuctionatorSellingViewGroupTemplate" virtual="true">
+    
+      <!--<KeyValue key="rowWidth" value="6" type="number" />-->
+      
+      
+      
+      
+    
+    <Size y="20"/>
+    <Frames>
+      <Button parentKey="GroupTitle" inherits="AuctionClassButtonTemplate">
+        <Anchors>
+          <Anchor point="RIGHT" />
+        </Anchors>
+
+        <Scripts>>
+          <OnLoad>
+            self:GetFontString():SetPoint("LEFT", 12, 0)
+          </OnLoad>
+          <OnClick>self:GetParent():ToggleOpen()</OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+  <Scripts><OnLoad>Mixin(self, AuctionatorGroupsViewGroupMixin); self.collapsable = true; self.insetLeft = 2; self.groupTitleHeight = 22; self.paddingBottom = 0; </OnLoad></Scripts></Frame>
+</Ui>

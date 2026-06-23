@@ -1,0 +1,289 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame
+    name="AuctionatorConfigurationTabFrameTemplate"
+    virtual="true"
+    inherits="AuctionatorTabFrameTemplate"
+    parentKey="AuctionatorConfigFrame"
+  >
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorConfigTabMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+    <Frames>
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="AuthorHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="RIGHT" relativeKey="$parent" relativePoint="CENTER" x="-150" />
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_AUTHOR_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="Author">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.AuthorHeading" relativePoint="BOTTOMLEFT" y="10" />
+        </Anchors>
+      <Scripts><OnLoad>self.subHeadingText = "Borj(amacare)"; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="ContributorsHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.AuthorHeading" relativePoint="TOPRIGHT" />
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_AUTHOR_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="Contributors">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ContributorsHeading" relativePoint="BOTTOMLEFT" y="10"/>
+        </Anchors>
+      <Scripts><OnLoad>self.subHeadingText = "plusmouse"; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="VersionHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ContributorsHeading" relativePoint="TOPRIGHT" x="-280"/>
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_VERSION_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="Version">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.VersionHeading" relativePoint="BOTTOMLEFT" y="10"/>
+        </Anchors>
+      <Scripts><OnLoad>self.subHeadingText = Auctionator.State.CurrentVersion; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="ContributeHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.Author" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_CONTRIBUTE_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCopyAndPasteFrame" parentKey="ContributeLink">
+        
+          
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ContributeHeading" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_DONATE; self.copyText = "https://linktr.ee/plusmouse"; self.tooltipTitleText = AUCTIONATOR_L_CONTRIBUTE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONTRIBUTE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="EngageHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ContributeLink" relativePoint="BOTTOMLEFT" y="15"/>
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_ENGAGE_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCopyAndPasteFrame" parentKey="DiscordLink">
+        
+          
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.EngageHeading" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_DISCORD; self.copyText = "https://discord.gg/JabzHmzjWF"; self.tooltipTitleText = AUCTIONATOR_L_DISCORD_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_DISCORD_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCopyAndPasteFrame" parentKey="BugReportLink">
+        
+          
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DiscordLink" relativePoint="BOTTOMLEFT" y="10" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_BUG_REPORT; self.copyText = "https://github.com/TheMouseNest/Auctionator/issues"; self.tooltipTitleText = AUCTIONATOR_L_BUG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_BUG_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="TranslatorsHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.BugReportLink" relativePoint="BOTTOMLEFT" y="15" />
+        </Anchors>
+      <Scripts><OnLoad>self.headingText = AUCTIONATOR_L_TRANSLATORS_HEADER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="deDE">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.TranslatorsHeading" relativePoint="BOTTOMLEFT" x="20"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\deDE"; self.translators = "flow0284, SunnySunflow"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_GERMAN; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="ptBR">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.deDE" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\ptBR"; self.translators = "maylisdalan, Magnuss_lm"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_BRAZIL_PORTUGUEUSE; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="zhCN">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ptBR" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\zhCN"; self.translators = "sugymaylis, LvWind, 枫聖御雷"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_SIMPLIFIED_CHINESE; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="zhTW">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.zhCN" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\zhTW"; self.translators = "RainbowUI, BNS333"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_TRADITIONAL_CHINESE; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="esES">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.zhTW" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\esES"; self.translators = "sugymaylis, NuluT, Franxavis"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_SPANISH; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="esMX">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.esES" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\esMX"; self.translators = "sugymaylis, NuluT, ftg3"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_LATIN_SPANISH; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="frFR">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.esMX" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\frFR"; self.translators = "Prissti, Tulsow, Korthen"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_FRENCH; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="itIT">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.frFR" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\itIT"; self.translators = "faniel80, nimaus12"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_ITALIAN; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="koKR">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.itIT" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\koKR"; self.translators = "Vee, netaras"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_KOREAN; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="ruRU">
+        
+          
+          
+          
+        
+			  <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.koKR" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\ruRU"; self.translators = "ZamestoTV"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_RUSSIAN; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="tkTK">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ruRU" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\trTR"; self.translators = "Serdar Çoban-Hellßringer"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_TURKISH_INFO; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorTranslatorTemplate" parentKey="roRO">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.tkTK" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.textureLocation = "Interface\\AddOns\\Auctionator\\Images\\roRO"; self.translators = "Radu Ursache"; self.tooltipTitleText = AUCTIONATOR_L_TRANSLATORS_ROMANIAN_INFO; </OnLoad></Scripts></Frame>
+
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_FULL_SCAN_BUTTON" parentKey="ScanButton">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" y="7" x="-3" />
+        </Anchors>
+        
+          
+        
+        <Scripts>
+          <OnClick>self:OnClick(button, down)</OnClick>
+        <OnLoad>Mixin(self, AuctionatorScanButtonMixin); self.tooltipText = AUCTIONATOR_L_FULL_SCAN_TOOLTIP_TEXT; </OnLoad></Scripts>
+      </Button>
+      <Frame inherits="AuctionatorFullScanStatusTemplate">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.ScanButton" relativePoint="TOPLEFT"/>
+          <Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScanButton" relativePoint="TOPRIGHT"/>
+        </Anchors>
+      </Frame>
+
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_OPEN_ADDON_OPTIONS" parentKey="OptionsButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeKey="$parent.ScanButton" relativePoint="TOPLEFT" x="-3" />
+        </Anchors>
+        <Scripts>
+          <OnClick>self:GetParent():OpenOptions()</OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+</Ui>

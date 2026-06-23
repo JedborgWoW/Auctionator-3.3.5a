@@ -1,0 +1,150 @@
+<Ui>
+  <Frame name="AuctionatorBuyWarningDialogTemplate" frameLevel="500" virtual="true" enableMouse="true">
+    
+      
+    
+    <Anchors>
+      <Anchor point="CENTER" relativeTo="AuctionFrame"/>
+    </Anchors>
+    <Size x="400" y="140"/>
+    <Layers>
+      <Layer>
+          <FontString parentKey="Text" inherits="GameFontRedLarge" text="AUCTIONATOR_L_PRICE_INCREASE_WARNING_2">
+          <Anchors>
+            <Anchor point="LEFT" x="20" y="10"/>
+            <Anchor point="RIGHT" x="-20" y="-10"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="BACKGROUND">
+        <Texture parentKey="Background">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="6" y="-8"/>
+            <Anchor point="BOTTOMRIGHT" x="-6" y="8"/>
+          </Anchors>
+          <Color r="0" g="0" b="0" a="0.8"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame parentKey="NineSlice" inherits="NineSlicePanelTemplate" useParentLevel="true" />
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_STOP" parentKey="Stop">
+        <Anchors>
+          <Anchor point="BOTTOM" y="20" />
+          <Anchor point="RIGHT" x="-20" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():GetParent():Hide()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CONTINUE" parentKey="BuyStack">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeKey="$parent.Stop" relativePoint="TOPLEFT" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():GetParent():ContinueAfterWarning()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+    </Frames>
+  <Scripts><OnLoad>self.layoutType = "Dialog"; </OnLoad></Scripts></Frame>
+  <Frame name="AuctionatorBuyDialogTemplate" frameStrata="Dialog" virtual="true" enableMouse="true" movable="true" clampedToScreen="true">
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorBuyDialogMixin); self.layoutType = "Dialog"; self:OnLoad()</OnLoad>
+      <OnEvent>self:OnEvent(event, ...)</OnEvent>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:OnHide()</OnHide>
+      <OnDragStart>
+        self:StartMoving()
+      </OnDragStart>
+      <OnDragStop>
+        self:StopMovingOrSizing()
+      </OnDragStop>
+    </Scripts>
+    
+      
+    
+    <Anchors>
+      <Anchor point="CENTER"/>
+    </Anchors>
+    <Size x="400" y="140"/>
+    <Frames>
+      <Frame parentKey="Overlay" enableMouse="true" useParentLevel="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" x="-10" relativeKey="$parent.$parent"/>
+          <Anchor point="BOTTOMRIGHT" y="-22" relativeKey="$parent.$parent"/>
+        </Anchors>
+      </Frame>
+    </Frames>
+    <Layers>
+      <Layer>
+        <FontString parentKey="PurchaseDetails" inherits="GameFontHighlightLarge" text="AUCTIONATOR_L_BUYING_X_FOR_X">
+          <Anchors>
+            <Anchor point="CENTER" y="30"/>
+          </Anchors>
+        </FontString>
+        <FontString parentKey="UnitPrice" inherits="GameFontHighlight" text="AUCTIONATOR_L_BRACKETS_X_EACH">
+          <Anchors>
+            <Anchor point="TOP" relativeKey="$parent.PurchaseDetails" relativePoint="BOTTOM" y="-6"/>
+          </Anchors>
+        </FontString>
+        <FontString parentKey="NumberPurchased" inherits="GameFontNormal" text="AUCTIONATOR_L_ALREADY_PURCHASED_X">
+          <Anchors>
+            <Anchor point="TOP" relativeKey="$parent.UnitPrice" relativePoint="BOTTOM" y="-8"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="BACKGROUND">
+        <Texture parentKey="Background">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="6" y="-8"/>
+            <Anchor point="BOTTOMRIGHT" x="-6" y="8"/>
+          </Anchors>
+          <Color r="0" g="0" b="0" a="0.8"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame parentKey="NineSlice" inherits="NineSlicePanelTemplate" useParentLevel="true" />
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CLOSE" parentKey="Cancel">
+        <Anchors>
+          <Anchor point="BOTTOM" y="20" />
+          <Anchor point="RIGHT" x="-20" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():Hide()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_BUY_STACK" parentKey="BuyStack">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeKey="$parent.Cancel" relativePoint="TOPLEFT" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():BuyStackClicked()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ChainBuy">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="BOTTOM" y="5" />
+          <Anchor point="LEFT" x="0" />
+          <Anchor point="RIGHT" relativeKey="$parent.BuyStack" relativePoint="LEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CHAIN_BUY; self.tooltipTitleText = AUCTIONATOR_L_CHAIN_BUY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CHAIN_BUY_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame parentKey="WarningDialog" inherits="AuctionatorBuyWarningDialogTemplate" hidden="true"/>
+    </Frames>
+  </Frame>
+</Ui>

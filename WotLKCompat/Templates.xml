@@ -1,0 +1,160 @@
+<!-- WotLK 3.3.5a compatibility: backports of Blizzard templates absent on stock
+     3.3.5a. Mixins/helpers live in Templates.lua. Native 3.3.5a XML form. -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+  <!-- A UIPanelButton that auto-sizes its width to its text. -->
+  <Button name="UIPanelDynamicResizeButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+    <Size x="80" y="22"/>
+    <Scripts>
+      <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad>
+      <OnShow>DynamicResizeButton_Resize(self)</OnShow>
+    </Scripts>
+  </Button>
+
+  <!-- Resizes to the bounding box of its children. -->
+  <Frame name="ResizeLayoutFrame" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+
+  <!-- Cosmetic bordered panel (native backdrop). -->
+  <Frame name="NineSlicePanelTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, NineSlicePanelMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+
+  <!-- Multi-line edit box in a scroll frame. -->
+  <Frame name="ScrollingEditBoxTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorScrollingEditBoxMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+
+  <!-- Fixed coin display: an amount, a coin icon and a symbol label. -->
+  <Frame name="FixedCoinFrameTemplate" virtual="true">
+    <Size x="50" y="16"/>
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString parentKey="amount" inherits="GameFontHighlightSmall" justifyH="RIGHT">
+          <Size x="24" y="14"/>
+          <Anchors>
+            <Anchor point="LEFT"/>
+          </Anchors>
+        </FontString>
+        <Texture parentKey="texture">
+          <Size x="14" y="14"/>
+          <Anchors>
+            <Anchor point="LEFT" relativeKey="$parent.amount" relativePoint="RIGHT" x="1"/>
+          </Anchors>
+        </Texture>
+        <FontString parentKey="label" inherits="GameFontHighlightSmall">
+          <Anchors>
+            <Anchor point="LEFT" relativeKey="$parent.texture" relativePoint="RIGHT" x="1"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+  </Frame>
+
+  <!-- Dropdown button backed by DropdownButtonMixin (-> UIDropDownMenu). -->
+  <Button name="WowStyle1DropdownTemplate" virtual="true">
+    <Size x="180" y="32"/>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture parentKey="Background" setAllPoints="true">
+          <Color r="0" g="0" b="0" a="0.5"/>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY">
+        <FontString parentKey="Text" inherits="GameFontHighlightSmall" justifyH="LEFT">
+          <Anchors>
+            <Anchor point="LEFT" x="8" y="0"/>
+            <Anchor point="RIGHT" x="-22" y="0"/>
+          </Anchors>
+        </FontString>
+        <Texture parentKey="Arrow" file="Interface\Buttons\Arrow-Down-Up">
+          <Size x="20" y="20"/>
+          <Anchors>
+            <Anchor point="RIGHT" x="-2" y="-1"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>Mixin(self, DropdownButtonMixin); self:OnLoad_Compat()</OnLoad>
+      <OnClick>self:OnClick_Compat()</OnClick>
+      <OnHide>self:CloseMenu()</OnHide>
+    </Scripts>
+  </Button>
+
+  <!-- Close button with no default OnClick (caller assigns one). -->
+  <Button name="UIPanelCloseButtonNoScripts" inherits="UIPanelCloseButton" virtual="true"/>
+
+  <!-- Portrait frame (added in Cataclysm). -->
+  <Frame name="ButtonFrameTemplate" virtual="true">
+    <Layers>
+      <Layer level="ARTWORK">
+        <Texture parentKey="portrait">
+          <Size x="60" y="60"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" x="7" y="-6"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY">
+        <FontString parentKey="TitleText" inherits="GameFontNormal">
+          <Anchors>
+            <Anchor point="TOP" x="0" y="-5"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button parentKey="CloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT" x="-2" y="-2"/>
+        </Anchors>
+      </Button>
+      <Frame parentKey="Inset" inherits="InsetFrameTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" x="4" y="-60"/>
+          <Anchor point="BOTTOMRIGHT" x="-6" y="4"/>
+        </Anchors>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnLoad>Mixin(self, ButtonFrameTemplateMixin); self:OnLoad()</OnLoad>
+    </Scripts>
+  </Frame>
+
+  <!-- Search box (added in Cataclysm); a styled InputBox. -->
+  <EditBox name="SearchBoxTemplate" inherits="InputBoxTemplate" virtual="true" autoFocus="false">
+    <Layers>
+      <Layer level="OVERLAY">
+        <FontString parentKey="Instructions" inherits="GameFontDisableSmall" text="SEARCH">
+          <Anchors>
+            <Anchor point="LEFT" x="2" y="0"/>
+            <Anchor point="RIGHT" x="-20" y="0"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button parentKey="clearButton" inherits="UIPanelCloseButton" hidden="true">
+        <Size x="17" y="17"/>
+        <Anchors>
+          <Anchor point="RIGHT" x="0" y="0"/>
+        </Anchors>
+      </Button>
+    </Frames>
+  </EditBox>
+
+  <!-- Numbered inset variant (Cataclysm); reuse the native 3.3.5a inset. -->
+  <Frame name="InsetFrameTemplate4" inherits="InsetFrameTemplate" virtual="true"/>
+
+  <!-- Script-only input box (added in MoP); plain InputBox on 3.3.5a. -->
+  <EditBox name="InputBoxScriptTemplate" inherits="InputBoxTemplate" virtual="true"/>
+
+</Ui>

@@ -1,0 +1,84 @@
+<Ui>
+  <Frame name="AuctionatorBuyFrameTemplate" virtual="true">
+    <Size x="450" y="350" />
+    <Frames>
+      <Frame parentKey="CurrentPrices" setAllPoints="true" inherits="AuctionatorBuyCurrentPricesFrameTemplate"/>
+      <Frame parentKey="HistoryPrices" setAllPoints="true" inherits="AuctionatorBuyHistoryPricesFrameTemplate" hidden="true"/>
+
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_HISTORY" parentKey="HistoryButton">
+        <Anchors>
+          <Anchor point="TOP" relativeKey="$parent.SearchResultsListing" relativePoint="BOTTOM"/>
+          <Anchor point="LEFT" x="-8" y="10" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():ToggleHistory()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+    </Frames>
+  <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin); </OnLoad></Scripts></Frame>
+
+  <Frame name="AuctionatorBuyFrameTemplateForShopping" hidden="true" inherits="AuctionatorBuyFrameTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init()</OnLoad>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:OnHide()</OnHide>
+    </Scripts>
+    <Anchors>
+      <Anchor point="TOPLEFT" relativeKey="$parent.ResultsListing" y="-50"/>
+      <Anchor point="BOTTOMRIGHT"/>
+    </Anchors>
+    <Frames>
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="BACK" parentKey="ReturnButton">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.SearchResultsListing" y="10" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():Hide()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+
+      <Frame enableMouse="true">
+        <Scripts>
+          <OnLoad>Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad()</OnLoad>
+          <OnEnter>self:OnEnter(motion)</OnEnter>
+          <OnLeave>self:OnLeave(motion)</OnLeave>
+          <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
+        </Scripts>
+        <Anchors>
+            <Anchor point="TOP" y="-9"/>
+            <Anchor point="LEFT" relativeKey="$parent.ReturnButton" relativePoint="RIGHT"/>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <Texture parentKey="Icon">
+              <Size x="40" y="40"/>
+              <Anchors>
+                  <Anchor point="TOP" y="-10"/>
+                  <Anchor point="LEFT" x="15"/>
+              </Anchors>
+            </Texture>
+            <FontString parentKey="Text" text="Item text" inherits="GameFontHighlight" justifyH="LEFT">
+              <Size x="400" y="50"/>
+              <Anchors>
+                <Anchor point="TOP" y="-5"/>
+                <Anchor point="LEFT" x="65"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+    </Frames>
+  </Frame>
+
+  <Frame name="AuctionatorBuyFrameTemplateForSelling" inherits="AuctionatorBuyFrameTemplate" virtual="true">
+    <Scripts>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:OnHide()</OnHide>
+      <OnEvent>self:OnEvent(event, ...)</OnEvent>
+    <OnLoad>Mixin(self, AuctionatorBuyFrameMixinForSelling); </OnLoad></Scripts>
+  </Frame>
+</Ui>

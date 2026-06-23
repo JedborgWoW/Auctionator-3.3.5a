@@ -1,0 +1,61 @@
+<Ui>
+  <Frame name="AuctionatorBuyHistoryPricesFrameTemplate" virtual="true">
+    <Frames>
+      <Frame parentKey="RealmHistoryDataProvider">
+        <Scripts>
+          <OnLoad>Mixin(self, AuctionatorBuyingRealmHistoryDataProviderMixin); self:OnLoad()</OnLoad>
+          <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
+        </Scripts>
+      </Frame>
+      <Frame parentKey="RealmHistoryResultsListing" inherits="AuctionatorResultsListingTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+          <Anchor point="BOTTOMRIGHT" x="-20"/>
+        </Anchors>
+      </Frame>
+
+      <Frame parentKey="PostingHistoryDataProvider">
+        <Scripts>
+          <OnLoad>Mixin(self, AuctionatorBuyingPostingHistoryProviderMixin); self:OnLoad()</OnLoad>
+          <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
+        </Scripts>
+      </Frame>
+      <Frame parentKey="PostingHistoryResultsListing" inherits="AuctionatorResultsListingTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+          <Anchor point="BOTTOMRIGHT" x="-20"/>
+        </Anchors>
+      </Frame>
+
+      <Frame parentKey="Inset" inherits="AuctionatorInsetTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.RealmHistoryResultsListing" relativePoint="TOPLEFT" x="-10" y="-25"/>
+          <Anchor point="BOTTOMRIGHT" relativeKey="$parent.RealmHistoryResultsListing" relativePoint="BOTTOMRIGHT" y="2"/>
+        </Anchors>
+      </Frame>
+
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_YOUR_HISTORY" parentKey="PostingHistoryButton">
+        <Anchors>
+          <Anchor point="TOP" relativeKey="$parent.RealmHistoryResultsListing" relativePoint="BOTTOM"/>
+          <Anchor point="RIGHT" relativePoint="RIGHT" x="-8" y="10" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():SelectPostingHistory()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_REALM_HISTORY" parentKey="RealmHistoryButton">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeKey="$parent.PostingHistoryButton"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():SelectRealmHistory()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+    </Frames>
+  <Scripts><OnLoad>Mixin(self, AuctionatorBuyHistoryPricesFrameMixin); </OnLoad></Scripts></Frame>
+</Ui>

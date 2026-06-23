@@ -1,0 +1,8 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame name="AuctionatorAHFrameTemplate" virtual="true">
+    <Scripts>
+      <OnShow>self:OnShow()</OnShow>
+      <OnEvent>self:OnEvent(event, ...)</OnEvent>
+    <OnLoad>Mixin(self, AuctionatorAHFrameMixin); </OnLoad></Scripts>
+  </Frame>
+</Ui>

@@ -1,0 +1,29 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame
+    name="AuctionatorSellingBagFrame"
+    virtual="true"
+    parentKey="BagListing"
+  >
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorBagUseMixin); self:OnLoad()</OnLoad>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:OnHide()</OnHide>
+    </Scripts>
+
+    <Frames>
+      <Frame inherits="AuctionatorGroupsViewTemplate">
+        
+          
+          
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+          <Anchor point="BOTTOMRIGHT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorSellingViewGroupTemplate"; self.clickEventName = "BagUse.BagItemClicked"; self.hideHiddenItems = true; self.applyVisibility = true; </OnLoad></Scripts></Frame>
+    </Frames>
+  </Frame>
+</Ui>

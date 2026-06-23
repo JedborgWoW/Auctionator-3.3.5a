@@ -1,0 +1,192 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame
+    name="AuctionatorConfigSellingAllItemsFrameTemplate"
+    hidden="true"
+    virtual="true"
+    >
+
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorConfigSellingAllItemsFrameMixin); self:OnLoad()</OnLoad>
+      <OnShow>self:OnShow()</OnShow>
+      <OnHide>self:Save()</OnHide>
+    </Scripts>
+    <Frames>
+      <Frame inherits="AuctionatorConfigurationTitleFrame" parentKey="TitleArea">
+        
+          
+          
+        
+      <Scripts><OnLoad>self.titleText = AUCTIONATOR_L_CONFIG_SELLING_ALL_ITEMS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_TBC_ALL_ITEMS; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationRadioButtonGroup" parentKey="DurationGroup">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Frames>
+          <Frame inherits="AuctionatorConfigurationRadioButton">
+            
+              
+              
+            
+          <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_AUCTION_DURATION_12; self.value = 12; </OnLoad></Scripts></Frame>
+          <Frame inherits="AuctionatorConfigurationRadioButton">
+            
+              
+              
+            
+          <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_AUCTION_DURATION_24; self.value = 24; </OnLoad></Scripts></Frame>
+          <Frame inherits="AuctionatorConfigurationRadioButton">
+            
+              
+              
+            
+          <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_AUCTION_DURATION_48; self.value = 48; </OnLoad></Scripts></Frame>
+        </Frames>
+      <Scripts><OnLoad>self.groupHeadingText = AUCTIONATOR_L_DEFAULT_AUCTION_DURATION; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="SaveLastDurationAsDefault">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DurationGroup" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationRadioButtonGroup" parentKey="SalesPreference">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.SaveLastDurationAsDefault" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Frames>
+          <Frame inherits="AuctionatorConfigurationRadioButton">
+            <!--
+              The values here should be populated by Auctionator.Config.SalesTypes but I don't know
+              how to do that programmatically?
+            -->
+            
+              
+              
+            
+          <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_PERCENTAGE; self.value = "percentage"; </OnLoad></Scripts></Frame>
+          <Frame inherits="AuctionatorConfigurationRadioButton">
+            
+              
+              
+            
+          <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_SET_VALUE; self.value = "static"; </OnLoad></Scripts></Frame>
+        </Frames>
+      <Scripts><OnLoad>self.groupHeadingText = AUCTIONATOR_L_UNDERCUT_PREFERENCE; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="UndercutPercentage" hidden="true">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.SalesPreference" relativePoint="BOTTOMLEFT" y="-7" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_PERCENTAGE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_PERCENTAGE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_PERCENTAGE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationMoneyInput" parentKey="UndercutValue" hidden="true">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.SalesPreference" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_SET_VALUE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="StackSizesHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.UndercutValue" relativePoint="BOTTOMLEFT" y="-35"/>
+        </Anchors>
+      <Scripts><OnLoad>self.subHeadingText = AUCTIONATOR_L_DEFAULT_STACK_SIZES; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorStackOfInputTemplate" parentKey="DefaultStacks">
+        
+          
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.StackSizesHeading" relativePoint="BOTTOMLEFT" x="25" y="-10"/>
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT; self.classID = Enum.ItemClass.Armor; </OnLoad></Scripts></Frame>
+
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CONFIG_RESET_STACK_SIZE_MEMORY" parentKey="ResetStackSizeMemory">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.DefaultStacks" relativePoint="BOTTOMLEFT" x="-2"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():ResetStackSizeMemoryClicked()
+          </OnClick>
+        <OnLoad></OnLoad></Scripts>
+      </Button>
+
+      <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="GearPriceMultiplierHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ResetStackSizeMemory" relativePoint="BOTTOMLEFT" x="-23"/>
+        </Anchors>
+      <Scripts><OnLoad>self.subHeadingText = AUCTIONATOR_L_GEAR_VENDOR_PRICE_MULTIPLIER; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="GearPriceMultiplier">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.GearPriceMultiplierHeading" relativePoint="BOTTOMLEFT" y="-15"/>
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="StartingPricePercentageHeading">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.GearPriceMultiplier" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      <Scripts><OnLoad>self.subHeadingText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="StartingPricePercentage">
+        
+          
+          
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.StartingPricePercentageHeading" relativePoint="BOTTOMLEFT" y="-15"/>
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+
+      <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="IgnoreItemSuffix">
+        
+          
+        
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.StartingPricePercentage" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_IGNORE_ITEM_SUFFIX; </OnLoad></Scripts></Frame>
+    </Frames>
+  </Frame>
+</Ui>

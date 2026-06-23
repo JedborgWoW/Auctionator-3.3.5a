@@ -1,0 +1,29 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Elements are required to be buttons for now -->
+	<Button name="AuctionatorRetailImportTemplatedListElementTemplate" virtual="true">
+		<Scripts>
+			<OnClick>self:OnClick(button, down)</OnClick>
+			<OnEnter>self:OnEnter(motion)</OnEnter>
+			<OnLeave>self:OnLeave(motion)</OnLeave>
+		<OnLoad>Mixin(self, AuctionatorRetailImportTemplatedListElementMixin); </OnLoad></Scripts>
+	</Button>
+
+
+	<Frame name="AuctionatorRetailImportTemplatedListTemplate" virtual="true">
+		<Frames>
+			<Frame parentKey="ArtOverlay" setAllPoints="true" frameStrata="HIGH" clipChildren="true">
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture parentKey="SelectedHighlight" hidden="true">
+							<Color r="1" g="0.8" b="0.2" a="0.2"/>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnShow>self:OnShow()</OnShow>
+		<OnLoad>Mixin(self, AuctionatorRetailImportTemplatedListMixin); </OnLoad></Scripts>
+	</Frame>
+</Ui>

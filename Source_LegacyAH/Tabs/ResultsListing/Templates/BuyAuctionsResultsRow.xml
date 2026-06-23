@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame
+    name="AuctionatorBuyAuctionsResultsRowTemplate"
+    inherits="AuctionatorResultsRowTemplate"
+    virtual="true"
+    enableMouse="true"
+  >
+  <Scripts><OnLoad>Mixin(self, AuctionatorBuyAuctionsResultsRowMixin); </OnLoad></Scripts></Frame>
+</Ui>

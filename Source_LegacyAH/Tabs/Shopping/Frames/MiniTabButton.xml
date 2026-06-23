@@ -1,0 +1,9 @@
+<Ui>
+  <Button name="AuctionatorShoppingMiniTabButtonTemplate" inherits="TabButtonTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorShoppingListsMiniTabButtonMixinMixin); self:OnLoad()</OnLoad>
+      <OnShow>self:OnShow()</OnShow>
+      <OnClick>self:OnClick(button, down)</OnClick>
+    </Scripts>
+  </Button>
+</Ui>
