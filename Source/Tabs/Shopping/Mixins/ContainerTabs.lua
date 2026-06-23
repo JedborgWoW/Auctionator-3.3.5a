@@ -6,7 +6,11 @@ function AuctionatorShoppingTabContainerTabsMixin:OnLoad()
 end
 
 function AuctionatorShoppingTabContainerTabsMixin:SetView(viewIndex)
-  PanelTemplates_SetTab(self, viewIndex)
+  -- PanelTemplates_SetTab -> PanelTemplates_UpdateTabs indexes _G[frameName.."Tab"..i]
+  -- on 3.3.5a, which errors for this anonymous (parentKey-only) container. The mini
+  -- tabs aren't PanelTemplates-style tabs, so just record the selection; the
+  -- show/hide below is the real behaviour.
+  self.selectedTab = viewIndex
   Auctionator.Config.Set(Auctionator.Config.Options.SHOPPING_LAST_CONTAINER_VIEW, viewIndex)
 
   self:GetParent().NewListButton:Hide()

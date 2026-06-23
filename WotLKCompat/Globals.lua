@@ -309,6 +309,18 @@ if not SafeUnpack then
   end
 end
 
+-- Expansion constants. LE_EXPANSION_LEVEL_CURRENT (and the LE_EXPANSION_* family)
+-- were added in Cataclysm; absent on 3.3.5a. Auctionator's Shopping item filter
+-- loops `for i = 0, LE_EXPANSION_LEVEL_CURRENT` -> nil limit error without this.
+-- 3.3.5a is WotLK = expansion level 2.
+if LE_EXPANSION_CLASSIC == nil then LE_EXPANSION_CLASSIC = 0 end
+if LE_EXPANSION_BURNING_CRUSADE == nil then LE_EXPANSION_BURNING_CRUSADE = 1 end
+if LE_EXPANSION_WRATH_OF_THE_LICH_KING == nil then LE_EXPANSION_WRATH_OF_THE_LICH_KING = 2 end
+if LE_EXPANSION_LEVEL_CURRENT == nil then LE_EXPANSION_LEVEL_CURRENT = 2 end
+if EXPANSION_NAME0 == nil then EXPANSION_NAME0 = "Classic" end
+if EXPANSION_NAME1 == nil then EXPANSION_NAME1 = "The Burning Crusade" end
+if EXPANSION_NAME2 == nil then EXPANSION_NAME2 = "Wrath of the Lich King" end
+
 -- SOUNDKIT: retail keys -> 3.3.5a PlaySound string names (PlaySound on 3.3.5a
 -- takes the old string identifiers, not numeric IDs).
 if not SOUNDKIT then

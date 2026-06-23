@@ -4,7 +4,11 @@ local TAB_PADDING = 20;
 AuctionatorShoppingListsMiniTabButtonMixinMixin = {}
 
 function AuctionatorShoppingListsMiniTabButtonMixinMixin:OnLoad()
-  self.LeftDisabled:SetPoint("TOPLEFT")
+  -- LeftDisabled is part of retail's full TabButtonTemplate chrome; our minimal
+  -- 3.3.5a TabButtonTemplate is a plain text button, so guard it.
+  if self.LeftDisabled then
+    self.LeftDisabled:SetPoint("TOPLEFT")
+  end
   self.deselectedTextY = 6
   self.selectedTextY = 2
 end
