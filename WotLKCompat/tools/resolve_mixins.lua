@@ -68,41 +68,50 @@ local function isFrameTag(name)
   return not CONTENT[name] and not (name:sub(1,2) == "On" and #name > 2 and name:sub(3,3):match("%u"))
 end
 
--- Split an OnLoad body into three parts: the leading Mixin(self, ...) call, the
--- KeyValue assignments (self.ident = value), and the rest (method calls / inline).
--- Retail applies mixins, THEN KeyValues, THEN OnLoad scripts, so the parts must be
--- re-ordered that way when chains are flattened (e.g. a radio button's OnLoad
--- errors unless self.value is set first).
-local function splitBody3(body)
-  body = body:gsub("^%s+", ""):gsub("%s+$", "")
-  local mixin = body:match("^(Mixin%(self,.-%))")
-  if mixin then
-    body = body:sub(#mixin + 1):gsub("^%s*;?%s*", "")
-  else
-    mixin = ""
-  end
-  local kvs = {}
-  while true do
-    local kv, after = body:match("^(self%.[%w_]+%s*=%s*[^;]*)%s*;%s*(.*)$")
-    if kv then
-      kvs[#kvs + 1] = (kv:gsub("%s+$", ""))
-      body = after
-    else
-      local last = body:match("^(self%.[%w_]+%s*=%s*[^;]*)$")
-      if last and not last:find("self:") then
-        kvs[#kvs + 1] = (last:gsub("%s+$", ""))
-        body = ""
-      end
-      break
-    end
-  end
-  body = body:gsub("^%s*;?%s*", ""):gsub("%s+$", "")
-  return mixin, table.concat(kvs, "; "), body
-end
-
 local function trimStmt(s)
   return (s:gsub("^[%s;]+", ""):gsub("[%s;]+$", ""))
 end
+
+-- Split a Lua body into top-level statements at ';', RESPECTING string literals
+-- (KeyValue string values like "NONE;SHOPPING_TAB;..." contain semicolons).
+local function splitStatements(body)
+  local stmts, start, i, n = {}, 1, 1, #body
+  local q = nil
+  while i <= n do
+    local c = body:sub(i, i)
+    if q then
+      if c == "\\" then i = i + 1
+      elseif c == q then q = nil end
+    else
+      if c == '"' or c == "'" then q = c
+      elseif c == ";" then stmts[#stmts + 1] = body:sub(start, i - 1); start = i + 1 end
+    end
+    i = i + 1
+  end
+  if start <= n then stmts[#stmts + 1] = body:sub(start) end
+  return stmts
+end
+
+-- Classify an OnLoad body into Mixin calls, KeyValue assignments and the rest
+-- (method calls / inline). Retail applies mixins, THEN KeyValues, THEN OnLoad
+-- scripts, so the parts are re-ordered that way when chains are flattened.
+local function splitBody3(body)
+  local mixin, kvs, rest = {}, {}, {}
+  for _, stmt in ipairs(splitStatements(body)) do
+    local s = trimStmt(stmt)
+    if s ~= "" then
+      if s:match("^Mixin%(self") then
+        mixin[#mixin + 1] = s
+      elseif s:match("^self%.[%w_]+%s*=") then
+        kvs[#kvs + 1] = s
+      else
+        rest[#rest + 1] = s
+      end
+    end
+  end
+  return table.concat(mixin, "; "), table.concat(kvs, "; "), table.concat(rest, "; ")
+end
+
 
 -- ---------------------------------------------------------------------------
 -- PASS 1: registry[name] = { mixin, rest, parent }

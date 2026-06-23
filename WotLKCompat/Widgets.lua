@@ -74,6 +74,25 @@ local function GetPointByName(self, pointName)
   end
 end
 
+-- Fonts that don't exist on stock 3.3.5a: create them (or fill an empty one) by
+-- copying a base font, so FontStrings that inherit them have a valid font (else
+-- FontString:SetText errors "Font not set").
+local function EnsureFont(name, baseName)
+  local base = _G[baseName] or _G.GameFontNormal
+  local font = _G[name]
+  if font then
+    if font.GetFont and not font:GetFont() and font.CopyFontObject and base then
+      font:CopyFontObject(base)
+    end
+  elseif CreateFont then
+    font = CreateFont(name)
+    if base and font.CopyFontObject then font:CopyFontObject(base) end
+  end
+end
+EnsureFont("GameFontNormalMed2", "GameFontNormalLarge")
+EnsureFont("GameFontNormalMed1", "GameFontNormal")
+EnsureFont("GameFontHighlightMedium", "GameFontHighlight")
+
 -- Region-level methods (apply to frames AND textures/fontstrings).
 local regionMethods = {
   SetShown = SetShown,
