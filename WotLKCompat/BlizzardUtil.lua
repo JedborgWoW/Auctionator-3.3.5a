@@ -13,7 +13,11 @@ end
 if not FrameUtil.RegisterFrameForEvents then
   function FrameUtil.RegisterFrameForEvents(frame, events)
     for _, event in ipairs(events) do
-      frame:RegisterEvent(event)
+      -- Some events Auctionator registers are retail-only and do not exist on
+      -- 3.3.5a (e.g. PLAYER_INTERACTION_MANAGER_FRAME_SHOW/HIDE). RegisterEvent
+      -- raises an error for an unknown event on this client, so swallow it --
+      -- the corresponding OnEvent branch simply never fires.
+      pcall(frame.RegisterEvent, frame, event)
     end
   end
 end

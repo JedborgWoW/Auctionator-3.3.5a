@@ -1,0 +1,27 @@
+<Ui>
+  <Frame name="AuctionatorCraftingInfoFrameTemplate" frameLevel="3" virtual="true">
+    <Size x="200" y="16"/>
+    <Scripts>
+      <OnLoad>Mixin(self, AuctionatorCraftingInfoFrameMixin); self:OnLoad()</OnLoad>
+      <OnEvent>self:OnEvent(event, ...)</OnEvent>
+    </Scripts>
+    <Layers>
+      <Layer level="OVERLAY">
+        <FontString inherits="GameFontNormal" parentKey="Total" justifyH="LEFT" spacing="1.5">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" />
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button parentKey="SearchButton" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_SEARCH">
+        <Scripts>
+          <OnClick>
+            self:GetParent():SearchButtonClicked()
+          </OnClick>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+</Ui>

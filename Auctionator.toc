@@ -25,6 +25,12 @@ Imports_LegacyAH\Manifest.xml
 
 Source\Manifest.xml
 
+# Shared classic code (loads on ALL classic flavours incl. wrath in retail's
+# [AllowLoadGameType classic]). Contains the AH bootstrap that creates
+# AuctionatorAHFrame + registers AUCTION_HOUSE_SHOW, plus CraftingInfo/Mill/
+# Prospect/Enchant. Must load after Source (needs Config.Options/Defaults).
+Source_Classic\Manifest.xml
+
 Source_Vanilla\Manifest.xml
 Data_Vanilla\Suffixes.lua
 Source_LegacyAH\Manifest.xml

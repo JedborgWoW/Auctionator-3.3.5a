@@ -78,15 +78,20 @@ end
 -- copying a base font, so FontStrings that inherit them have a valid font (else
 -- FontString:SetText errors "Font not set").
 local function EnsureFont(name, baseName)
-  local base = _G[baseName] or _G.GameFontNormal
   local font = _G[name]
-  if font then
-    if font.GetFont and not font:GetFont() and font.CopyFontObject and base then
-      font:CopyFontObject(base)
-    end
-  elseif CreateFont then
+  if font and font.GetFont and font:GetFont() then
+    return -- already a usable font object
+  end
+  -- CopyFontObject does not exist on 3.3.5a, so copy via GetFont/SetFont.
+  local base = _G[baseName] or _G.GameFontNormal
+  if not (base and base.GetFont) then return end
+  local path, size, flags = base:GetFont()
+  if not path then return end
+  if not font and CreateFont then
     font = CreateFont(name)
-    if base and font.CopyFontObject then font:CopyFontObject(base) end
+  end
+  if font and font.SetFont then
+    font:SetFont(path, size, flags)
   end
 end
 EnsureFont("GameFontNormalMed2", "GameFontNormalLarge")
