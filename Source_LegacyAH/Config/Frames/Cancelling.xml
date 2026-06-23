@@ -15,7 +15,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad(); self.titleText = AUCTIONATOR_L_CONFIG_CANCELLING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_CANCELLING_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self.titleText = AUCTIONATOR_L_CONFIG_CANCELLING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_CANCELLING_TEXT; self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="UndercutItemsAhead">
         
@@ -26,7 +26,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_UNDERCUT_ITEMS_AHEAD_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_ITEMS_AHEAD_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self.labelText = AUCTIONATOR_L_CONFIG_UNDERCUT_ITEMS_AHEAD_CLASSIC; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_UNDERCUT_ITEMS_AHEAD_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_ITEMS_AHEAD_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame parentKey="CancelUndercutShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
@@ -37,7 +37,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad()</OnLoad></Scripts></Frame>
    </Frames>
   </Frame>
 </Ui>

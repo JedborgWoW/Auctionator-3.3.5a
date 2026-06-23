@@ -15,7 +15,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad(); self.titleText = AUCTIONATOR_L_CONFIG_SHOPPING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self.titleText = AUCTIONATOR_L_CONFIG_SHOPPING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_TEXT; self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="AutoListSearch">
         
@@ -26,7 +26,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self.labelText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_AUTO_LIST_SEARCH_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="DefaultListHeading">
         
@@ -35,7 +35,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.AutoListSearch" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad(); self.headingText = AUCTIONATOR_L_DEFAULT_LIST_HEADER</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self.headingText = AUCTIONATOR_L_DEFAULT_LIST_HEADER; self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorDropDown" parentKey="DefaultShoppingList">
         
@@ -45,7 +45,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.DefaultListHeading" relativePoint="BOTTOMLEFT"/>
           <Anchor point="RIGHT" relativePoint="LEFT" x="50"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad(); self.labelText = ""</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ListMissingTerms">
         
@@ -56,7 +56,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.DefaultShoppingList" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_LIST_MISSING_TERMS_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
    </Frames>
   </Frame>
 </Ui>

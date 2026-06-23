@@ -68,15 +68,36 @@ local function isFrameTag(name)
   return not CONTENT[name] and not (name:sub(1,2) == "On" and #name > 2 and name:sub(3,3):match("%u"))
 end
 
--- Split an OnLoad body into its leading Mixin(self, ...) and the rest.
-local function splitBody(body)
+-- Split an OnLoad body into three parts: the leading Mixin(self, ...) call, the
+-- KeyValue assignments (self.ident = value), and the rest (method calls / inline).
+-- Retail applies mixins, THEN KeyValues, THEN OnLoad scripts, so the parts must be
+-- re-ordered that way when chains are flattened (e.g. a radio button's OnLoad
+-- errors unless self.value is set first).
+local function splitBody3(body)
   body = body:gsub("^%s+", ""):gsub("%s+$", "")
   local mixin = body:match("^(Mixin%(self,.-%))")
   if mixin then
-    local rest = body:sub(#mixin + 1):gsub("^%s*;?%s*", "")
-    return mixin, rest
+    body = body:sub(#mixin + 1):gsub("^%s*;?%s*", "")
+  else
+    mixin = ""
   end
-  return "", body
+  local kvs = {}
+  while true do
+    local kv, after = body:match("^(self%.[%w_]+%s*=%s*[^;]*)%s*;%s*(.*)$")
+    if kv then
+      kvs[#kvs + 1] = (kv:gsub("%s+$", ""))
+      body = after
+    else
+      local last = body:match("^(self%.[%w_]+%s*=%s*[^;]*)$")
+      if last and not last:find("self:") then
+        kvs[#kvs + 1] = (last:gsub("%s+$", ""))
+        body = ""
+      end
+      break
+    end
+  end
+  body = body:gsub("^%s*;?%s*", ""):gsub("%s+$", "")
+  return mixin, table.concat(kvs, "; "), body
 end
 
 local function trimStmt(s)
@@ -103,8 +124,8 @@ local function buildRegistry(path)
       local top = table.remove(stack)
       if top and top.kind == "onload" then capturing = nil end
       if top and top.kind == "frame" and top.name then
-        local mixin, rest = splitBody(top.body or "")
-        registry[top.name] = { mixin = mixin, rest = rest, parent = top.inherits }
+        local mixin, kvs, rest = splitBody3(top.body or "")
+        registry[top.name] = { mixin = mixin, kvs = kvs, rest = rest, parent = top.inherits }
       end
       return
     end
@@ -128,27 +149,31 @@ end
 -- ---------------------------------------------------------------------------
 -- Chain resolution: collect all Mixin parts then all rest parts (root -> self)
 -- ---------------------------------------------------------------------------
-local function collect(inherits, mixins, rests, seen)
+local function collect(inherits, mixins, kvs, rests, seen)
   if not inherits then return end
   for token in inherits:gmatch("[^,%s]+") do
     if registry[token] and not seen[token] then
       seen[token] = true
-      collect(registry[token].parent, mixins, rests, seen)
+      collect(registry[token].parent, mixins, kvs, rests, seen)
       if registry[token].mixin ~= "" then mixins[#mixins + 1] = registry[token].mixin end
+      if registry[token].kvs ~= "" then kvs[#kvs + 1] = registry[token].kvs end
       if registry[token].rest ~= "" then rests[#rests + 1] = registry[token].rest end
     end
   end
 end
 
--- Build the resolved OnLoad body for a frame from its inherits chain + own body.
+-- Build the resolved OnLoad body for a frame: ALL chain mixins, THEN all KeyValue
+-- assignments, THEN all OnLoad bodies (matches retail ordering).
 local function resolved(inherits, ownBody)
-  local mixins, rests = {}, {}
-  collect(inherits, mixins, rests, {})
-  local ownMixin, ownRest = splitBody(ownBody or "")
+  local mixins, kvs, rests = {}, {}, {}
+  collect(inherits, mixins, kvs, rests, {})
+  local ownMixin, ownKvs, ownRest = splitBody3(ownBody or "")
   if ownMixin ~= "" then mixins[#mixins + 1] = ownMixin end
+  if ownKvs ~= "" then kvs[#kvs + 1] = ownKvs end
   if ownRest ~= "" then rests[#rests + 1] = ownRest end
   local parts = {}
   for _, m in ipairs(mixins) do local t = trimStmt(m); if t ~= "" then parts[#parts + 1] = t end end
+  for _, k in ipairs(kvs) do local t = trimStmt(k); if t ~= "" then parts[#parts + 1] = t end end
   for _, r in ipairs(rests) do local t = trimStmt(r); if t ~= "" then parts[#parts + 1] = t end end
   return table.concat(parts, "; ")
 end

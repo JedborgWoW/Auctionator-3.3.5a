@@ -40,7 +40,7 @@
             
               
             
-          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad(); self.scrollable = true</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self.scrollable = true; self:OnLoad()</OnLoad></Scripts></Frame>
         </Frames>
       <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 

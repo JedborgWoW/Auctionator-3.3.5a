@@ -16,7 +16,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad(); self.titleText = AUCTIONATOR_L_CONFIG_SELLING_ALL_ITEMS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_TBC_ALL_ITEMS</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self.titleText = AUCTIONATOR_L_CONFIG_SELLING_ALL_ITEMS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_TBC_ALL_ITEMS; self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationRadioButtonGroup" parentKey="DurationGroup">
         
@@ -31,21 +31,21 @@
               
               
             
-          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_AUCTION_DURATION_12; self.value = 12</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self.labelText = AUCTIONATOR_L_AUCTION_DURATION_12; self.value = 12; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
           <Frame inherits="AuctionatorConfigurationRadioButton">
             
               
               
             
-          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_AUCTION_DURATION_24; self.value = 24</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self.labelText = AUCTIONATOR_L_AUCTION_DURATION_24; self.value = 24; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
           <Frame inherits="AuctionatorConfigurationRadioButton">
             
               
               
             
-          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_AUCTION_DURATION_48; self.value = 48</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self.labelText = AUCTIONATOR_L_AUCTION_DURATION_48; self.value = 48; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
         </Frames>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); self:InitializeRadioButtonGroup(); self.groupHeadingText = AUCTIONATOR_L_DEFAULT_AUCTION_DURATION</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); self.groupHeadingText = AUCTIONATOR_L_DEFAULT_AUCTION_DURATION; self:InitializeRadioButtonGroup()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="SaveLastDurationAsDefault">
         
@@ -56,7 +56,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.DurationGroup" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self.labelText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SAVE_LAST_DURATION_AS_DEFAULT_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationRadioButtonGroup" parentKey="SalesPreference">
         
@@ -75,15 +75,15 @@
               
               
             
-          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_PERCENTAGE; self.value = "percentage"</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self.labelText = AUCTIONATOR_L_PERCENTAGE; self.value = "percentage"; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
           <Frame inherits="AuctionatorConfigurationRadioButton">
             
               
               
             
-          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_SET_VALUE; self.value = "static"</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self.labelText = AUCTIONATOR_L_SET_VALUE; self.value = "static"; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
         </Frames>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); self:InitializeRadioButtonGroup(); self.groupHeadingText = AUCTIONATOR_L_UNDERCUT_PREFERENCE</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); self.groupHeadingText = AUCTIONATOR_L_UNDERCUT_PREFERENCE; self:InitializeRadioButtonGroup()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="UndercutPercentage" hidden="true">
         
@@ -94,7 +94,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.SalesPreference" relativePoint="BOTTOMLEFT" y="-7" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_PERCENTAGE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_PERCENTAGE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_PERCENTAGE_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self.labelText = AUCTIONATOR_L_PERCENTAGE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_PERCENTAGE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_PERCENTAGE_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMoneyInput" parentKey="UndercutValue" hidden="true">
         
@@ -105,7 +105,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.SalesPreference" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_SET_VALUE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_SET_VALUE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="StackSizesHeading">
         
@@ -114,7 +114,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.UndercutValue" relativePoint="BOTTOMLEFT" y="-35"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self:InitializeSubHeading(); self.subHeadingText = AUCTIONATOR_L_DEFAULT_STACK_SIZES</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self.subHeadingText = AUCTIONATOR_L_DEFAULT_STACK_SIZES; self:InitializeSubHeading()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorStackOfInputTemplate" parentKey="DefaultStacks">
         
@@ -126,7 +126,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.StackSizesHeading" relativePoint="BOTTOMLEFT" x="25" y="-10"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT; self.classID = Enum.ItemClass.Armor</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT; self.classID = Enum.ItemClass.Armor; self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CONFIG_RESET_STACK_SIZE_MEMORY" parentKey="ResetStackSizeMemory">
         <Anchors>
@@ -146,7 +146,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ResetStackSizeMemory" relativePoint="BOTTOMLEFT" x="-23"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self:InitializeSubHeading(); self.subHeadingText = AUCTIONATOR_L_GEAR_VENDOR_PRICE_MULTIPLIER</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self.subHeadingText = AUCTIONATOR_L_GEAR_VENDOR_PRICE_MULTIPLIER; self:InitializeSubHeading()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="GearPriceMultiplier">
         
@@ -157,7 +157,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.GearPriceMultiplierHeading" relativePoint="BOTTOMLEFT" y="-15"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_GEAR_VENDOR_PRICE_MULTIPLIER_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="StartingPricePercentageHeading">
         
@@ -166,7 +166,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.GearPriceMultiplier" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self:InitializeSubHeading(); self.subHeadingText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self.subHeadingText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE; self:InitializeSubHeading()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="StartingPricePercentage">
         
@@ -177,7 +177,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.StartingPricePercentageHeading" relativePoint="BOTTOMLEFT" y="-15"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self.labelText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_STARTING_PRICE_PERCENTAGE_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="IgnoreItemSuffix">
         
@@ -186,7 +186,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.StartingPricePercentage" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_IGNORE_ITEM_SUFFIX</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_IGNORE_ITEM_SUFFIX; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>
