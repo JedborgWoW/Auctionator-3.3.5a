@@ -2,7 +2,7 @@
   <Frame name="AuctionatorInsetTemplate" useParentLevel="true" virtual="true">
     <Layers>
       <Layer level="BACKGROUND">
-        <Texture parentKey="Bg" inherits="Auctionator_AuctionHouseBackgroundIndex">
+        <Texture parentKey="Bg" file="Interface\FrameGeneral\UI-Background-Rock" horizTile="true" vertTile="true">
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
@@ -23,7 +23,7 @@
   <Frame name="AuctionatorInsetDarkTemplate" useParentLevel="true" virtual="true">
     <Layers>
       <Layer level="BACKGROUND">
-        <Texture parentKey="Bg" inherits="Auctionator_AuctionHouseBackgroundSellRight">
+        <Texture parentKey="Bg" file="Interface\FrameGeneral\UI-Background-Rock" horizTile="true" vertTile="true">
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
@@ -44,7 +44,7 @@
   <Frame name="AuctionatorInsetLeaveScrollSpaceTemplate" useParentLevel="true" virtual="true">
     <Layers>
       <Layer level="BACKGROUND">
-        <Texture parentKey="Bg" inherits="Auctionator_AuctionHouseBackgroundIndex">
+        <Texture parentKey="Bg" file="Interface\FrameGeneral\UI-Background-Rock" horizTile="true" vertTile="true">
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-28"/>

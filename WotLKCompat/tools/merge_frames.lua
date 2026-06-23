@@ -83,6 +83,21 @@ local function process(path)
     if kind ~= "tag" then put(tok); return end
     local name, isClose, isSelf = parseTag(tok)
 
+    -- While diverting an extra <Frames> block, copy everything VERBATIM into the
+    -- merge buffer and only track <Frames> nesting depth to find this block's end.
+    -- No merge/stack logic here, so a nested frame keeps its own <Frames> intact
+    -- (a deeper frame with multiple <Frames> is handled on a later pass).
+    if divert then
+      if name == "Frames" and not isClose and not isSelf then
+        divert.depth = divert.depth + 1
+      elseif name == "Frames" and isClose then
+        divert.depth = divert.depth - 1
+        if divert.depth == 0 then divert = nil; return end  -- drop the block's </Frames>
+      end
+      divert.extra[#divert.extra + 1] = tok
+      return
+    end
+
     if isClose then
       local top = stack[#stack]
       if name == "Frames" and top and top.kind == "frames" then
@@ -116,8 +131,7 @@ local function process(path)
           emit(tok)                                   -- first <Frames>
           stack[#stack + 1] = { kind = "frames", first = true, node = fr }
         else
-          divert = fr                                 -- buffer inner into fr.extra
-          stack[#stack + 1] = { kind = "frames", first = false, node = fr }
+          divert = fr; fr.depth = 1                   -- buffer inner verbatim into fr.extra
           stats.merged = stats.merged + 1
         end
         return
