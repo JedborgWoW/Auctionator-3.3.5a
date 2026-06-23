@@ -68,18 +68,23 @@ if not CreateColor then
   end
 end
 
--- Common colour globals as ColorMixin instances (3.3.5a has the *_FONT_COLOR
--- tables as plain {r,g,b} without the mixin methods). Only (re)defined when the
--- mixin method is missing so we do not stomp a native ColorMixin instance.
+-- Common colour globals need the ColorMixin methods (3.3.5a has the *_FONT_COLOR
+-- tables as plain {r,g,b}). IMPORTANT: when the Blizzard global already exists we
+-- ADD the missing methods to it in place rather than replacing it -- replacing a
+-- Blizzard global table can taint it (and anything secure that later reads it).
 local function EnsureColor(name, r, g, b, a)
   local existing = _G[name]
-  if type(existing) == "table" and existing.WrapTextInColorCode then
-    return
+  if type(existing) == "table" then
+    if not existing.WrapTextInColorCode then
+      for methodName, method in pairs(ColorMixin) do
+        if existing[methodName] == nil then
+          existing[methodName] = method
+        end
+      end
+    end
+  else
+    _G[name] = CreateColor(r, g, b, a or 1)
   end
-  if type(existing) == "table" and existing.r then
-    r, g, b, a = existing.r, existing.g, existing.b, existing.a or 1
-  end
-  _G[name] = CreateColor(r, g, b, a or 1)
 end
 
 EnsureColor("WHITE_FONT_COLOR", 1, 1, 1)

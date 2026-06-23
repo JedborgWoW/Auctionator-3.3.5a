@@ -383,7 +383,7 @@ function AuctionatorShoppingTabListsContainerMixin:SetupContent()
   self.ScrollBox:SetPoint("TOPLEFT", 0, -2)
   self.ScrollBox:SetPoint("BOTTOMRIGHT", 0, 2)
 
-  self.ScrollBar = CreateFrame("EventFrame", nil, self, "WowTrimScrollBar")
+  self.ScrollBar = CreateFrame("Frame", nil, self, "WowTrimScrollBar")
   self.ScrollBar:SetPoint("TOPLEFT", self, "TOPRIGHT")
   self.ScrollBar:SetPoint("BOTTOMLEFT", self, "BOTTOMRIGHT")
 

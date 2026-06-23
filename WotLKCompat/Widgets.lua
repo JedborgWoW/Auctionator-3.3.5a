@@ -1,22 +1,13 @@
--- WotLK 3.3.5a compatibility: widget method + CreateFrame shims
+-- WotLK 3.3.5a compatibility: widget method shims
 --
 -- Adds region/frame methods that modern WoW has but 3.3.5a lacks. On this client
 -- each widget type has its own metatable __index table (Button does not inherit
 -- Frame's table), so each missing method must be added to every type we use.
-
--- ---------------------------------------------------------------------------
--- CreateFrame wrapper: map the modern "EventFrame" frame type to "Frame".
--- A plain Frame already supports RegisterEvent + OnEvent, which is all the
--- converted XML/Lua needs.
--- ---------------------------------------------------------------------------
-do
-  local _CreateFrame = CreateFrame
-  local REMAP = { EventFrame = "Frame", DropdownButton = "Button" }
-  function CreateFrame(frameType, ...)
-    frameType = REMAP[frameType] or frameType
-    return _CreateFrame(frameType, ...)
-  end
-end
+--
+-- NOTE: we deliberately do NOT wrap the global CreateFrame (doing so taints every
+-- frame the secure UI and other addons create). The modern "EventFrame" /
+-- "DropdownButton" frame types are handled by editing Auctionator's few
+-- CreateFrame call sites to "Frame" / "Button" directly.
 
 -- ---------------------------------------------------------------------------
 -- Method shims

@@ -8,7 +8,7 @@ function AuctionatorFilterKeySelectorMixin:OnLoad()
     self:Reset()
   end)
 
-  self.DropDown = CreateFrame("DropdownButton", nil, self, "WowStyle1DropdownTemplate")
+  self.DropDown = CreateFrame("Button", nil, self, "WowStyle1DropdownTemplate")
   self.DropDown:SetPoint("TOPLEFT", 20, 0)
   self.DropDown:SetWidth(280)
 
