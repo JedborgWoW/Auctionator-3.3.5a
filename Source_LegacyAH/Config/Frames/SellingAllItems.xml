@@ -105,7 +105,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.SalesPreference" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_SET_VALUE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_SET_VALUE_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_UNDERCUT_TOOLTIP_TEXT; self:OnLoad(); self:OnLoad(); self.Label:SetPoint("LEFT", self.MoneyInput, "RIGHT", 5, 0)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationSubHeadingFrame" parentKey="StackSizesHeading">
         
@@ -126,7 +126,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.StackSizesHeading" relativePoint="BOTTOMLEFT" x="25" y="-10"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT; self.classID = Enum.ItemClass.Armor; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_SUFFIX; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_DEFAULT_QUANTITY_TOOLTIP_TEXT; self.classID = Enum.ItemClass.Armor; self:OnLoad(); self.MaxNumStacks:SetPoint("TOPLEFT", self.NumStacks, "BOTTOMLEFT", 10, -4); self.Label:SetPoint("TOPLEFT", self.NumStacks, "TOPRIGHT", 10, -3); self.StackSize:SetPoint("TOPLEFT", self.Label, "TOPRIGHT", 10, 3); self.MaxStackSize:SetPoint("TOPLEFT", self.StackSize, "BOTTOMLEFT", 10, -4)</OnLoad></Scripts></Frame>
 
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CONFIG_RESET_STACK_SIZE_MEMORY" parentKey="ResetStackSizeMemory">
         <Anchors>

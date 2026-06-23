@@ -45,7 +45,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.DefaultListHeading" relativePoint="BOTTOMLEFT"/>
           <Anchor point="RIGHT" relativePoint="LEFT" x="50"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ListMissingTerms">
         

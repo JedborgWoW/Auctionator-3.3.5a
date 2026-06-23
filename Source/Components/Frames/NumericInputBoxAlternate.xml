@@ -38,7 +38,7 @@
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
           <OnEscapePressed>self:ClearFocus()</OnEscapePressed>
           <OnEnterPressed>Auctionator.Components.ReportEnterPressed()</OnEnterPressed>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad>self.Middle:SetPoint("LEFT", self.Left, "RIGHT"); self.Middle:SetPoint("RIGHT", self.Right, "LEFT")</OnLoad></Scripts>
       </EditBox>
     </Frames>
   </Frame>

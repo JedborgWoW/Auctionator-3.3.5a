@@ -23,7 +23,7 @@
           <Anchor point="TOPLEFT"/>
           <Anchor point="BOTTOMRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorSellingViewGroupTemplate"; self.clickEventName = "BagUse.BagItemClicked"; self.hideHiddenItems = true; self.applyVisibility = true; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorSellingViewGroupTemplate"; self.clickEventName = "BagUse.BagItemClicked"; self.hideHiddenItems = true; self.applyVisibility = true; self:OnLoad(); self.ScrollBox:SetPoint("BOTTOMRIGHT", self.ScrollBar, "BOTTOMLEFT", 0, 3)</OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

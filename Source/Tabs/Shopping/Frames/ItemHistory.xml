@@ -29,7 +29,7 @@
           <Anchor point="TOPLEFT" x="8" y="-30"/>
           <Anchor point="BOTTOMRIGHT" x="-26" y="32"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin)</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); self.ScrollArea:SetPoint("TOPLEFT", self.HeaderContainer, "BOTTOMLEFT", 15, -3); self.ScrollArea:SetPoint("RIGHT", self.HeaderContainer, "RIGHT", -3, 0)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="Inset" inherits="AuctionatorInsetDarkTemplate">
         <Anchors>

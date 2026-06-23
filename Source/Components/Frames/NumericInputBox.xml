@@ -40,7 +40,7 @@
           <OnEnterPressed>Auctionator.Components.ReportEnterPressed()</OnEnterPressed>
           <OnTextChanged function="Auctionator_EditBox_OnTextChanged"/>
           <OnKeyDown function="Auctionator_EditBox_OnKeyDown" />
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad>self.Middle:SetPoint("LEFT", self.Left, "RIGHT"); self.Middle:SetPoint("RIGHT", self.Right, "LEFT")</OnLoad></Scripts>
       </EditBox>
     </Frames>
   </Frame>

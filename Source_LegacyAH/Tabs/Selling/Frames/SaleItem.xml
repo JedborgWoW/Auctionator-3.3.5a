@@ -47,7 +47,7 @@
         </Anchors>
         <Scripts>
           <OnReceiveDrag>self:OnReceiveDrag()</OnReceiveDrag>
-        <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); Mixin(self, AuctionatorBagItemSelectedMixin); self.clickEventName = "BagItemClicked"</OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); Mixin(self, AuctionatorBagItemSelectedMixin); self.clickEventName = "BagItemClicked"; self:SetPoint("TOPLEFT", self:GetParent().Icon, "TOPLEFT"); self:SetPoint("BOTTOMRIGHT", self:GetParent().Icon, "BOTTOMRIGHT")</OnLoad></Scripts>
       </Button>
 
       <Frame parentKey="UnitPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">
@@ -59,7 +59,7 @@
         
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_UNIT_PRICE; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_UNIT_PRICE; self:OnLoad(); self:OnLoad(); self.Label:SetPoint("RIGHT", self.MoneyInput, "LEFT", -10, 0)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="StackPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">
         <Anchors>
@@ -70,14 +70,14 @@
         
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_STACK_PRICE; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_STACK_PRICE; self:OnLoad(); self:OnLoad(); self.Label:SetPoint("RIGHT", self.MoneyInput, "LEFT", -10, 0)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="Stacks" inherits="AuctionatorStackOfInputTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.StackPrice" relativePoint="BOTTOMLEFT" y="-30" x="112"/>
           <Anchor point="RIGHT" relativeKey="$parent.UnitPrice"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad(); self.MaxNumStacks:SetPoint("TOPLEFT", self.NumStacks, "BOTTOMLEFT", 10, -4); self.Label:SetPoint("TOPLEFT", self.NumStacks, "TOPRIGHT", 10, -3); self.StackSize:SetPoint("TOPLEFT", self.Label, "TOPRIGHT", 10, 3); self.MaxStackSize:SetPoint("TOPLEFT", self.StackSize, "BOTTOMLEFT", 10, -4)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorDurationHorizontalRadioControls" parentKey="Duration">
         <Anchors>
@@ -121,7 +121,7 @@
         
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_STACK_BID_PRICE; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self.labelText = AUCTIONATOR_L_STACK_BID_PRICE; self:OnLoad(); self:OnLoad(); self.Label:SetPoint("RIGHT", self.MoneyInput, "LEFT", -10, 0)</OnLoad></Scripts></Frame>
     </Frames>
 
     <Layers>

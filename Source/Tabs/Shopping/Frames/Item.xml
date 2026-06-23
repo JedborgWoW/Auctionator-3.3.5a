@@ -93,7 +93,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.FilterKeySelector" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_LEVEL; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_LEVEL; self:OnLoad(); self:OnLoad(); self.MinBox:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT"); self.MaxBox:SetPoint("TOPLEFT", self.MinBox, "TOPRIGHT", 15, 0); self.ResetButton:SetPoint("TOPLEFT", self.MaxBox, "TOPRIGHT", 3, -3); self.Separator:SetPoint("CENTER", self.Title, "CENTER", -3, -19)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="ItemLevelRange">
         
@@ -102,7 +102,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.LevelRange" relativePoint="TOPRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_ITEM_LEVEL; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_ITEM_LEVEL; self:OnLoad(); self:OnLoad(); self.MinBox:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT"); self.MaxBox:SetPoint("TOPLEFT", self.MinBox, "TOPRIGHT", 15, 0); self.ResetButton:SetPoint("TOPLEFT", self.MaxBox, "TOPRIGHT", 3, -3); self.Separator:SetPoint("CENTER", self.Title, "CENTER", -3, -19)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="PriceRange">
         
@@ -111,7 +111,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.LevelRange" relativePoint="BOTTOMLEFT" y="-8"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_PRICE; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_PRICE; self:OnLoad(); self:OnLoad(); self.MinBox:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT"); self.MaxBox:SetPoint("TOPLEFT", self.MinBox, "TOPRIGHT", 15, 0); self.ResetButton:SetPoint("TOPLEFT", self.MaxBox, "TOPRIGHT", 3, -3); self.Separator:SetPoint("CENTER", self.Title, "CENTER", -3, -19)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="CraftedLevelRange">
         
@@ -120,7 +120,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.PriceRange" relativePoint="TOPRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_CRAFTED_LEVEL; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self.titleText = AUCTIONATOR_L_CRAFTED_LEVEL; self:OnLoad(); self:OnLoad(); self.MinBox:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT"); self.MaxBox:SetPoint("TOPLEFT", self.MinBox, "TOPRIGHT", 15, 0); self.ResetButton:SetPoint("TOPLEFT", self.MaxBox, "TOPRIGHT", 3, -3); self.Separator:SetPoint("CENTER", self.Title, "CENTER", -3, -19)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationNumericInputAlternate" parentKey="PurchaseQuantity">
         
@@ -153,7 +153,7 @@
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="TOPRIGHT" y="8"/>
             </Anchors>
-          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad()</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad></Scripts></Frame>
 
           <Button parentKey="ResetQualityButton" inherits="AuctionatorResetButton">
             <Anchors>
@@ -185,7 +185,7 @@
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="TOPRIGHT" y="8"/>
             </Anchors>
-          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad()</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad></Scripts></Frame>
 
           <Button parentKey="ResetExpansionButton" inherits="AuctionatorResetButton">
             <Anchors>
@@ -217,7 +217,7 @@
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="TOPRIGHT" y="8"/>
             </Anchors>
-          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad()</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = ""; self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad></Scripts></Frame>
 
           <Button parentKey="ResetTierButton" inherits="AuctionatorResetButton">
             <Anchors>

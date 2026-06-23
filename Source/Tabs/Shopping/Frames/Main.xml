@@ -105,7 +105,7 @@
           <Anchor point="RIGHT"/>
         </Anchors>
         <Size x="280"/>
-      <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0)</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorShoppingTabListsContainerTemplate" hidden="true">
         <Anchors>
           <Anchor point="TOP" y="-50"/>
@@ -206,7 +206,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.ListsContainer.ScrollBar" relativePoint="TOPRIGHT" x="5" y="27"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); self:SetPoint("TOPLEFT", self:GetParent().ListsContainer.ScrollBar, "TOPRIGHT", 5, 27)</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); self:SetPoint("TOPLEFT", self:GetParent().ListsContainer.ScrollBar, "TOPRIGHT", 5, 27); self.ScrollArea:SetPoint("TOPLEFT", self.HeaderContainer, "BOTTOMLEFT", 15, -3); self.ScrollArea:SetPoint("RIGHT", self.HeaderContainer, "RIGHT", -3, 0)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="ShoppingResultsInset" inherits="AuctionatorInsetTemplate">
         <Anchors>

@@ -25,7 +25,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_BAG_SELECT_SHORTCUT; self.textString = "RIGHT_CLICK;ALT_LEFT_CLICK;ALT_RIGHT_CLICK;SHIFT_LEFT_CLICK;SHIFT_RIGHT_CLICK;DISABLED"; self.valuesString = "right click;alt left click;alt right click;shift left click;shift right click;none"; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_BAG_SELECT_SHORTCUT; self.textString = "RIGHT_CLICK;ALT_LEFT_CLICK;ALT_RIGHT_CLICK;SHIFT_LEFT_CLICK;SHIFT_RIGHT_CLICK;DISABLED"; self.valuesString = "right click;alt left click;alt right click;shift left click;shift right click;none"; self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad></Scripts></Frame>
       <Frame parentKey="PostShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.BagSelectShortcut"/>
@@ -35,7 +35,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad(); self.Button:SetPoint("LEFT", self.Description, "RIGHT")</OnLoad></Scripts></Frame>
       <Frame parentKey="SkipShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.PostShortcut"/>
@@ -45,7 +45,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_SKIP_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_SKIP_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad(); self.Button:SetPoint("LEFT", self.Description, "RIGHT")</OnLoad></Scripts></Frame>
       <Frame parentKey="PrevShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.SkipShortcut"/>
@@ -55,7 +55,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_PREV_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_PREV_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad(); self.Button:SetPoint("LEFT", self.Description, "RIGHT")</OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

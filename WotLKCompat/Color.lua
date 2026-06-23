@@ -100,3 +100,15 @@ EnsureColor("ORANGE_FONT_COLOR", 1.0, 0.5, 0.25)
 EnsureColor("LIGHTYELLOW_FONT_COLOR", 1, 1, 0.6)
 EnsureColor("DISABLED_FONT_COLOR", 0.5, 0.5, 0.5)
 EnsureColor("ERROR_COLOR", 1, 0.1, 0.1)
+
+-- ITEM_QUALITY_COLORS on 3.3.5a has {r, g, b, hex} per quality but NOT the `.color`
+-- ColorMixin object that later clients added. Auctionator's CreateColoredQuality
+-- does ITEM_QUALITY_COLORS[q].color:WrapTextInColorCode(...), so add `.color` to
+-- each entry in place (don't replace the table -> avoids taint).
+if type(ITEM_QUALITY_COLORS) == "table" then
+  for _, entry in pairs(ITEM_QUALITY_COLORS) do
+    if type(entry) == "table" and entry.color == nil and entry.r ~= nil then
+      entry.color = CreateColor(entry.r, entry.g, entry.b, 1)
+    end
+  end
+end

@@ -35,7 +35,7 @@
        <Anchors>
          <Anchor point="TOPLEFT" relativeKey="$parent.DefaultTabHeading" relativePoint="BOTTOMLEFT"/>
        </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = AUCTIONATOR_L_DEFAULT_TAB_TEXT; self.textString = "NONE;SHOPPING_TAB;SELLING_TAB;CANCELLING_TAB;AUCTIONATOR"; self.valuesString = "0;1;2;3;4"; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self.labelText = AUCTIONATOR_L_DEFAULT_TAB_TEXT; self.textString = "NONE;SHOPPING_TAB;SELLING_TAB;CANCELLING_TAB;AUCTIONATOR"; self.valuesString = "0;1;2;3;4"; self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="CraftingInfoHeading">
         

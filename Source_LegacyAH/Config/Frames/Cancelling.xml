@@ -37,7 +37,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self.labelText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_CANCEL_UNDERCUT_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; self:OnLoad(); self.Button:SetPoint("LEFT", self.Description, "RIGHT")</OnLoad></Scripts></Frame>
    </Frames>
   </Frame>
 </Ui>

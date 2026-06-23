@@ -151,6 +151,30 @@ end
 -- ---------------------------------------------------------------------------
 local stats = { files = 0, appended = 0 }
 
+-- Collect setpoints for a frame from its inherits= chain: each inherited template's
+-- ancestors' setpoints, then the template's own. Covers anonymous inline instances
+-- (e.g. DefaultStacks inheriting AuctionatorStackOfInputTemplate) whose own OnLoad
+-- (from KeyValues/mixin) shadows the inherited template's SetPoint-bearing OnLoad.
+local function ancestorSetpointsFromInherits(inheritsStr, acc, present)
+  if not inheritsStr then return end
+  local seen = {}
+  for token in inheritsStr:gmatch("[^,%s]+") do
+    if registry[token] and not seen[token] then
+      seen[token] = true
+      ancestorSetpoints(token, seen, acc, present)        -- token's ancestors
+      for _, st in ipairs(registry[token].setpoints) do   -- token's own
+        if not present[st] then present[st] = true; acc[#acc + 1] = st end
+      end
+    end
+  end
+end
+
+local function inheritsHaveSetpoints(inheritsStr)
+  local acc = {}
+  ancestorSetpointsFromInherits(inheritsStr, acc, {})
+  return #acc > 0
+end
+
 local function rewrite(path)
   local f = io.open(path, "rb"); local s = f:read("*a"); f:close()
   local out = {}
@@ -169,7 +193,7 @@ local function rewrite(path)
         local present = {}
         for _, st in ipairs(splitStatements(capture.buf)) do present[trim(st)] = true end
         local acc = {}
-        ancestorSetpoints(node.name, {}, acc, present)
+        ancestorSetpointsFromInherits(node.inherits, acc, present)
         local body = capture.buf
         if #acc > 0 then
           body = trim(body)
@@ -189,8 +213,8 @@ local function rewrite(path)
     if name == "OnLoad" and not isSelf then
       local parent = stack[#stack]
       local grand = stack[#stack - 1]
-      if parent and parent.kind == "scripts" and grand and grand.kind == "frame" and grand.name
-         and registry[grand.name] then
+      if parent and parent.kind == "scripts" and grand and grand.kind == "frame"
+         and grand.inherits and inheritsHaveSetpoints(grand.inherits) then
         capture = { node = grand, buf = "" }
         stack[#stack + 1] = { kind = "onload" }
         return  -- swallow <OnLoad> tag; rebuilt at close
@@ -201,7 +225,7 @@ local function rewrite(path)
     end
     if isSelf then if capture then capture.buf = capture.buf .. tok else emit(tok) end; return end
     if name == "Scripts" then stack[#stack + 1] = { kind = "scripts" }
-    elseif isFrameTag(name) then stack[#stack + 1] = { kind = "frame", name = attrs:match('name="([^"]*)"') }
+    elseif isFrameTag(name) then stack[#stack + 1] = { kind = "frame", name = attrs:match('name="([^"]*)"'), inherits = attrs:match('inherits="([^"]*)"') }
     else stack[#stack + 1] = { kind = "content" } end
     emit(tok)
   end)
