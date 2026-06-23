@@ -14,7 +14,7 @@
     <Size y="50" x="150" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad(); self:OnLoad()</OnLoad>
     </Scripts>
 
     <Anchors>

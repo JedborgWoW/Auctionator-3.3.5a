@@ -12,7 +12,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad() self.labelText = Auctionator.Constants.Durations.Short; self.value = 12; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = Auctionator.Constants.Durations.Short; self.value = 12</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationRadioButton">
         <Anchors>
           <Anchor point="RIGHT" x="-130" />
@@ -21,7 +21,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad() self.labelText = Auctionator.Constants.Durations.Medium; self.value = 24; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = Auctionator.Constants.Durations.Medium; self.value = 24</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationRadioButton">
         <Anchors>
           <Anchor point="RIGHT" x="-80" />
@@ -30,7 +30,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad() self.labelText = Auctionator.Constants.Durations.Long; self.value = 48; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad(); self:OnLoad(); self.labelText = Auctionator.Constants.Durations.Long; self.value = 48</OnLoad></Scripts></Frame>
     </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); self:InitializeRadioButtonGroup() Mixin(self, AuctionatorConfigHorizontalRadioButtonGroupMixin);  self.groupHeadingText = AUCTIONATOR_L_DURATION; </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); Mixin(self, AuctionatorConfigHorizontalRadioButtonGroupMixin); self:InitializeRadioButtonGroup(); self.groupHeadingText = AUCTIONATOR_L_DURATION</OnLoad></Scripts></Frame>
 </Ui>

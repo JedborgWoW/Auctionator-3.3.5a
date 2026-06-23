@@ -44,7 +44,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnCloseClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
 

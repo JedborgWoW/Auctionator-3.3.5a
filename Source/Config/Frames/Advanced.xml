@@ -11,7 +11,7 @@
         
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_CONFIG_ADVANCED_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_ADVANCED_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad(); self.titleText = AUCTIONATOR_L_CONFIG_ADVANCED_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_ADVANCED_TEXT</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ReplicateScan">
         
@@ -22,7 +22,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_ALTERNATE_SCAN_TEXT</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="DebugHeading">
         
@@ -31,7 +31,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ReplicateScan" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad() self.headingText = AUCTIONATOR_L_CONFIG_DEVELOPER; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad(); self.headingText = AUCTIONATOR_L_CONFIG_DEVELOPER</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="Debug">
         
@@ -42,7 +42,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.DebugHeading" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_DEBUG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_DEBUG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_DEBUG_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_DEBUG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_DEBUG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_DEBUG_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

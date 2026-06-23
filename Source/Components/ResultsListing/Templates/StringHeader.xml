@@ -11,7 +11,7 @@
       <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
-    <OnLoad>Mixin(self, AuctionatorStringColumnHeaderTemplateMixin); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorStringColumnHeaderTemplateMixin)</OnLoad></Scripts>
 
     <Layers>
       <Layer level="OVERLAY">

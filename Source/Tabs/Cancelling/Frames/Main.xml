@@ -38,7 +38,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="4" y="-79"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="HistoricalPriceInset" inherits="AuctionatorInsetTemplate">
         <Anchors>
@@ -67,7 +67,7 @@
             </Anchors>
             <Scripts>
               <OnClick>self:GetParent():CancelNextAuction()</OnClick>
-            <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+            <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
           </Button>
 
           <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_UNDERCUT_SCAN" parentKey="StartScanButton">
@@ -76,7 +76,7 @@
             </Anchors>
             <Scripts>
               <OnClick>self:GetParent():StartScan()</OnClick>
-            <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+            <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
           </Button>
         </Frames>
       </Frame>

@@ -35,6 +35,6 @@
   </Frames>
 </Frame>
 
-<Frame name="AuctionatorPageStatusDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true"><Scripts><OnLoad>self.layoutType = "Dialog"; self:OnLoad() Mixin(self, AuctionatorPageStatusDialogMixin)</OnLoad></Scripts></Frame>
-<Frame name="AuctionatorThrottlingTimeoutDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true" frameLevel="500" ><Scripts><OnLoad>self.layoutType = "Dialog"; self:OnLoad() Mixin(self, AuctionatorThrottlingTimeoutDialogMixin)</OnLoad></Scripts></Frame>
+<Frame name="AuctionatorPageStatusDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true"><Scripts><OnLoad>Mixin(self, AuctionatorPageStatusDialogMixin); self.layoutType = "Dialog"; self:OnLoad()</OnLoad></Scripts></Frame>
+<Frame name="AuctionatorThrottlingTimeoutDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true" frameLevel="500" ><Scripts><OnLoad>Mixin(self, AuctionatorThrottlingTimeoutDialogMixin); self.layoutType = "Dialog"; self:OnLoad()</OnLoad></Scripts></Frame>
 </Ui>

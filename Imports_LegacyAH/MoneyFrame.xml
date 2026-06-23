@@ -49,17 +49,17 @@
 				
 					
 				
-			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDenominationDisplayMixin); self:OnLoad() self.displayType = AuctionatorRetailImportMoneyDenominationDisplayType.Copper; </OnLoad></Scripts></Frame>
+			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDenominationDisplayMixin); self:OnLoad(); self.displayType = AuctionatorRetailImportMoneyDenominationDisplayType.Copper</OnLoad></Scripts></Frame>
 			<Frame parentKey="SilverDisplay" inherits="AuctionatorRetailImportMoneyDenominationDisplayTemplate">
 				
 					
 				
-			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDenominationDisplayMixin); self:OnLoad() self.displayType = AuctionatorRetailImportMoneyDenominationDisplayType.Silver; </OnLoad></Scripts></Frame>
+			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDenominationDisplayMixin); self:OnLoad(); self.displayType = AuctionatorRetailImportMoneyDenominationDisplayType.Silver</OnLoad></Scripts></Frame>
 			<Frame parentKey="GoldDisplay" inherits="AuctionatorRetailImportMoneyDenominationDisplayTemplate">
 				
 					
 				
-			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDenominationDisplayMixin); self:OnLoad() self.displayType = AuctionatorRetailImportMoneyDenominationDisplayType.Gold; </OnLoad></Scripts></Frame>
+			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDenominationDisplayMixin); self:OnLoad(); self.displayType = AuctionatorRetailImportMoneyDenominationDisplayType.Gold</OnLoad></Scripts></Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>Mixin(self, AuctionatorRetailImportMoneyDisplayFrameMixin); self:OnLoad()</OnLoad>

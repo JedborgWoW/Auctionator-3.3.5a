@@ -53,7 +53,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnImportClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
 

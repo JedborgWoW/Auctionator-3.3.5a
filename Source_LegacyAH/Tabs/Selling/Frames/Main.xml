@@ -43,7 +43,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.BagListing" relativePoint="TOPRIGHT" y="10" x="10"/>
           <Anchor point="BOTTOMRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin);  Mixin(self, AuctionatorBuyFrameMixinForSelling); </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForSelling)</OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

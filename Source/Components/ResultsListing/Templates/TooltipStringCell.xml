@@ -4,5 +4,5 @@
     inherits="AuctionatorStringCellTemplate"
     virtual="true"
   >
-  <Scripts><OnLoad>Mixin(self, AuctionatorCellMixin);  Mixin(self, AuctionatorStringCellTemplateMixin);  Mixin(self, AuctionatorTooltipStringCellTemplateMixin); </OnLoad></Scripts></Button>
+  <Scripts><OnLoad>Mixin(self, AuctionatorCellMixin); Mixin(self, AuctionatorStringCellTemplateMixin); Mixin(self, AuctionatorTooltipStringCellTemplateMixin)</OnLoad></Scripts></Button>
 </Ui>

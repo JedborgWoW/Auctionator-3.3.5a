@@ -16,7 +16,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDisplayFrameMixin); self:OnLoad() self.hideCopper = false; self.useAuctionHouseIcons = true; self.resizeToFit = false; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorRetailImportMoneyDisplayFrameMixin); self:OnLoad(); self.hideCopper = false; self.useAuctionHouseIcons = true; self.resizeToFit = false</OnLoad></Scripts></Frame>
     </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorCellMixin);  Mixin(self, AuctionatorPriceCellTemplateMixin); </OnLoad></Scripts></Button>
+  <Scripts><OnLoad>Mixin(self, AuctionatorCellMixin); Mixin(self, AuctionatorPriceCellTemplateMixin)</OnLoad></Scripts></Button>
 </Ui>

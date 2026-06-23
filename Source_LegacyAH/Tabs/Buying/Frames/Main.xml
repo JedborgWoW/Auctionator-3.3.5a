@@ -14,14 +14,14 @@
           <OnClick>
             self:GetParent():ToggleHistory()
           </OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin)</OnLoad></Scripts></Frame>
 
   <Frame name="AuctionatorBuyFrameTemplateForShopping" hidden="true" inherits="AuctionatorBuyFrameTemplate" virtual="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBuyFrameMixin);  Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -38,7 +38,7 @@
           <OnClick>
             self:GetParent():Hide()
           </OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
 
       <Frame enableMouse="true">
@@ -79,6 +79,6 @@
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
-    <OnLoad>Mixin(self, AuctionatorBuyFrameMixin);  Mixin(self, AuctionatorBuyFrameMixinForSelling); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForSelling)</OnLoad></Scripts>
   </Frame>
 </Ui>

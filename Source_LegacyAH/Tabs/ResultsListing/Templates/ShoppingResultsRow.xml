@@ -6,5 +6,5 @@
     enableMouse="true"
   >
 
-  <Scripts><OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin);  Mixin(self, AuctionatorShoppingResultsRowMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin); Mixin(self, AuctionatorShoppingResultsRowMixin)</OnLoad></Scripts></Frame>
 </Ui>

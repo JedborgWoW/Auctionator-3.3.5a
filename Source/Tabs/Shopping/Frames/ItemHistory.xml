@@ -14,7 +14,7 @@
       <OnHide>self:OnHide()</OnHide>
       <OnKeyDown>self:OnKeyDown(key)</OnKeyDown>
       <OnKeyUp>self:OnKeyUp(key)</OnKeyUp>
-    <OnLoad>Mixin(self, AuctionatorItemHistoryFrameMixin); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorItemHistoryFrameMixin)</OnLoad></Scripts>
 
     <Frames>
       <Frame parentKey="DataProvider">
@@ -29,7 +29,7 @@
           <Anchor point="TOPLEFT" x="8" y="-30"/>
           <Anchor point="BOTTOMRIGHT" x="-26" y="32"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="Inset" inherits="AuctionatorInsetDarkTemplate">
         <Anchors>
@@ -65,7 +65,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnCloseDialogClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
 

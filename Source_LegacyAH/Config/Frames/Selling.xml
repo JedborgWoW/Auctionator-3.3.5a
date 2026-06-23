@@ -16,7 +16,7 @@
           
           
         
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_CONFIG_SELLING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad(); self.titleText = AUCTIONATOR_L_CONFIG_SELLING_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_TEXT</OnLoad></Scripts></Frame>
 
       <Frame parentKey="ScrollBar" inherits="WowTrimScrollBar">
         <Anchors>
@@ -48,7 +48,7 @@
         <Anchors>
           <Anchor point="TOPLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_CHAT_LOG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CHAT_LOG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CHAT_LOG_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_CHAT_LOG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CHAT_LOG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CHAT_LOG_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ShowBidPrice">
         
           
@@ -58,7 +58,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.AuctionChatLog" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_SHOW_BID_PRICE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_SHOW_BID_PRICE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_SHOW_BID_PRICE_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ConfirmPostLowPrice">
         
           
@@ -68,7 +68,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ShowBidPrice" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_CONFIRM_LOW_PRICE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT_2; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_CONFIRM_LOW_PRICE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_CONFIRM_LOW_PRICE_TOOLTIP_TEXT_2</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="AlwaysLoadMore">
         
           
@@ -78,7 +78,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ConfirmPostLowPrice" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="GreyPostButton">
         
           
@@ -88,7 +88,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.AlwaysLoadMore" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_GREY_POST_BUTTON; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_GREY_POST_BUTTON; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_GREY_POST_BUTTON_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="BagHeading">
         
           
@@ -96,7 +96,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.GreyPostButton" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad() self.headingText = AUCTIONATOR_L_CONFIG_BAG; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad(); self.headingText = AUCTIONATOR_L_CONFIG_BAG</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="BagShown">
         
@@ -107,7 +107,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.BagHeading" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_BAG_SHOW_SELLING_BAG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_BAG_SHOW_SELLING_BAG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_BAG_SHOW_SELLING_BAG_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_BAG_SHOW_SELLING_BAG; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_BAG_SHOW_SELLING_BAG_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_BAG_SHOW_SELLING_BAG_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="BagCollapsed">
         
           
@@ -117,7 +117,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.BagShown" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_BAG_COLLAPSED; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_BAG_COLLAPSED_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_BAG_COLLAPSED_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_BAG_COLLAPSED; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_BAG_COLLAPSED_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_BAG_COLLAPSED_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationNumericInput" parentKey="IconSize">
         
           
@@ -127,7 +127,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.BagCollapsed" relativePoint="BOTTOMLEFT" y="-5"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_ICON_SIZE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_ICON_SIZE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_ICON_SIZE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_ICON_SIZE_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="AutoSelectNext">
         
           
@@ -137,7 +137,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.IconSize" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_NEXT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_NEXT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_NEXT_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="AutoSelectStackRemainder">
         
           
@@ -147,7 +147,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.AutoSelectNext" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_AUTO_SELECT_STACK_REMAINDER_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ReselectItem">
         
           
@@ -157,7 +157,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.AutoSelectStackRemainder" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_RESELECT_ITEM; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_RESELECT_ITEM; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_RESELECT_ITEM_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="MissingFavourites">
         
           
@@ -167,7 +167,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ReselectItem" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_MISSING_FAVOURITES; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_MISSING_FAVOURITES; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_MISSING_FAVOURITES_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="PossessedFavouritesFirst">
         
           
@@ -177,7 +177,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.MissingFavourites" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad(); self:OnLoad(); self.labelText = AUCTIONATOR_L_CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POSSESSED_FAVOURITES_FIRST_TOOLTIP_TEXT</OnLoad></Scripts></Frame>
 
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_UNHIDE_ALL_HIDDEN_ITEMS" parentKey="UnhideAll">
         <Anchors>
@@ -187,10 +187,10 @@
           <OnClick>
             self:GetParent():GetParent():GetParent():GetParent():UnhideAllClicked()
           </OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
             </Frames>
-          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad() self.scrollable = true; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad(); self.scrollable = true</OnLoad></Scripts></Frame>
         </Frames>
       <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 

@@ -59,7 +59,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent().SearchString:SetText("")</OnClick>
-        <OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad() </OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad></Scripts>
       </Button>
       <Button parentKey="SearchButton" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_SEARCH">
         <Anchors>
@@ -199,7 +199,7 @@
       >
         <Scripts>
           <OnEvent>self:OnEvent(event, ...)</OnEvent>
-        <OnLoad>Mixin(self, AuctionatorDirectSearchProviderMixin);  </OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorDirectSearchProviderMixin)</OnLoad></Scripts>
       </Frame>
 
       <Frame inherits="AuctionatorResultsListingTemplate">
@@ -207,7 +207,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.ListsContainer.ScrollBar" relativePoint="TOPRIGHT" x="5" y="27"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="ShoppingResultsInset" inherits="AuctionatorInsetTemplate">
         <Anchors>
@@ -223,7 +223,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():ExportCSVClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
   </Frame>

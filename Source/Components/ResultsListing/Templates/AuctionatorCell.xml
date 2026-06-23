@@ -11,6 +11,6 @@
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
       <OnMouseUp>self:OnClick(button)</OnMouseUp>
-    <OnLoad>Mixin(self, AuctionatorCellMixin); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorCellMixin)</OnLoad></Scripts>
   </Button>
 </Ui>

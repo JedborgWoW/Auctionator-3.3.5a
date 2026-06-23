@@ -5,5 +5,5 @@
     virtual="true"
     enableMouse="true"
   >
-  <Scripts><OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin);  Mixin(self, AuctionatorBuyAuctionsResultsRowMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin); Mixin(self, AuctionatorBuyAuctionsResultsRowMixin)</OnLoad></Scripts></Frame>
 </Ui>

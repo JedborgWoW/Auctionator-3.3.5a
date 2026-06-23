@@ -40,7 +40,7 @@
             
               
             
-          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad() self.scrollable = true; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad(); self.scrollable = true</OnLoad></Scripts></Frame>
         </Frames>
       <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
@@ -94,7 +94,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnExportClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
 
       <Button parentKey="SelectAll" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_SELECT_ALL">
@@ -103,7 +103,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnSelectAllClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
 
       <Button parentKey="UnselectAll" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_UNSELECT_ALL">
@@ -112,7 +112,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnUnselectAllClicked()</OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
 

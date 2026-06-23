@@ -20,7 +20,7 @@
           <OnClick>
             self:GetParent():SearchButtonClicked()
           </OnClick>
-        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-5" y="6"/>
         </Anchors>

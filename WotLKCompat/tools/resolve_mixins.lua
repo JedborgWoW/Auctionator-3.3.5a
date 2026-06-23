@@ -1,18 +1,17 @@
 -- Resolve inherited mixin/OnLoad chains into each frame's OWN OnLoad.
 --
--- On the target 3.3.5a client, a template's <OnLoad> is NOT reliably run for a
--- frame that inherits it (especially when the inheriting frame has its own
--- <Scripts>), and inherit="append" does not fix it. Since the backport applies
--- mixins inside <OnLoad>, inherited mixins were never applied
--- ("attempt to call method 'X' (a nil value)").
+-- On the target 3.3.5a client a template's <OnLoad> is NOT reliably run for a
+-- frame that inherits it, so inherited mixins were never applied. This post-pass
+-- makes mixin application independent of OnLoad inheritance by writing the FULL
+-- resolved chain into each frame's own (plain) OnLoad.
 --
--- This post-pass makes mixin application independent of OnLoad inheritance:
---   PASS 1 builds registry[name] = { body = <that template's own OnLoad body>,
---          parent = <its inherits= tokens> } from ALL xml (incl. WotLKCompat).
---   PASS 2 rewrites every frame in the addon dirs so its OnLoad = the full
---          resolved chain (root template -> ... -> own body), as a PLAIN OnLoad
---          (no inherit=), creating one if the frame had none. Nothing then
---          depends on the client running inherited OnLoads.
+-- CRITICAL ordering (matches retail): apply ALL mixins of the inheritance chain
+-- FIRST, THEN run the per-level OnLoad bodies. Auctionator relies on this — e.g.
+-- AuctionatorConfigurationTooltip's OnLoad does `Mixin(TooltipMixin); self:OnLoad()`
+-- but TooltipMixin has no OnLoad; the self:OnLoad() is meant to resolve to the
+-- most-derived mixin's OnLoad (CheckboxMixin etc.) AFTER all mixins are applied.
+-- So per-level (Mixin; method; Mixin; method) ordering breaks it -> we split each
+-- template body into its Mixin part and its rest, emit all Mixins, then all rests.
 --
 -- Usage: lua resolve_mixins.lua <registry-list> <rewrite-list>
 
@@ -31,9 +30,6 @@ for _, n in ipairs({
   "BackgroundInsets","EdgeSize","TileSize","BarColor","Attributes","Attribute","NineSlice",
 }) do CONTENT[n] = true end
 
-local TOKEN_RE = "<!%-%-.-%-%->" -- handled manually below
-
--- Manual tokenizer: yields tokens in order via callback.
 local function eachToken(text, cb)
   local i, n = 1, #text
   while i <= n do
@@ -60,8 +56,7 @@ local function parseTag(tok)
   local isSelf = (not isClose) and inner:sub(-1) == "/"
   local name, attrs
   if isClose then
-    name = inner:match("^/%s*([%w_]+)")
-    attrs = ""
+    name = inner:match("^/%s*([%w_]+)"); attrs = ""
   else
     local core = isSelf and inner:sub(1, -2) or inner
     name, attrs = core:match("^%s*([%w_]+)(.*)$")
@@ -70,44 +65,52 @@ local function parseTag(tok)
 end
 
 local function isFrameTag(name)
-  return not CONTENT[name] and not (name:sub(1, 2) == "On" and name:len() > 2 and name:sub(3, 3):match("%u"))
+  return not CONTENT[name] and not (name:sub(1,2) == "On" and #name > 2 and name:sub(3,3):match("%u"))
+end
+
+-- Split an OnLoad body into its leading Mixin(self, ...) and the rest.
+local function splitBody(body)
+  body = body:gsub("^%s+", ""):gsub("%s+$", "")
+  local mixin = body:match("^(Mixin%(self,.-%))")
+  if mixin then
+    local rest = body:sub(#mixin + 1):gsub("^%s*;?%s*", "")
+    return mixin, rest
+  end
+  return "", body
+end
+
+local function trimStmt(s)
+  return (s:gsub("^[%s;]+", ""):gsub("[%s;]+$", ""))
 end
 
 -- ---------------------------------------------------------------------------
--- PASS 1: registry
+-- PASS 1: registry[name] = { mixin, rest, parent }
 -- ---------------------------------------------------------------------------
 local registry = {}
 
 local function buildRegistry(path)
   local f = io.open(path, "rb"); if not f then return end
   local s = f:read("*a"); f:close()
-  -- stack of {name, inherits, kind}; capture own OnLoad body of named frames
   local stack = {}
-  local capturing = nil      -- frame table currently capturing its OnLoad body
+  local capturing = nil
   eachToken(s, function(kind, tok)
     if kind == "text" then
       if capturing then capturing.body = (capturing.body or "") .. tok end
       return
-    elseif kind == "raw" then
-      return
-    end
+    elseif kind == "raw" then return end
     local name, attrs, isClose, isSelf = parseTag(tok)
     if isClose then
       local top = table.remove(stack)
-      if top and top.kind == "frame" and top.name then
-        registry[top.name] = { body = top.body or "", parent = top.inherits }
-      end
       if top and top.kind == "onload" then capturing = nil end
+      if top and top.kind == "frame" and top.name then
+        local mixin, rest = splitBody(top.body or "")
+        registry[top.name] = { mixin = mixin, rest = rest, parent = top.inherits }
+      end
       return
     end
     if name == "OnLoad" and not isSelf then
-      -- direct child OnLoad of the nearest frame?
-      local parentEl = stack[#stack]            -- should be Scripts
       local frameEl = stack[#stack - 1]
-      if frameEl and frameEl.kind == "frame" then
-        capturing = frameEl
-        frameEl.body = ""
-      end
+      if frameEl and frameEl.kind == "frame" then capturing = frameEl; frameEl.body = "" end
       stack[#stack + 1] = { kind = "onload" }
       return
     end
@@ -115,9 +118,7 @@ local function buildRegistry(path)
     if name == "Scripts" then
       stack[#stack + 1] = { kind = "scripts" }
     elseif isFrameTag(name) then
-      local nm = attrs:match('name="([^"]*)"')
-      local inh = attrs:match('inherits="([^"]*)"')
-      stack[#stack + 1] = { kind = "frame", name = nm, inherits = inh }
+      stack[#stack + 1] = { kind = "frame", name = attrs:match('name="([^"]*)"'), inherits = attrs:match('inherits="([^"]*)"') }
     else
       stack[#stack + 1] = { kind = "content" }
     end
@@ -125,58 +126,74 @@ local function buildRegistry(path)
 end
 
 -- ---------------------------------------------------------------------------
--- Chain resolution
+-- Chain resolution: collect all Mixin parts then all rest parts (root -> self)
 -- ---------------------------------------------------------------------------
-local function resolveChain(inherits, seen)
-  if not inherits then return "" end
-  seen = seen or {}
-  local out = {}
+local function collect(inherits, mixins, rests, seen)
+  if not inherits then return end
   for token in inherits:gmatch("[^,%s]+") do
     if registry[token] and not seen[token] then
       seen[token] = true
-      local entry = registry[token]
-      local parentBody = resolveChain(entry.parent, seen)
-      if parentBody ~= "" then out[#out + 1] = parentBody end
-      if entry.body ~= "" then out[#out + 1] = entry.body end
+      collect(registry[token].parent, mixins, rests, seen)
+      if registry[token].mixin ~= "" then mixins[#mixins + 1] = registry[token].mixin end
+      if registry[token].rest ~= "" then rests[#rests + 1] = registry[token].rest end
     end
   end
-  return table.concat(out, " ")
+end
+
+-- Build the resolved OnLoad body for a frame from its inherits chain + own body.
+local function resolved(inherits, ownBody)
+  local mixins, rests = {}, {}
+  collect(inherits, mixins, rests, {})
+  local ownMixin, ownRest = splitBody(ownBody or "")
+  if ownMixin ~= "" then mixins[#mixins + 1] = ownMixin end
+  if ownRest ~= "" then rests[#rests + 1] = ownRest end
+  local parts = {}
+  for _, m in ipairs(mixins) do local t = trimStmt(m); if t ~= "" then parts[#parts + 1] = t end end
+  for _, r in ipairs(rests) do local t = trimStmt(r); if t ~= "" then parts[#parts + 1] = t end end
+  return table.concat(parts, "; ")
 end
 
 -- ---------------------------------------------------------------------------
 -- PASS 2: rewrite addon frames
 -- ---------------------------------------------------------------------------
-local stats = { onload_rewritten = 0, onload_created = 0 }
+local stats = { rewritten = 0, created = 0 }
 
 local function rewrite(path)
   local f = io.open(path, "rb"); local s = f:read("*a"); f:close()
   local out = {}
   local stack = {}
+  local capture = nil  -- {frame=..., buf=""} while inside a frame's own OnLoad
   local emit = function(x) out[#out + 1] = x end
 
   eachToken(s, function(kind, tok)
-    if kind ~= "tag" then emit(tok); return end
+    if kind ~= "tag" then
+      if capture then capture.buf = capture.buf .. tok else emit(tok) end
+      return
+    end
     local name, attrs, isClose, isSelf = parseTag(tok)
 
     if isClose then
-      if name == "Scripts" then
-        table.remove(stack) -- scripts
-        emit(tok)
+      if name == "OnLoad" and capture then
+        local body = resolved(capture.frame.inherits, capture.buf)
+        emit("<OnLoad>" .. body .. "</OnLoad>")
+        capture.frame.hadOnLoad = true
+        capture = nil
+        table.remove(stack) -- onload
+        stats.rewritten = stats.rewritten + 1
         return
       end
+      if name == "Scripts" then table.remove(stack); emit(tok); return end
       local top = stack[#stack]
       if top and top.kind == "frame" then
         if not top.hadOnLoad then
-          local chain = resolveChain(top.inherits)
-          if chain ~= "" then
-            emit("<Scripts><OnLoad>" .. chain .. "</OnLoad></Scripts>")
-            stats.onload_created = stats.onload_created + 1
+          local body = resolved(top.inherits, "")
+          if body ~= "" then
+            emit("<Scripts><OnLoad>" .. body .. "</OnLoad></Scripts>")
+            stats.created = stats.created + 1
           end
         end
-        table.remove(stack)
-      elseif top then
-        table.remove(stack)
       end
+      if top then table.remove(stack) end
       emit(tok)
       return
     end
@@ -184,27 +201,21 @@ local function rewrite(path)
     if name == "OnLoad" and not isSelf then
       local frameEl = stack[#stack - 1]
       if frameEl and frameEl.kind == "frame" then
-        frameEl.hadOnLoad = true
-        local chain = resolveChain(frameEl.inherits)
-        emit("<OnLoad>") -- strip any inherit="append"
-        if chain ~= "" then
-          emit(chain .. " ")
-          stats.onload_rewritten = stats.onload_rewritten + 1
-        end
-      else
-        emit("<OnLoad>")
+        capture = { frame = frameEl, buf = "" }   -- swallow body; rebuild at close
+        stack[#stack + 1] = { kind = "onload" }
+        return                                    -- do NOT emit the <OnLoad...> tag
       end
+      emit(tok)
       stack[#stack + 1] = { kind = "onload" }
       return
     end
 
-    if isSelf then emit(tok); return end
+    if isSelf then if capture then capture.buf = capture.buf .. tok else emit(tok) end; return end
 
     if name == "Scripts" then
       stack[#stack + 1] = { kind = "scripts" }
     elseif isFrameTag(name) then
-      local inh = attrs:match('inherits="([^"]*)"')
-      stack[#stack + 1] = { kind = "frame", inherits = inh, hadOnLoad = false }
+      stack[#stack + 1] = { kind = "frame", inherits = attrs:match('inherits="([^"]*)"'), hadOnLoad = false }
     else
       stack[#stack + 1] = { kind = "content" }
     end
@@ -219,18 +230,9 @@ local function rewrite(path)
   return false
 end
 
--- ---------------------------------------------------------------------------
 local regList, rwList = arg[1], arg[2]
-for path in io.lines(regList) do
-  path = path:gsub("%s+$", "")
-  if #path > 0 then buildRegistry(path) end
-end
+for path in io.lines(regList) do path = path:gsub("%s+$", ""); if #path > 0 then buildRegistry(path) end end
 local changed = 0
-for path in io.lines(rwList) do
-  path = path:gsub("%s+$", "")
-  if #path > 0 and rewrite(path) then changed = changed + 1 end
-end
-local regCount = 0
-for _ in pairs(registry) do regCount = regCount + 1 end
-print("registry templates:", regCount, "files changed:", changed)
-print("onload_rewritten:", stats.onload_rewritten, "onload_created:", stats.onload_created)
+for path in io.lines(rwList) do path = path:gsub("%s+$", ""); if #path > 0 and rewrite(path) then changed = changed + 1 end end
+local rc = 0; for _ in pairs(registry) do rc = rc + 1 end
+print("registry:", rc, "files changed:", changed, "rewritten:", stats.rewritten, "created:", stats.created)

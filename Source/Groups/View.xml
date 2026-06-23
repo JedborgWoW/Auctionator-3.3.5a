@@ -30,7 +30,7 @@
             
               
             
-          <Scripts><OnLoad>self.scrollable = true; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>self.scrollable = true</OnLoad></Scripts></Frame>
         </Frames>
       <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
     </Frames>

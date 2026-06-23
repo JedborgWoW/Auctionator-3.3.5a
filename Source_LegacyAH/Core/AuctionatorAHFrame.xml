@@ -3,6 +3,6 @@
     <Scripts>
       <OnShow>self:OnShow()</OnShow>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
-    <OnLoad>Mixin(self, AuctionatorAHFrameMixin); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorAHFrameMixin)</OnLoad></Scripts>
   </Frame>
 </Ui>
