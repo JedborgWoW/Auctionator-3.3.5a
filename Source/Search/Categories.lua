@@ -16,7 +16,13 @@ end
 function Auctionator.Search.InitializeCategories()
   Auctionator.Search.InitializeOldCategories()
 
-  SaveCategory(AuctionCategories)
+  -- AuctionCategories is a modern Blizzard AH global (the nested category tree);
+  -- it does not exist on stock 3.3.5a. The old-category path above
+  -- (InitializeOldCategories, built from the 3.3.5a item classes) is what this
+  -- client uses, and GetItemClassCategories falls back to it, so skip when nil.
+  if AuctionCategories then
+    SaveCategory(AuctionCategories)
+  end
 end
 
 function Auctionator.Search.GetItemClassCategories(categoryKey)

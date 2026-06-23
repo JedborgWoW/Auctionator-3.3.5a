@@ -262,6 +262,18 @@ if not C_MerchantFrame then
   end
 end
 
+-- GetMerchantItemID (global, added to retail later) -> derive the itemID from the
+-- 3.3.5a GetMerchantItemLink. Used by CraftingInfo vendor-price caching.
+if not GetMerchantItemID then
+  function GetMerchantItemID(index)
+    local link = GetMerchantItemLink(index)
+    if not link then
+      return nil
+    end
+    return tonumber(link:match("item:(%d+)"))
+  end
+end
+
 -- ---------------------------------------------------------------------------
 -- C_Spell
 -- ---------------------------------------------------------------------------

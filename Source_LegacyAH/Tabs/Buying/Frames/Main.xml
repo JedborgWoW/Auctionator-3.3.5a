@@ -21,7 +21,7 @@
 
   <Frame name="AuctionatorBuyFrameTemplateForShopping" hidden="true" inherits="AuctionatorBuyFrameTemplate" virtual="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init(); self:SetPoint("TOPLEFT", self:GetParent().ResultsListing, "TOPLEFT", 0, -50); self.ReturnButton:SetPoint("BOTTOMLEFT", self.SearchResultsListing, "TOPLEFT", 0, 10)</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init(); self:SetPoint("TOPLEFT", self:GetParent().ResultsListing, "TOPLEFT", 0, -50); self.ReturnButton:SetPoint("BOTTOMLEFT", self.SearchResultsListing, "TOPLEFT", 0, 10); self.HistoryButton:SetPoint("TOP", self.SearchResultsListing, "BOTTOM")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -79,6 +79,6 @@
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
-    <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForSelling)</OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForSelling); self.HistoryButton:SetPoint("TOP", self.SearchResultsListing, "BOTTOM")</OnLoad></Scripts>
   </Frame>
 </Ui>

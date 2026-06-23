@@ -17,7 +17,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad()</OnLoad>
+			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad(); self.Middle:SetPoint("LEFT", self.Left, "RIGHT"); self.Middle:SetPoint("RIGHT", self.Right, "LEFT")</OnLoad>
 			<OnTextChanged>self:OnTextChanged(userInput)</OnTextChanged>
 		</Scripts>
 	</EditBox>

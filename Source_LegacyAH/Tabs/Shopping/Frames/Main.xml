@@ -16,5 +16,5 @@
         </Scripts>
       </Button>
     </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabFrameMixin); self:OnLoad(); self.LoadAllPagesButton:SetPoint("BOTTOMLEFT", self.ShoppingResultsInset, "BOTTOMLEFT"); self.LoadAllPagesButton:SetPoint("TOPRIGHT", self.ShoppingResultsInset, "BOTTOMRIGHT", 0, 20)</OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabFrameMixin); self:OnLoad(); self.LoadAllPagesButton:SetPoint("BOTTOMLEFT", self.ShoppingResultsInset, "BOTTOMLEFT"); self.LoadAllPagesButton:SetPoint("TOPRIGHT", self.ShoppingResultsInset, "BOTTOMRIGHT", 0, 20); self.ExportButton:SetPoint("RIGHT", self.RecentsContainer, "RIGHT", 20, 0); self.ImportButton:SetPoint("RIGHT", self.ExportButton, "LEFT"); self.ContainerTabs:SetPoint("BOTTOMLEFT", self.ListsContainer, "TOPLEFT", 20, 0); self.ShoppingResultsInset:SetPoint("TOPLEFT", self.ResultsListing, "TOPLEFT", -10, -25); self.ShoppingResultsInset:SetPoint("BOTTOMRIGHT", self.ResultsListing, "BOTTOMRIGHT", 0, 2); self.ExportCSV:SetPoint("TOP", self.ResultsListing, "BOTTOM")</OnLoad></Scripts></Frame>
 </Ui>

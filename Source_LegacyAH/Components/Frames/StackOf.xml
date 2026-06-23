@@ -53,17 +53,7 @@
           </OnClick>
         <OnLoad></OnLoad></Scripts>
       </Button>
-    </Frames>
-    <Layers>
-      <Layer level="BACKGROUND">
-        <FontString inherits="GameFontHighlight" parentKey="Label" text="AUCTIONATOR_L_STACK_OF">
-          <Anchors>
-            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.NumStacks" x="10" y="-3"/>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
-    <Frames>
+    
       <EditBox autoFocus="false" inherits="AuctionatorRetailImportLargeInputBoxTemplate" numeric="true" parentKey="StackSize" letters="10">
         <Size x="70" y="20" />
         <Anchors>
@@ -89,5 +79,15 @@
         <OnLoad></OnLoad></Scripts>
       </Button>
     </Frames>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <FontString inherits="GameFontHighlight" parentKey="Label" text="AUCTIONATOR_L_STACK_OF">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.NumStacks" x="10" y="-3"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    
   </Frame>
 </Ui>

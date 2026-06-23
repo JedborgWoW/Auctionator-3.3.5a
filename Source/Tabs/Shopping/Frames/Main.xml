@@ -163,8 +163,7 @@
           <Anchor point="RIGHT" relativeKey="$parent.ExportButton" relativePoint="LEFT"/>
         </Anchors>
       <Scripts><OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts></Button>
-    </Frames>
-    <Frames>
+    
       <Frame parentKey="ContainerTabs">
         <Size x="10" y="10"/>
         <Scripts>
@@ -173,7 +172,7 @@
         <Anchors>
           <Anchor point="BOTTOMLEFT" relativeKey="$parent.ListsContainer" relativePoint="TOPLEFT" x="20"/>
         </Anchors>
-        <Frames>
+        
           <Button inherits="AuctionatorShoppingMiniTabButtonTemplate" text="AUCTIONATOR_L_SHOPPING_LISTS" id="1" parentKey="ListsTab">
             <Anchors>
               <Anchor point="BOTTOMLEFT"/>
@@ -184,7 +183,7 @@
               <Anchor point="BOTTOMLEFT" relativeKey="$parent.ListsTab" relativePoint="BOTTOMRIGHT"/>
             </Anchors>
           <Scripts><OnLoad>Mixin(self, AuctionatorShoppingListsMiniTabButtonMixinMixin); self:OnLoad()</OnLoad></Scripts></Button>
-        </Frames>
+        
       </Frame>
 
       <Frame parentKey="DataProvider">
@@ -226,5 +225,6 @@
         <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
+    
   </Frame>
 </Ui>

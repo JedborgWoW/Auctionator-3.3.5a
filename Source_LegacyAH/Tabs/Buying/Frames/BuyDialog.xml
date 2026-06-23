@@ -78,36 +78,7 @@
           <Anchor point="BOTTOMRIGHT" y="-22" relativeKey="$parent.$parent"/>
         </Anchors>
       </Frame>
-    </Frames>
-    <Layers>
-      <Layer>
-        <FontString parentKey="PurchaseDetails" inherits="GameFontHighlightLarge" text="AUCTIONATOR_L_BUYING_X_FOR_X">
-          <Anchors>
-            <Anchor point="CENTER" y="30"/>
-          </Anchors>
-        </FontString>
-        <FontString parentKey="UnitPrice" inherits="GameFontHighlight" text="AUCTIONATOR_L_BRACKETS_X_EACH">
-          <Anchors>
-            <Anchor point="TOP" relativeKey="$parent.PurchaseDetails" relativePoint="BOTTOM" y="-6"/>
-          </Anchors>
-        </FontString>
-        <FontString parentKey="NumberPurchased" inherits="GameFontNormal" text="AUCTIONATOR_L_ALREADY_PURCHASED_X">
-          <Anchors>
-            <Anchor point="TOP" relativeKey="$parent.UnitPrice" relativePoint="BOTTOM" y="-8"/>
-          </Anchors>
-        </FontString>
-      </Layer>
-      <Layer level="BACKGROUND">
-        <Texture parentKey="Background">
-          <Anchors>
-            <Anchor point="TOPLEFT" x="6" y="-8"/>
-            <Anchor point="BOTTOMRIGHT" x="-6" y="8"/>
-          </Anchors>
-          <Color r="0" g="0" b="0" a="0.8"/>
-        </Texture>
-      </Layer>
-    </Layers>
-    <Frames>
+    
       <Frame parentKey="NineSlice" inherits="NineSlicePanelTemplate" useParentLevel="true" />
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CLOSE" parentKey="Cancel">
         <Anchors>
@@ -146,5 +117,34 @@
 
       <Frame parentKey="WarningDialog" inherits="AuctionatorBuyWarningDialogTemplate" hidden="true"/>
     </Frames>
+    <Layers>
+      <Layer>
+        <FontString parentKey="PurchaseDetails" inherits="GameFontHighlightLarge" text="AUCTIONATOR_L_BUYING_X_FOR_X">
+          <Anchors>
+            <Anchor point="CENTER" y="30"/>
+          </Anchors>
+        </FontString>
+        <FontString parentKey="UnitPrice" inherits="GameFontHighlight" text="AUCTIONATOR_L_BRACKETS_X_EACH">
+          <Anchors>
+            <Anchor point="TOP" relativeKey="$parent.PurchaseDetails" relativePoint="BOTTOM" y="-6"/>
+          </Anchors>
+        </FontString>
+        <FontString parentKey="NumberPurchased" inherits="GameFontNormal" text="AUCTIONATOR_L_ALREADY_PURCHASED_X">
+          <Anchors>
+            <Anchor point="TOP" relativeKey="$parent.UnitPrice" relativePoint="BOTTOM" y="-8"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="BACKGROUND">
+        <Texture parentKey="Background">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="6" y="-8"/>
+            <Anchor point="BOTTOMRIGHT" x="-6" y="8"/>
+          </Anchors>
+          <Color r="0" g="0" b="0" a="0.8"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    
   </Frame>
 </Ui>

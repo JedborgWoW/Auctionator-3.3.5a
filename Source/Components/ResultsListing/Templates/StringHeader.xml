@@ -11,7 +11,7 @@
       <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
-    <OnLoad>Mixin(self, AuctionatorStringColumnHeaderTemplateMixin); self.Arrow:SetPoint("RIGHT", self.Text, "RIGHT", -3, 0)</OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorStringColumnHeaderTemplateMixin); self.Arrow:SetPoint("RIGHT", self.Text, "RIGHT", -3, 0); self.Middle:SetPoint("LEFT", self.Left, "RIGHT"); self.Middle:SetPoint("RIGHT", self.Right, "LEFT")</OnLoad></Scripts>
 
     <Layers>
       <Layer level="OVERLAY">
