@@ -88,20 +88,32 @@ local frameMethods = {
   SetPropagateKeyboardInput = SetPropagateKeyboardInput,
 }
 
--- Build one sample of each widget type and patch its metatable.
-local probe = CreateFrame("Frame")
+-- Build one hidden sample of each widget type to patch its metatable. These
+-- probes are parented to a HIDDEN frame and never shown. CRITICAL: a bare
+-- CreateFrame("EditBox") defaults to autoFocus=true and GRABS keyboard focus the
+-- moment it is created, which would eat all keyboard input at login (can't move /
+-- open Escape). So disable its autofocus and clear focus immediately. Only widget
+-- types Auctionator actually uses are probed (no Minimap/Model/etc. — creating a
+-- second Minimap can break the real one and other minimap addons).
+local probeParent = CreateFrame("Frame")
+probeParent:Hide()
 
+local probe = CreateFrame("Frame", nil, probeParent)
 AddMethods(probe, regionMethods)
 AddMethods(probe, frameMethods)
 
 local frameTypes = {
   "Button", "CheckButton", "EditBox", "Slider", "StatusBar",
-  "ScrollFrame", "GameTooltip", "MessageFrame", "ColorSelect",
-  "Cooldown", "SimpleHTML", "Model", "PlayerModel", "Minimap",
+  "ScrollFrame", "GameTooltip",
 }
 for _, t in ipairs(frameTypes) do
-  local ok, obj = pcall(CreateFrame, t)
+  local ok, obj = pcall(CreateFrame, t, nil, probeParent)
   if ok and obj then
+    if t == "EditBox" then
+      obj:SetAutoFocus(false)
+      obj:ClearFocus()
+    end
+    if obj.Hide then obj:Hide() end
     AddMethods(obj, regionMethods)
     AddMethods(obj, frameMethods)
   end
