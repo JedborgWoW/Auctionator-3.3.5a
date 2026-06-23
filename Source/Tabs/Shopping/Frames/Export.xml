@@ -10,7 +10,7 @@
     <Size x="350" y="320" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorListExportFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorListExportFrameMixin); self:OnLoad(); self.ScrollBar:SetPoint("TOPRIGHT", self.Inset, "TOPRIGHT"); self.ScrollBar:SetPoint("BOTTOMRIGHT", self.Inset, "BOTTOMRIGHT"); self.ScrollBox:SetPoint("TOPLEFT", self.Inset, "TOPLEFT", 5, -6); self.ScrollBox:SetPoint("BOTTOMRIGHT", self.ScrollBar, "BOTTOMLEFT", 0, 4); self.Export:SetPoint("TOPRIGHT", self.Inset, "BOTTOMRIGHT", 0, -3); self.SelectAll:SetPoint("TOPLEFT", self.Inset, "BOTTOMLEFT", 0, -3); self.UnselectAll:SetPoint("TOPLEFT", self.SelectAll, "TOPRIGHT")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>

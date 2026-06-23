@@ -19,7 +19,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad(); self.MaxNumStacks:SetPoint("TOPLEFT", self.NumStacks, "BOTTOMLEFT", 10, -4); self.Label:SetPoint("TOPLEFT", self.NumStacks, "TOPRIGHT", 10, -3); self.StackSize:SetPoint("TOPLEFT", self.Label, "TOPRIGHT", 10, 3); self.MaxStackSize:SetPoint("TOPLEFT", self.StackSize, "BOTTOMLEFT", 10, -4)</OnLoad>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
     </Scripts>

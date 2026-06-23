@@ -10,7 +10,7 @@
     <Size x="350" y="320" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorExportTextFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorExportTextFrameMixin); self:OnLoad(); self.ScrollBar:SetPoint("TOPRIGHT", self.Inset, "TOPRIGHT"); self.ScrollBar:SetPoint("BOTTOMRIGHT", self.Inset, "BOTTOMRIGHT"); self.EditBoxContainer:SetPoint("TOPLEFT", self.Inset, "TOPLEFT", 5, -6); self.EditBoxContainer:SetPoint("BOTTOMRIGHT", self.Inset, "BOTTOMRIGHT", -27, 4); self.Close:SetPoint("TOPRIGHT", self.Inset, "BOTTOMRIGHT", 0, -3)</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>

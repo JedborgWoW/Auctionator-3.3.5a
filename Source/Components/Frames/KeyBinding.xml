@@ -46,7 +46,7 @@
       </Button>
     </Frames>
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self:OnLoad(); self.Button:SetPoint("LEFT", self.Description, "RIGHT")</OnLoad>
       <OnMouseDown>self:OnClick(button)</OnMouseDown>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>

@@ -6,7 +6,7 @@
     hidden="true"
   >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorCancellingFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorCancellingFrameMixin); self:OnLoad(); self.HistoricalPriceInset:SetPoint("TOPLEFT", self.ResultsListing, "TOPLEFT", -5, -25); self.HistoricalPriceInset:SetPoint("BOTTOMRIGHT", self.ResultsListing, "BOTTOMRIGHT", 0, 2); self.UndercutScanContainer:SetPoint("TOP", self.ResultsListing, "BOTTOM"); self.Total:SetPoint("TOPLEFT", self.SearchFilter, "TOPRIGHT", 15, -5)</OnLoad>
     </Scripts>
 
     <Anchors>
@@ -49,7 +49,7 @@
 
       <Frame parentKey="UndercutScanContainer">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorUndercutScanMixin); self:OnLoad()</OnLoad>
+          <OnLoad>Mixin(self, AuctionatorUndercutScanMixin); self:OnLoad(); self.StartScanButton:SetPoint("TOPRIGHT", self.CancelNextButton, "TOPLEFT", 3, 0)</OnLoad>
           <OnShow>self:OnShow()</OnShow>
           <OnHide>self:OnHide()</OnHide>
           <OnEvent>self:OnEvent(event, ...)</OnEvent>

@@ -10,7 +10,7 @@
     <Size x="350" y="350" />
 
     <Scripts>
-      <OnLoad>Mixin(self, ButtonFrameTemplateMixin); Mixin(self, AuctionatorShoppingItemMixin); self:OnLoad(); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, ButtonFrameTemplateMixin); Mixin(self, AuctionatorShoppingItemMixin); self:OnLoad(); self:OnLoad(); self.SearchStringHeading:SetPoint("TOPLEFT", self.Inset, "TOPLEFT", 0, -5); self.SearchContainer:SetPoint("TOPLEFT", self.SearchStringHeading, "BOTTOMLEFT"); self.ItemClassHeading:SetPoint("TOPLEFT", self.SearchContainer, "BOTTOMLEFT"); self.FilterKeySelector:SetPoint("TOPLEFT", self.ItemClassHeading, "BOTTOMLEFT"); self.LevelRange:SetPoint("TOPLEFT", self.FilterKeySelector, "BOTTOMLEFT"); self.ItemLevelRange:SetPoint("TOPLEFT", self.LevelRange, "TOPRIGHT"); self.PriceRange:SetPoint("TOPLEFT", self.LevelRange, "BOTTOMLEFT", 0, -8); self.CraftedLevelRange:SetPoint("TOPLEFT", self.PriceRange, "TOPRIGHT"); self.PurchaseQuantity:SetPoint("TOPLEFT", self.PriceRange, "BOTTOMLEFT", 30, -22); self.QualityContainer:SetPoint("TOPLEFT", self.PurchaseQuantity, "BOTTOMLEFT", -4, 0); self.ExpansionContainer:SetPoint("TOPLEFT", self.QualityContainer, "BOTTOMLEFT", -6, -20); self.TierContainer:SetPoint("TOPLEFT", self.ExpansionContainer, "BOTTOMLEFT", 25, -20); self.Finished:SetPoint("TOPRIGHT", self.Inset, "BOTTOMRIGHT"); self.Cancel:SetPoint("TOPLEFT", self.Inset, "BOTTOMLEFT"); self.ResetAllButton:SetPoint("TOPLEFT", self.Cancel, "TOPRIGHT")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
       <OnKeyDown>self:OnKeyDown(key)</OnKeyDown>
@@ -27,7 +27,7 @@
         </Anchors>
       <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self.subHeadingText = AUCTIONATOR_L_SEARCH_TERM; self:InitializeSubHeading()</OnLoad></Scripts></Frame>
 
-      <Frame parentKey="SearchContainer">
+      <Frame parentKey="SearchContainer"><Scripts><OnLoad>self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -3); self.IsExact:SetPoint("TOPLEFT", self.SearchString, "BOTTOMLEFT", -8, 0)</OnLoad></Scripts>
         <Size y="48" />
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.SearchStringHeading" relativePoint="BOTTOMLEFT" />
@@ -131,7 +131,7 @@
         </Anchors>
       <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigNumericInputMixin); self.labelText = AUCTIONATOR_L_QUANTITY; self:OnLoad(); self:OnLoad()</OnLoad></Scripts></Frame>
 
-      <Frame parentKey="QualityContainer">
+      <Frame parentKey="QualityContainer"><Scripts><OnLoad>self.DropDown:SetPoint("TOPLEFT", self.Label, "TOPRIGHT", 0, 8); self.ResetQualityButton:SetPoint("TOPLEFT", self.DropDown.DropDown, "TOPRIGHT", 5, -5)</OnLoad></Scripts>
         <Size x="50" y="20"/>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.PurchaseQuantity" x="-4"/>
@@ -163,7 +163,7 @@
         </Frames>
       </Frame>
 
-      <Frame parentKey="ExpansionContainer">
+      <Frame parentKey="ExpansionContainer"><Scripts><OnLoad>self.DropDown:SetPoint("TOPLEFT", self.Label, "TOPRIGHT", 0, 8); self.ResetExpansionButton:SetPoint("TOPLEFT", self.DropDown.DropDown, "TOPRIGHT", 5, -5)</OnLoad></Scripts>
         <Size x="50" y="20"/>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.QualityContainer" x="-6" y="-20" />
@@ -195,7 +195,7 @@
         </Frames>
       </Frame>
 
-      <Frame parentKey="TierContainer">
+      <Frame parentKey="TierContainer"><Scripts><OnLoad>self.DropDown:SetPoint("TOPLEFT", self.Label, "TOPRIGHT", 0, 8); self.ResetTierButton:SetPoint("TOPLEFT", self.DropDown.DropDown, "TOPRIGHT", 5, -5)</OnLoad></Scripts>
         <Size x="50" y="20"/>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.ExpansionContainer" x="25" y="-20" />

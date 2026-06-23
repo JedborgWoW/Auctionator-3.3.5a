@@ -6,7 +6,7 @@
     hidden="true"
   >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorSellingTabMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorSellingTabMixin); self:OnLoad(); self.BagInset:SetPoint("TOPLEFT", self.BagListing, "TOPLEFT", -5, 5); self.BagInset:SetPoint("BOTTOMRIGHT", self.BagListing, "BOTTOMRIGHT", 0, -3); self.BuyFrame:SetPoint("TOPLEFT", self.BagListing, "TOPRIGHT", 10, 10)</OnLoad>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
 

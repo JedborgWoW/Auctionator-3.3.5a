@@ -5,7 +5,7 @@
     virtual="true">
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigSellingFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigSellingFrameMixin); self:OnLoad(); self.ScrollBar:SetPoint("TOPRIGHT", self.TitleArea, "BOTTOMRIGHT"); self.ScrollBox:SetPoint("TOPLEFT", self.TitleArea, "BOTTOMLEFT"); self.ScrollBox:SetPoint("BOTTOMRIGHT", self.ScrollBar, "BOTTOMLEFT")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>
@@ -190,7 +190,7 @@
         <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
             </Frames>
-          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self.scrollable = true; self:OnLoad()</OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self.scrollable = true; self:OnLoad(); self.ShowBidPrice:SetPoint("TOPLEFT", self.AuctionChatLog, "BOTTOMLEFT"); self.ConfirmPostLowPrice:SetPoint("TOPLEFT", self.ShowBidPrice, "BOTTOMLEFT"); self.AlwaysLoadMore:SetPoint("TOPLEFT", self.ConfirmPostLowPrice, "BOTTOMLEFT"); self.GreyPostButton:SetPoint("TOPLEFT", self.AlwaysLoadMore, "BOTTOMLEFT"); self.BagHeading:SetPoint("TOPLEFT", self.GreyPostButton, "BOTTOMLEFT"); self.BagShown:SetPoint("TOPLEFT", self.BagHeading, "BOTTOMLEFT"); self.BagCollapsed:SetPoint("TOPLEFT", self.BagShown, "BOTTOMLEFT"); self.IconSize:SetPoint("TOPLEFT", self.BagCollapsed, "BOTTOMLEFT", 0, -5); self.AutoSelectNext:SetPoint("TOPLEFT", self.IconSize, "BOTTOMLEFT"); self.AutoSelectStackRemainder:SetPoint("TOPLEFT", self.AutoSelectNext, "BOTTOMLEFT"); self.ReselectItem:SetPoint("TOPLEFT", self.AutoSelectStackRemainder, "BOTTOMLEFT"); self.MissingFavourites:SetPoint("TOPLEFT", self.ReselectItem, "BOTTOMLEFT"); self.PossessedFavouritesFirst:SetPoint("TOPLEFT", self.MissingFavourites, "BOTTOMLEFT"); self.UnhideAll:SetPoint("TOPLEFT", self.PossessedFavouritesFirst, "BOTTOMLEFT", 23, -10)</OnLoad></Scripts></Frame>
         </Frames>
       <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 

@@ -1,7 +1,7 @@
 <Ui>
   <Frame name="AuctionatorGroupsViewTemplate" virtual="true" parentKey="View">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self:OnLoad(); self.ScrollBox:SetPoint("BOTTOMRIGHT", self.ScrollBar, "BOTTOMLEFT", 0, 3)</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>

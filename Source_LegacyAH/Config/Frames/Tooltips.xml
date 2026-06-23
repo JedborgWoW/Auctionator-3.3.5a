@@ -4,7 +4,7 @@
     virtual="true">
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTooltipsFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipsFrameMixin); self:OnLoad(); self.AuctionTooltips:SetPoint("TOPLEFT", self.TitleArea, "BOTTOMLEFT"); self.MailboxTooltips:SetPoint("TOPLEFT", self.AuctionTooltips, "BOTTOMLEFT"); self.VendorTooltips:SetPoint("TOPLEFT", self.MailboxTooltips, "BOTTOMLEFT"); self.EnchantTooltips:SetPoint("TOPLEFT", self.VendorTooltips, "BOTTOMLEFT"); self.ProspectTooltips:SetPoint("TOPLEFT", self.EnchantTooltips, "BOTTOMLEFT"); self.MillTooltips:SetPoint("TOPLEFT", self.ProspectTooltips, "BOTTOMLEFT"); self.AuctionAgeTooltips:SetPoint("TOPLEFT", self.MillTooltips, "BOTTOMLEFT"); self.ShiftStackTooltips:SetPoint("TOPLEFT", self.AuctionAgeTooltips, "BOTTOMLEFT")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>

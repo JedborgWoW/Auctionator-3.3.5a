@@ -8,7 +8,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad(); self.Label:SetPoint("LEFT", self.DropDown, "RIGHT", 15, 0)</OnLoad>
     </Scripts>
     <Size y="40"/>
 

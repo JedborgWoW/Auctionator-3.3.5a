@@ -17,11 +17,11 @@
         <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>
     </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin)</OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin); self.HistoryButton:SetPoint("TOP", self.SearchResultsListing, "BOTTOM")</OnLoad></Scripts></Frame>
 
   <Frame name="AuctionatorBuyFrameTemplateForShopping" hidden="true" inherits="AuctionatorBuyFrameTemplate" virtual="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorBuyFrameMixin); Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init(); self:SetPoint("TOPLEFT", self:GetParent().ResultsListing, "TOPLEFT", 0, -50); self.ReturnButton:SetPoint("BOTTOMLEFT", self.SearchResultsListing, "TOPLEFT", 0, 10)</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -43,7 +43,7 @@
 
       <Frame enableMouse="true">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad()</OnLoad>
+          <OnLoad>Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad(); self:SetPoint("LEFT", self:GetParent().ReturnButton, "RIGHT")</OnLoad>
           <OnEnter>self:OnEnter(motion)</OnEnter>
           <OnLeave>self:OnLeave(motion)</OnLeave>
           <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>

@@ -4,7 +4,7 @@
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
-    <OnLoad>Mixin(self, AuctionatorBuyCurrentPricesFrameMixin)</OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorBuyCurrentPricesFrameMixin); self.Inset:SetPoint("TOPLEFT", self.SearchResultsListing, "TOPLEFT", -10, -25); self.Inset:SetPoint("BOTTOMRIGHT", self.SearchResultsListing, "BOTTOMRIGHT", 0, 2); self.LoadAllPagesButton:SetPoint("BOTTOMLEFT", self.Inset, "BOTTOMLEFT"); self.LoadAllPagesButton:SetPoint("TOPRIGHT", self.Inset, "BOTTOMRIGHT", 0, 20); self.StopLoadingNowButton:SetPoint("BOTTOMLEFT", self.Inset, "BOTTOMLEFT"); self.StopLoadingNowButton:SetPoint("TOPRIGHT", self.Inset, "BOTTOMRIGHT", 0, 20); self.CancelButton:SetPoint("TOP", self.SearchResultsListing, "BOTTOM"); self.BuyButton:SetPoint("LEFT", self.CancelButton, "LEFT", -100, 0); self.BuyButton:SetPoint("BOTTOMRIGHT", self.CancelButton, "BOTTOMLEFT"); self.RefreshButton:SetPoint("BOTTOMRIGHT", self.BuyButton, "BOTTOMLEFT")</OnLoad></Scripts>
     <Frames>
       <Frame parentKey="SearchDataProvider">
         <Scripts>

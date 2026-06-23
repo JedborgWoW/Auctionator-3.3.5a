@@ -10,7 +10,7 @@
 *******************************************************************************
 -->
 
-	<Button name="AuctionatorRetailImportColumnDisplayButtonShortTemplate" virtual="true">
+	<Button name="AuctionatorRetailImportColumnDisplayButtonShortTemplate" virtual="true"><Scripts><OnLoad>self.Middle:SetPoint("LEFT", self.Left, "RIGHT"); self.Middle:SetPoint("RIGHT", self.Right, "LEFT")</OnLoad></Scripts>
 		<Size x="10" y="19"/>
 		<Layers>
 			<Layer level="BACKGROUND">

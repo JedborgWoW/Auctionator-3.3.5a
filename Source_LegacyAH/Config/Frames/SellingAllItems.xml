@@ -6,7 +6,7 @@
     >
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigSellingAllItemsFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigSellingAllItemsFrameMixin); self:OnLoad(); self.DurationGroup:SetPoint("TOPLEFT", self.TitleArea, "BOTTOMLEFT"); self.SaveLastDurationAsDefault:SetPoint("TOPLEFT", self.DurationGroup, "BOTTOMLEFT"); self.SalesPreference:SetPoint("TOPLEFT", self.SaveLastDurationAsDefault, "BOTTOMLEFT"); self.UndercutPercentage:SetPoint("TOPLEFT", self.SalesPreference, "BOTTOMLEFT", 0, -7); self.UndercutValue:SetPoint("TOPLEFT", self.SalesPreference, "BOTTOMLEFT"); self.StackSizesHeading:SetPoint("TOPLEFT", self.UndercutValue, "BOTTOMLEFT", 0, -35); self.DefaultStacks:SetPoint("TOPLEFT", self.StackSizesHeading, "BOTTOMLEFT", 25, -10); self.ResetStackSizeMemory:SetPoint("TOPLEFT", self.DefaultStacks, "BOTTOMLEFT", -2, 0); self.GearPriceMultiplierHeading:SetPoint("TOPLEFT", self.ResetStackSizeMemory, "BOTTOMLEFT", -23, 0); self.GearPriceMultiplier:SetPoint("TOPLEFT", self.GearPriceMultiplierHeading, "BOTTOMLEFT", 0, -15); self.StartingPricePercentageHeading:SetPoint("TOPLEFT", self.GearPriceMultiplier, "BOTTOMLEFT"); self.StartingPricePercentage:SetPoint("TOPLEFT", self.StartingPricePercentageHeading, "BOTTOMLEFT", 0, -15); self.IgnoreItemSuffix:SetPoint("TOPLEFT", self.StartingPricePercentage, "BOTTOMLEFT")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>

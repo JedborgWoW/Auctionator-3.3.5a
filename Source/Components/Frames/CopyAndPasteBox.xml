@@ -14,7 +14,7 @@
     -->
     <Size y="40" />
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigurationCopyAndPasteMixin); self:OnLoad(); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigurationCopyAndPasteMixin); self:OnLoad(); self:OnLoad(); self.Label:SetPoint("TOPLEFT", self.InputBox, "TOPRIGHT", 8, -4)</OnLoad>
     </Scripts>
     <Anchors>
       <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" />

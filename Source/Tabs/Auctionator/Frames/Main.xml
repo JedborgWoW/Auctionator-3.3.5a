@@ -6,7 +6,7 @@
     parentKey="AuctionatorConfigFrame"
   >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTabMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTabMixin); self:OnLoad(); self.Author:SetPoint("TOPLEFT", self.AuthorHeading, "BOTTOMLEFT", 0, 10); self.ContributorsHeading:SetPoint("TOPLEFT", self.AuthorHeading, "TOPRIGHT"); self.Contributors:SetPoint("TOPLEFT", self.ContributorsHeading, "BOTTOMLEFT", 0, 10); self.VersionHeading:SetPoint("TOPLEFT", self.ContributorsHeading, "TOPRIGHT", -280, 0); self.Version:SetPoint("TOPLEFT", self.VersionHeading, "BOTTOMLEFT", 0, 10); self.ContributeHeading:SetPoint("TOPLEFT", self.Author, "BOTTOMLEFT"); self.ContributeLink:SetPoint("TOPLEFT", self.ContributeHeading, "BOTTOMLEFT"); self.EngageHeading:SetPoint("TOPLEFT", self.ContributeLink, "BOTTOMLEFT", 0, 15); self.DiscordLink:SetPoint("TOPLEFT", self.EngageHeading, "BOTTOMLEFT"); self.BugReportLink:SetPoint("TOPLEFT", self.DiscordLink, "BOTTOMLEFT", 0, 10); self.TranslatorsHeading:SetPoint("TOPLEFT", self.BugReportLink, "BOTTOMLEFT", 0, 15); self.deDE:SetPoint("TOPLEFT", self.TranslatorsHeading, "BOTTOMLEFT", 20, 0); self.ptBR:SetPoint("TOPLEFT", self.deDE, "BOTTOMLEFT"); self.zhCN:SetPoint("TOPLEFT", self.ptBR, "BOTTOMLEFT"); self.zhTW:SetPoint("TOPLEFT", self.zhCN, "BOTTOMLEFT"); self.esES:SetPoint("TOPLEFT", self.zhTW, "BOTTOMLEFT"); self.esMX:SetPoint("TOPLEFT", self.esES, "BOTTOMLEFT"); self.frFR:SetPoint("TOPLEFT", self.esMX, "BOTTOMLEFT"); self.itIT:SetPoint("TOPLEFT", self.frFR, "BOTTOMLEFT"); self.koKR:SetPoint("TOPLEFT", self.itIT, "BOTTOMLEFT"); self.ruRU:SetPoint("TOPLEFT", self.koKR, "BOTTOMLEFT"); self.tkTK:SetPoint("TOPLEFT", self.ruRU, "BOTTOMLEFT"); self.roRO:SetPoint("TOPLEFT", self.tkTK, "BOTTOMLEFT"); self.OptionsButton:SetPoint("TOPRIGHT", self.ScanButton, "TOPLEFT", -3, 0)</OnLoad>
     </Scripts>
     <Frames>
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="AuthorHeading">
@@ -274,7 +274,7 @@
           <Anchor point="BOTTOMLEFT" relativeKey="$parent.ScanButton" relativePoint="TOPLEFT"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScanButton" relativePoint="TOPRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorFullScanStatusMixin); self:OnLoad()</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorFullScanStatusMixin); self:OnLoad(); self:SetPoint("BOTTOMLEFT", self:GetParent().ScanButton, "TOPLEFT"); self:SetPoint("BOTTOMRIGHT", self:GetParent().ScanButton, "TOPRIGHT")</OnLoad></Scripts></Frame>
 
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_OPEN_ADDON_OPTIONS" parentKey="OptionsButton">
         <Anchors>

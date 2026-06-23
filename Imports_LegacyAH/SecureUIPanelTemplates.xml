@@ -3,7 +3,7 @@
 	<EditBox name="AuctionatorRetailImportLargeInputBoxTemplate" inherits="InputBoxScriptTemplate" virtual="true">
     <Scripts>
       <OnTabPressed function="AuctionatorRetailImportEditBox_OnTabPressed"/>
-    <OnLoad></OnLoad></Scripts>
+    <OnLoad>self.Middle:SetPoint("LEFT", self.Left, "RIGHT"); self.Middle:SetPoint("RIGHT", self.Right, "LEFT")</OnLoad></Scripts>
 		<Size x="110" y="33"/>
 		<Layers>
 			<Layer level="BACKGROUND">

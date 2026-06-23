@@ -4,7 +4,7 @@
     virtual="true">
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigBasicOptionsFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigBasicOptionsFrameMixin); self:OnLoad(); self.DefaultTabHeading:SetPoint("TOPLEFT", self.TitleArea, "BOTTOMLEFT"); self.DefaultTab:SetPoint("TOPLEFT", self.DefaultTabHeading, "BOTTOMLEFT"); self.CraftingInfoHeading:SetPoint("TOPLEFT", self.DefaultTab, "BOTTOMLEFT"); self.ShowCraftingInfo:SetPoint("TOPLEFT", self.CraftingInfoHeading, "BOTTOMLEFT"); self.ShowCraftingCost:SetPoint("TOPLEFT", self.ShowCraftingInfo, "BOTTOMLEFT"); self.ShowCraftingProfit:SetPoint("TOPLEFT", self.ShowCraftingCost, "BOTTOMLEFT")</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>

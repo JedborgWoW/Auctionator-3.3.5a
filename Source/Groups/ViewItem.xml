@@ -7,7 +7,7 @@
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
       <OnClick>self:OnClick(button, down)</OnClick>
-    <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); self.clickEventName = "BagItemClicked"</OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); self.clickEventName = "BagItemClicked"; self:SetPoint("TOPLEFT", self:GetParent().Icon, "TOPLEFT"); self:SetPoint("BOTTOMRIGHT", self:GetParent().Icon, "BOTTOMRIGHT"); self:SetPoint("TOPLEFT", self:GetParent().Icon, "TOPLEFT"); self:SetPoint("BOTTOMRIGHT", self:GetParent().Icon, "BOTTOMRIGHT")</OnLoad></Scripts>
 
     <Layers>
       <Layer level="BACKGROUND" textureSubLevel="2">

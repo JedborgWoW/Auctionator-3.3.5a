@@ -38,6 +38,6 @@
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
       <OnMouseUp>self:OnClick(button)</OnMouseUp>
-    <OnLoad>Mixin(self, AuctionatorItemKeyCellTemplateMixin)</OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorItemKeyCellTemplateMixin); self.IconBorder:SetPoint("CENTER", self.Icon, "CENTER"); self.Text:SetPoint("LEFT", self.Icon, "RIGHT", 4, -1)</OnLoad></Scripts>
   </Frame>
 </Ui>

@@ -14,7 +14,7 @@
     <Size y="50" x="150" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad(); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad(); self:OnLoad(); self.MinBox:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT"); self.MaxBox:SetPoint("TOPLEFT", self.MinBox, "TOPRIGHT", 15, 0); self.ResetButton:SetPoint("TOPLEFT", self.MaxBox, "TOPRIGHT", 3, -3); self.Separator:SetPoint("CENTER", self.Title, "CENTER", -3, -19)</OnLoad>
     </Scripts>
 
     <Anchors>
@@ -32,7 +32,7 @@
       </Layer>
 
       <Layer level="ARTWORK">
-        <FontString inherits="GameFontHighlight" justifyH="CENTER" text="-">
+        <FontString inherits="GameFontHighlight" justifyH="CENTER" text="-" parentKey="Separator">
           <Size x="15" y="20"/>
           <Anchors>
             <Anchor point="CENTER" relativeKey="$parent.Title" relativePoint="CENTER" y="-19" x="-3" />

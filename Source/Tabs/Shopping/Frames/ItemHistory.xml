@@ -14,7 +14,7 @@
       <OnHide>self:OnHide()</OnHide>
       <OnKeyDown>self:OnKeyDown(key)</OnKeyDown>
       <OnKeyUp>self:OnKeyUp(key)</OnKeyUp>
-    <OnLoad>Mixin(self, AuctionatorItemHistoryFrameMixin)</OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorItemHistoryFrameMixin); self.Inset:SetPoint("TOPLEFT", self.ResultsListing, "TOPLEFT", -5, -25); self.Inset:SetPoint("BOTTOMRIGHT", self.ResultsListing, "BOTTOMRIGHT"); self.Dock:SetPoint("TOPRIGHT", self.Inset, "BOTTOMRIGHT", 20, -3); self.Close:SetPoint("TOPRIGHT", self.Dock, "TOPLEFT")</OnLoad></Scripts>
 
     <Frames>
       <Frame parentKey="DataProvider">

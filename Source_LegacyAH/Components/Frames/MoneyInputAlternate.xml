@@ -11,7 +11,7 @@
     -->
     <Size y="7"/>
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad(); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad(); self:OnLoad(); self.Label:SetPoint("RIGHT", self.MoneyInput, "LEFT", -10, 0)</OnLoad>
     </Scripts>
     <Anchors>
       <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT"/>

@@ -33,7 +33,7 @@
   </Frame>
 
   <!-- Fixed coin display: an amount, a coin icon and a symbol label. -->
-  <Frame name="FixedCoinFrameTemplate" virtual="true">
+  <Frame name="FixedCoinFrameTemplate" virtual="true"><Scripts><OnLoad>self.texture:SetPoint("LEFT", self.amount, "RIGHT", 1, 0); self.label:SetPoint("LEFT", self.texture, "RIGHT", 1, 0)</OnLoad></Scripts>
     <Size x="50" y="16"/>
     <Layers>
       <Layer level="ARTWORK">

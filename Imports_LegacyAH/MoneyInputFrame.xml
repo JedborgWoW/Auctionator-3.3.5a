@@ -59,7 +59,7 @@
 			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self.iconAtlas = "auctionhouse-icon-coin-gold"; self:OnLoad()</OnLoad></Scripts></EditBox>
 		</Frames>
 		<Scripts>
-			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputFrameMixin); self:OnLoad()</OnLoad>
+			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputFrameMixin); self:OnLoad(); self.SilverBox:SetPoint("RIGHT", self.CopperBox, "LEFT", -6, 0); self.GoldBox:SetPoint("RIGHT", self.SilverBox, "LEFT", -6, 0)</OnLoad>
 		</Scripts>
 	</Frame>
 </Ui>
