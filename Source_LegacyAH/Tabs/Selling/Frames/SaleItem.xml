@@ -8,7 +8,7 @@
     <Size x="600" y="100" />
 
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorSaleItemMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorSaleItemMixin); self:OnLoad()</OnLoad>
       <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
@@ -37,7 +37,7 @@
           <OnShow>self:OnShow()</OnShow>
           <OnHide>self:OnHide()</OnHide>
           <OnEvent>self:OnEvent(event, ...)</OnEvent>
-        <OnLoad inherit="append">Mixin(self, AuctionatorPostWatchMixin); </OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorPostWatchMixin); </OnLoad></Scripts>
       </Frame>
 
       <Button parentKey="Icon" inherits="AuctionatorGroupsViewItemTemplate" registerForClicks="LeftButtonUp, RightButtonUp">
@@ -47,7 +47,7 @@
         </Anchors>
         <Scripts>
           <OnReceiveDrag>self:OnReceiveDrag()</OnReceiveDrag>
-        <OnLoad inherit="append">Mixin(self, AuctionatorBagItemSelectedMixin); </OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); self.clickEventName = "BagItemClicked";  Mixin(self, AuctionatorBagItemSelectedMixin); </OnLoad></Scripts>
       </Button>
 
       <Frame parentKey="UnitPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">
@@ -59,7 +59,7 @@
         
           
         
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_UNIT_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_UNIT_PRICE; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="StackPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">
         <Anchors>
@@ -70,21 +70,21 @@
         
           
         
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_STACK_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_STACK_PRICE; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="Stacks" inherits="AuctionatorStackOfInputTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.StackPrice" relativePoint="BOTTOMLEFT" y="-30" x="112"/>
           <Anchor point="RIGHT" relativeKey="$parent.UnitPrice"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorDurationHorizontalRadioControls" parentKey="Duration">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.UnitPrice" relativePoint="TOPRIGHT" />
           <Anchor point="RIGHT" relativeKey="$parent.UnitPrice" relativePoint="RIGHT" x="200"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigRadioButtonGroupMixin); self:InitializeRadioButtonGroup() Mixin(self, AuctionatorConfigHorizontalRadioButtonGroupMixin);  self.groupHeadingText = AUCTIONATOR_L_DURATION; </OnLoad></Scripts></Frame>
       <Button parentKey="PostButton" name="AuctionatorPostButton" inherits="UIPanelButtonTemplate" text="AUCTIONATOR_L_POST">
         <Size x="184" y="22"/>
         <Anchors>
@@ -92,7 +92,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():PostItem()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
       <Button parentKey="SkipButton" name="AuctionatorSkipPostingButton" inherits="UIPanelButtonTemplate" text="AUCTIONATOR_L_SKIP" hidden="true">
         <Size x="80" y="22"/>
@@ -101,7 +101,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():SkipItem()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
       <Button parentKey="PrevButton" name="AuctionatorPrevPostingButton" inherits="UIPanelButtonTemplate" text="AUCTIONATOR_L_PREVIOUS" hidden="true">
         <Size x="80" y="22"/>
@@ -110,7 +110,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():PrevItem()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
 
       <Frame parentKey="BidPrice" inherits="AuctionatorConfigurationMoneyInputAlternate" hidden="true">
@@ -121,7 +121,7 @@
         
           
         
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_STACK_BID_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_STACK_BID_PRICE; </OnLoad></Scripts></Frame>
     </Frames>
 
     <Layers>

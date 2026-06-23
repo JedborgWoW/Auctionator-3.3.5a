@@ -17,7 +17,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad inherit="append">Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad()</OnLoad>
+			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad()</OnLoad>
 			<OnTextChanged>self:OnTextChanged(userInput)</OnTextChanged>
 		</Scripts>
 	</EditBox>
@@ -37,7 +37,7 @@
 				<Anchors>
 					<Anchor point="RIGHT"/>
 				</Anchors>
-			<Scripts><OnLoad inherit="append">self.iconAtlas = "auctionhouse-icon-coin-copper"; </OnLoad></Scripts></EditBox>
+			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad() self.iconAtlas = "auctionhouse-icon-coin-copper"; </OnLoad></Scripts></EditBox>
 			<EditBox parentKey="SilverBox" letters="2" inherits="AuctionatorRetailImportLargeMoneyInputBoxTemplate">
 				
 					
@@ -46,7 +46,7 @@
 				<Anchors>
 					<Anchor point="RIGHT" relativeKey="$parent.CopperBox" relativePoint="LEFT" x="-6" y="0"/>
 				</Anchors>
-			<Scripts><OnLoad inherit="append">self.iconAtlas = "auctionhouse-icon-coin-silver"; </OnLoad></Scripts></EditBox>
+			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad() self.iconAtlas = "auctionhouse-icon-coin-silver"; </OnLoad></Scripts></EditBox>
       <!-- XXX: Changed letters to "6" rather than the original "7" -->
 			<EditBox parentKey="GoldBox" letters="6" inherits="AuctionatorRetailImportLargeMoneyInputBoxTemplate">
 				
@@ -56,10 +56,10 @@
 					<Anchor point="LEFT"/>
 					<Anchor point="RIGHT" relativeKey="$parent.SilverBox" relativePoint="LEFT" x="-6" y="0"/>
 				</Anchors>
-			<Scripts><OnLoad inherit="append">self.iconAtlas = "auctionhouse-icon-coin-gold"; </OnLoad></Scripts></EditBox>
+			<Scripts><OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputBoxMixin); self:OnLoad() self.iconAtlas = "auctionhouse-icon-coin-gold"; </OnLoad></Scripts></EditBox>
 		</Frames>
 		<Scripts>
-			<OnLoad inherit="append">Mixin(self, AuctionatorRetailImportLargeMoneyInputFrameMixin); self:OnLoad()</OnLoad>
+			<OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputFrameMixin); self:OnLoad()</OnLoad>
 		</Scripts>
 	</Frame>
 </Ui>

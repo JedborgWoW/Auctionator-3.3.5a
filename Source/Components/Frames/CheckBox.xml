@@ -10,7 +10,7 @@
     -->
     <Size y="40" />
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad()</OnLoad>
       <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
@@ -36,7 +36,7 @@
         <Scripts>
           <OnEnter>self:GetParent():OnEnter()</OnEnter>
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </CheckButton>
     </Frames>
   </Frame>

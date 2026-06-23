@@ -19,7 +19,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorStackOfInputMixin); self:OnLoad()</OnLoad>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
     </Scripts>
@@ -41,7 +41,7 @@
           <OnEnter>self:GetParent():OnEnter()</OnEnter>
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
           <OnMouseWheel>self:SetNumber(math.max(0, self:GetNumber() + delta))</OnMouseWheel>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </EditBox>
       <Button parentKey="MaxNumStacks" inherits="AuctionatorStackOfInputNumStacksTemplate" text="AUCTIONATOR_L_MAX_COLON_X">
         <Anchors>
@@ -51,7 +51,7 @@
           <OnClick>
             self:GetParent():MaxNumStacksClicked()
           </OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
     </Frames>
     <Layers>
@@ -76,7 +76,7 @@
           <OnEnter>self:GetParent():OnEnter()</OnEnter>
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
           <OnMouseWheel>self:SetNumber(math.max(0, self:GetNumber() + delta))</OnMouseWheel>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </EditBox>
       <Button parentKey="MaxStackSize" inherits="AuctionatorStackOfInputNumStacksTemplate" text="AUCTIONATOR_L_MAX_COLON_X">
         <Anchors>
@@ -86,7 +86,7 @@
           <OnClick>
             self:GetParent():MaxStackSizeClicked()
           </OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
     </Frames>
   </Frame>

@@ -8,7 +8,7 @@
     -->
     <Size y="60" />
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad()</OnLoad>
     </Scripts>
     <Anchors>
       <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" />

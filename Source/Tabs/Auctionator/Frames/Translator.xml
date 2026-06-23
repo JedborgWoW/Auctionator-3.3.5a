@@ -12,7 +12,7 @@
     </KeyValues>
   -->
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorTranslatorMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorTranslatorMixin); self:OnLoad()</OnLoad>
     </Scripts>
 
     <Size x="200" y="21"/>

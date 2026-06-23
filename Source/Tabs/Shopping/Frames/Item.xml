@@ -10,7 +10,7 @@
     <Size x="350" y="350" />
 
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorShoppingItemMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, ButtonFrameTemplateMixin); self:OnLoad() Mixin(self, AuctionatorShoppingItemMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
       <OnKeyDown>self:OnKeyDown(key)</OnKeyDown>
@@ -25,7 +25,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.Inset" relativePoint="TOPLEFT" y="-5" />
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.subHeadingText = AUCTIONATOR_L_SEARCH_TERM; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self:InitializeSubHeading() self.subHeadingText = AUCTIONATOR_L_SEARCH_TERM; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="SearchContainer">
         <Size y="48" />
@@ -44,14 +44,14 @@
               <OnEnterPressed>self:GetParent():GetParent():OnFinishedClicked()</OnEnterPressed>
               <OnEscapePressed>self:ClearFocus()</OnEscapePressed>
               <OnTabPressed>self:GetParent():GetParent().LevelRange:SetFocus()</OnTabPressed>
-            <OnLoad inherit="append"></OnLoad></Scripts>
+            <OnLoad></OnLoad></Scripts>
           </EditBox>
 
           <Button parentKey="ResetSearchStringButton" inherits="AuctionatorResetButton">
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.SearchString" relativePoint="TOPRIGHT" x="3" y="-3"/>
             </Anchors>
-          </Button>
+          <Scripts><OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad></Scripts></Button>
 
           <CheckButton inherits="UICheckButtonTemplate" parentKey="IsExact">
             <Size x="20" y="20" />
@@ -78,13 +78,13 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.SearchContainer" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.subHeadingText = AUCTIONATOR_L_ITEM_CLASS; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationSubHeadingMixin); self:InitializeSubHeading() self.subHeadingText = AUCTIONATOR_L_ITEM_CLASS; </OnLoad></Scripts></Frame>
 
       <Frame name="$parent_FilterKeySelector" parentKey="FilterKeySelector" inherits="AuctionatorFilterKeySelectorTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ItemClassHeading" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorFilterKeySelectorMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="LevelRange">
         
@@ -93,7 +93,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.FilterKeySelector" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_LEVEL; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_LEVEL; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="ItemLevelRange">
         
@@ -102,7 +102,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.LevelRange" relativePoint="TOPRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_ITEM_LEVEL; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_ITEM_LEVEL; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="PriceRange">
         
@@ -111,7 +111,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.LevelRange" relativePoint="BOTTOMLEFT" y="-8"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_PRICE; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationMinMaxFrame" parentKey="CraftedLevelRange">
         
@@ -120,7 +120,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.PriceRange" relativePoint="TOPRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_CRAFTED_LEVEL; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_CRAFTED_LEVEL; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationNumericInputAlternate" parentKey="PurchaseQuantity">
         
@@ -129,7 +129,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.PriceRange" relativePoint="BOTTOMLEFT" y="-22" x="30"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_QUANTITY; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_QUANTITY; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="QualityContainer">
         <Size x="50" y="20"/>
@@ -153,13 +153,13 @@
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="TOPRIGHT" y="8"/>
             </Anchors>
-          <Scripts><OnLoad inherit="append">self.labelText = ""; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad() self.labelText = ""; </OnLoad></Scripts></Frame>
 
           <Button parentKey="ResetQualityButton" inherits="AuctionatorResetButton">
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.DropDown.DropDown" relativePoint="TOPRIGHT" x="5" y="-5"/>
             </Anchors>
-          </Button>
+          <Scripts><OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad></Scripts></Button>
         </Frames>
       </Frame>
 
@@ -185,13 +185,13 @@
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="TOPRIGHT" y="8"/>
             </Anchors>
-          <Scripts><OnLoad inherit="append">self.labelText = ""; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad() self.labelText = ""; </OnLoad></Scripts></Frame>
 
           <Button parentKey="ResetExpansionButton" inherits="AuctionatorResetButton">
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.DropDown.DropDown" relativePoint="TOPRIGHT" x="5" y="-5"/>
             </Anchors>
-          </Button>
+          <Scripts><OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad></Scripts></Button>
         </Frames>
       </Frame>
 
@@ -217,13 +217,13 @@
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="TOPRIGHT" y="8"/>
             </Anchors>
-          <Scripts><OnLoad inherit="append">self.labelText = ""; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad() self.labelText = ""; </OnLoad></Scripts></Frame>
 
           <Button parentKey="ResetTierButton" inherits="AuctionatorResetButton">
             <Anchors>
               <Anchor point="TOPLEFT" relativeKey="$parent.DropDown.DropDown" relativePoint="TOPRIGHT" x="5" y="-5"/>
             </Anchors>
-          </Button>
+          <Scripts><OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad></Scripts></Button>
         </Frames>
       </Frame>
 
@@ -235,7 +235,7 @@
 
         <Scripts>
           <OnClick>self:GetParent():OnFinishedClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
 
       <Button parentKey="Cancel" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CANCEL">
@@ -245,7 +245,7 @@
 
         <Scripts>
           <OnClick>self:GetParent():OnCancelClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
 
       <Button parentKey="ResetAllButton" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_RESET_ALL">
@@ -254,7 +254,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():ResetAll()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
     </Frames>
   </Frame>

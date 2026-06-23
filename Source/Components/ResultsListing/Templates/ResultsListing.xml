@@ -7,7 +7,7 @@
 
     <Scripts>
       <OnShow>self:OnShow()</OnShow>
-    <OnLoad inherit="append">Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts>
 
     <Frames>
       <Frame parentKey="HeaderContainer">
@@ -30,13 +30,13 @@
               <Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
               <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
             </Anchors>
-          </Frame>
+          <Scripts><OnLoad>Mixin(self, ScrollBoxListMixin); self:OnLoad()</OnLoad></Scripts></Frame>
           <Frame parentKey="ScrollBar" inherits="WowTrimScrollBar">
               <Anchors>
                   <Anchor point="TOPLEFT" relativePoint="TOPRIGHT"/>
                   <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"/>
               </Anchors>
-          </Frame>
+          <Scripts><OnLoad>Mixin(self, ScrollBarMixin); self:OnLoad()</OnLoad></Scripts></Frame>
         </Frames>
         <Layers>
           <Layer level="OVERLAY">

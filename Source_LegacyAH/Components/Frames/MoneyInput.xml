@@ -11,7 +11,7 @@
     -->
     <Size y="7"/>
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigMoneyInputMixin); self:OnLoad()</OnLoad>
     </Scripts>
     <Anchors>
       <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT"/>
@@ -26,7 +26,7 @@
         <Scripts>
           <OnEnter>self:GetParent():OnEnter()</OnEnter>
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorRetailImportLargeMoneyInputFrameMixin); self:OnLoad() </OnLoad></Scripts>
       </Frame>
     </Frames>
     <Layers>

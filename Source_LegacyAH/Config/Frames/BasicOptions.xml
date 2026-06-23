@@ -4,7 +4,7 @@
     virtual="true">
 
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorConfigBasicOptionsFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigBasicOptionsFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>
@@ -15,7 +15,7 @@
           
           
         
-      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_CONFIG_BASIC_OPTIONS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_BASIC_OPTIONS_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationTitleFrameMixin); self:OnLoad() self.titleText = AUCTIONATOR_L_CONFIG_BASIC_OPTIONS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_BASIC_OPTIONS_TEXT; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="DefaultTabHeading">
         
@@ -24,7 +24,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.headingText = AUCTIONATOR_L_DEFAULT_TAB; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad() self.headingText = AUCTIONATOR_L_DEFAULT_TAB; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorDropDown" parentKey="DefaultTab">
        
@@ -35,7 +35,7 @@
        <Anchors>
          <Anchor point="TOPLEFT" relativeKey="$parent.DefaultTabHeading" relativePoint="BOTTOMLEFT"/>
        </Anchors>
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_DEFAULT_TAB_TEXT; self.textString = "NONE;SHOPPING_TAB;SELLING_TAB;CANCELLING_TAB;AUCTIONATOR"; self.valuesString = "0;1;2;3;4"; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_DEFAULT_TAB_TEXT; self.textString = "NONE;SHOPPING_TAB;SELLING_TAB;CANCELLING_TAB;AUCTIONATOR"; self.valuesString = "0;1;2;3;4"; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationHeadingFrame" parentKey="CraftingInfoHeading">
         
@@ -44,7 +44,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.DefaultTab" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.headingText = AUCTIONATOR_L_CRAFTING_INFO; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigurationHeadingMixin); self:OnLoad() self.headingText = AUCTIONATOR_L_CRAFTING_INFO; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ShowCraftingInfo">
         
@@ -55,7 +55,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.CraftingInfoHeading" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ShowCraftingCost">
         
@@ -66,7 +66,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ShowCraftingInfo" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_COST; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_COST; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_COST_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ShowCraftingProfit">
         
@@ -77,7 +77,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ShowCraftingCost" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_PROFIT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigCheckboxMixin); self:OnLoad() self.labelText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_PROFIT; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_CRAFTING_INFO_SHOW_PROFIT_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
    </Frames>
   </Frame>
 </Ui>

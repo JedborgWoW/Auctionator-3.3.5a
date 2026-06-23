@@ -6,7 +6,7 @@
     <Size x="320" y="32"/>
 
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorFilterKeySelectorMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorFilterKeySelectorMixin); self:OnLoad()</OnLoad>
     </Scripts>
 
     <Frames>
@@ -14,7 +14,7 @@
         <Anchors>
           <Anchor point="TOPRIGHT" y="-6"/>
         </Anchors>
-      </Button>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad></Scripts></Button>
     </Frames>
   </Frame>
 </Ui>

@@ -4,7 +4,7 @@
     virtual="true"
   >
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorTabContainerMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorTabContainerMixin); self:OnLoad()</OnLoad>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
   </Frame>

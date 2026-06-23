@@ -6,7 +6,7 @@
 			<OnClick>self:OnClick(button, down)</OnClick>
 			<OnEnter>self:OnEnter(motion)</OnEnter>
 			<OnLeave>self:OnLeave(motion)</OnLeave>
-		<OnLoad inherit="append">Mixin(self, AuctionatorRetailImportTemplatedListElementMixin); </OnLoad></Scripts>
+		<OnLoad>Mixin(self, AuctionatorRetailImportTemplatedListElementMixin); </OnLoad></Scripts>
 	</Button>
 
 
@@ -24,6 +24,6 @@
 		</Frames>
 		<Scripts>
 			<OnShow>self:OnShow()</OnShow>
-		<OnLoad inherit="append">Mixin(self, AuctionatorRetailImportTemplatedListMixin); </OnLoad></Scripts>
+		<OnLoad>Mixin(self, AuctionatorRetailImportTemplatedListMixin); </OnLoad></Scripts>
 	</Frame>
 </Ui>

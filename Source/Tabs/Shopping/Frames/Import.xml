@@ -10,7 +10,7 @@
     <Size x="350" y="320" />
 
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorListImportFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorListImportFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -28,14 +28,14 @@
           <Anchor point="TOPRIGHT" relativeKey="$parent.Inset" relativePoint="TOPRIGHT"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" relativePoint="BOTTOMRIGHT"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, ScrollBarMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame parentKey="EditBoxContainer" inherits="ScrollingEditBoxTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.Inset" relativePoint="TOPLEFT" x="5" y="-6"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" relativePoint="BOTTOMRIGHT" x="-27" y="4" />
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorScrollingEditBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <!-- Action Buttons -->
       <Button parentKey="CloseDialog" inherits="UIPanelCloseButtonNoScripts">
@@ -44,7 +44,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnCloseDialogClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
 
       <Button parentKey="Import" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_IMPORT">
@@ -53,7 +53,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnImportClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
     </Frames>
 

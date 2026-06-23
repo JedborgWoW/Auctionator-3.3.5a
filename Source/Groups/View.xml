@@ -1,7 +1,7 @@
 <Ui>
   <Frame name="AuctionatorGroupsViewTemplate" virtual="true" parentKey="View">
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -19,7 +19,7 @@
           <Anchor point="TOPRIGHT"/>
           <Anchor point="BOTTOMRIGHT"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, ScrollBarMixin); self:OnLoad()</OnLoad></Scripts></Frame>
       <Frame inherits="WowScrollBox" parentKey="ScrollBox">
         <Anchors>
             <Anchor point="TOPLEFT"/>
@@ -30,9 +30,9 @@
             
               
             
-          <Scripts><OnLoad inherit="append">self.scrollable = true; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>self.scrollable = true; </OnLoad></Scripts></Frame>
         </Frames>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

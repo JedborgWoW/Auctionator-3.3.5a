@@ -1,7 +1,7 @@
 <Ui>
   <Frame name="AuctionatorBagCacheTemplate" virtual="true">
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorBagCacheMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorBagCacheMixin); self:OnLoad()</OnLoad>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
     </Scripts>
   </Frame>

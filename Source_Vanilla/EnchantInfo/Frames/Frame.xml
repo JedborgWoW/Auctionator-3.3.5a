@@ -2,7 +2,7 @@
   <Frame name="AuctionatorEnchantInfoFrameTemplate" frameLevel="3" virtual="true">
     <Size x="200" y="22"/>
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorEnchantInfoFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorEnchantInfoFrameMixin); self:OnLoad()</OnLoad>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
     </Scripts>
     <Layers>
@@ -20,7 +20,7 @@
           <OnClick>
             self:GetParent():SearchButtonClicked()
           </OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-5" y="6"/>
         </Anchors>

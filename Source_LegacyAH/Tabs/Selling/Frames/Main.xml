@@ -6,7 +6,7 @@
     hidden="true"
   >
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorSellingTabMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorSellingTabMixin); self:OnLoad()</OnLoad>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
 
@@ -22,14 +22,14 @@
           <Anchor point="TOP" relativePoint="TOP" y="-38" />
           <Anchor point="LEFT" relativePoint="LEFT" x="70" />
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorSaleItemMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame parentKey="BagListing" inherits="AuctionatorSellingBagFrame">
         <Anchors>
           <Anchor point="TOPLEFT" x="4" y="-180" />
           <Anchor point="BOTTOM" y="5" />
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorBagUseMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame parentKey="BagInset" inherits="AuctionatorInsetTemplate">
         <Anchors>
@@ -43,7 +43,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.BagListing" relativePoint="TOPRIGHT" y="10" x="10"/>
           <Anchor point="BOTTOMRIGHT"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin);  Mixin(self, AuctionatorBuyFrameMixinForSelling); </OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

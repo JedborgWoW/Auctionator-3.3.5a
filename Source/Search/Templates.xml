@@ -5,6 +5,6 @@
   >
     <Scripts>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
-    <OnLoad inherit="append">Mixin(self, AuctionatorDirectSearchProviderMixin); </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorDirectSearchProviderMixin); </OnLoad></Scripts>
   </Frame>
 </Ui>

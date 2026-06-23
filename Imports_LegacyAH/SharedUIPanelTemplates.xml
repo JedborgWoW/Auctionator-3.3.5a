@@ -57,6 +57,6 @@
 			<OnClick>
         StaticPopupSpecial_Hide(self:GetParent());
       </OnClick>
-		<OnLoad inherit="append"></OnLoad></Scripts>
+		<OnLoad></OnLoad></Scripts>
 	</Button>
 </Ui>

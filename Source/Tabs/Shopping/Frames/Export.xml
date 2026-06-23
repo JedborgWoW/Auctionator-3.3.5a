@@ -10,7 +10,7 @@
     <Size x="350" y="320" />
 
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorListExportFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorListExportFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -28,7 +28,7 @@
           <Anchor point="TOPRIGHT" relativeKey="$parent.Inset" relativePoint="TOPRIGHT"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" relativePoint="BOTTOMRIGHT"/>
         </Anchors>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, ScrollBarMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <Frame parentKey="ScrollBox" inherits="WowScrollBox">
         <Anchors>
@@ -40,9 +40,9 @@
             
               
             
-          <Scripts><OnLoad inherit="append">self.scrollable = true; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad>Mixin(self, ResizeLayoutMixin); self:OnLoad() self.scrollable = true; </OnLoad></Scripts></Frame>
         </Frames>
-      </Frame>
+      <Scripts><OnLoad>Mixin(self, ScrollBoxMixin); self:OnLoad()</OnLoad></Scripts></Frame>
 
       <!-- Export options -->
       <!-- TODO: Uncomment this to continue working on export via whisper -->
@@ -85,7 +85,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnCloseDialogClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </Button>
 
       <Button parentKey="Export" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_EXPORT">
@@ -94,7 +94,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnExportClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
 
       <Button parentKey="SelectAll" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_SELECT_ALL">
@@ -103,7 +103,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnSelectAllClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
 
       <Button parentKey="UnselectAll" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_UNSELECT_ALL">
@@ -112,7 +112,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnUnselectAllClicked()</OnClick>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self) </OnLoad></Scripts>
       </Button>
     </Frames>
 

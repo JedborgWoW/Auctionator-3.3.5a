@@ -7,7 +7,7 @@
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
       <OnClick>self:OnClick(button, down)</OnClick>
-    <OnLoad inherit="append">Mixin(self, AuctionatorGroupsViewItemMixin); self.clickEventName = "BagItemClicked"; </OnLoad></Scripts>
+    <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); self.clickEventName = "BagItemClicked"; </OnLoad></Scripts>
 
     <Layers>
       <Layer level="BACKGROUND" textureSubLevel="2">

@@ -15,12 +15,12 @@
         </Anchors>
 
         <Scripts>>
-          <OnLoad inherit="append">
+          <OnLoad>
             self:GetFontString():SetPoint("LEFT", 12, 0)
           </OnLoad>
           <OnClick>self:GetParent():ToggleOpen()</OnClick>
         </Scripts>
       </Button>
     </Frames>
-  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorGroupsViewGroupMixin); self.collapsable = true; self.insetLeft = 2; self.groupTitleHeight = 22; self.paddingBottom = 0; </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorGroupsViewGroupMixin); self.collapsable = true; self.insetLeft = 2; self.groupTitleHeight = 22; self.paddingBottom = 0; </OnLoad></Scripts></Frame>
 </Ui>

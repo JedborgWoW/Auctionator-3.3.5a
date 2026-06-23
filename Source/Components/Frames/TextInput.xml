@@ -9,7 +9,7 @@
     -->
     <Size y="20"/>
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorConfigTextInputMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad() Mixin(self, AuctionatorConfigTextInputMixin); self:OnLoad()</OnLoad>
       <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
     </Scripts>
     <Anchors>
@@ -27,7 +27,7 @@
           <OnEnter>self:GetParent():OnEnter()</OnEnter>
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
           <OnEscapePressed>self:ClearFocus()</OnEscapePressed>
-        <OnLoad inherit="append"></OnLoad></Scripts>
+        <OnLoad></OnLoad></Scripts>
       </EditBox>
     </Frames>
   </Frame>

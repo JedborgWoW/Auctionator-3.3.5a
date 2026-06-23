@@ -8,7 +8,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad inherit="append">Mixin(self, AuctionatorDropDownMixin); self:OnLoad()</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad()</OnLoad>
     </Scripts>
     <Size y="40"/>
 
@@ -17,7 +17,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent" x="20" y="-3"/>
         </Anchors>
-      </Button>
+      <Scripts><OnLoad>Mixin(self, DropdownButtonMixin); self:OnLoad_Compat()</OnLoad></Scripts></Button>
     </Frames>
     <Layers>
       <Layer level="BACKGROUND">
