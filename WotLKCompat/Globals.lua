@@ -34,8 +34,12 @@ if not Mixin then
   function Mixin(object, ...)
     for i = 1, select("#", ...) do
       local mixin = select(i, ...)
-      for k, v in pairs(mixin) do
-        object[k] = v
+      -- Tolerate a nil mixin (e.g. a Blizzard mixin table that does not exist on
+      -- 3.3.5a) instead of erroring in pairs().
+      if mixin then
+        for k, v in pairs(mixin) do
+          object[k] = v
+        end
       end
     end
     return object

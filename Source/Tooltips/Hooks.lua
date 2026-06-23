@@ -341,7 +341,11 @@ else
   hooksecurefunc(ItemRefTooltip, "SetHyperlink", TooltipHandlers["SetHyperlink"])
 
   for func, handler in pairs(TooltipHandlers) do
-    hooksecurefunc(GameTooltip, func, handler)
+    -- Only hook tooltip setters that exist on this client (some, e.g. retail-only
+    -- profession/recipe setters, are absent on stock 3.3.5a).
+    if GameTooltip[func] then
+      hooksecurefunc(GameTooltip, func, handler)
+    end
   end
 end
 

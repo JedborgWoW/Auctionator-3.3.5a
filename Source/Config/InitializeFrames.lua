@@ -3,7 +3,7 @@ function Auctionator.Config.InternalInitializeFrames(templateNames)
     CreateFrame(
       "FRAME",
       "AuctionatorConfig" .. name .. "Frame",
-      SettingsPanel,
+      InterfaceOptionsFramePanelContainer or UIParent,
       "AuctionatorConfig" .. name .. "FrameTemplate")
   end
 end

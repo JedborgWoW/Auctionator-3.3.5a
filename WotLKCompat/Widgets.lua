@@ -163,6 +163,21 @@ if not C_Texture then
   }
 end
 
+-- GameTooltip:SetItemByID (added in Cataclysm) -> SetHyperlink on the shared
+-- GameTooltip metatable (covers GameTooltip, ItemRefTooltip and other
+-- GameTooltipTemplate frames). Auctionator hooks this to inject price lines.
+if GameTooltip and not GameTooltip.SetItemByID then
+  local mt = getmetatable(GameTooltip)
+  local index = mt and mt.__index
+  if type(index) == "table" and index.SetItemByID == nil then
+    index.SetItemByID = function(self, itemID)
+      if itemID then
+        self:SetHyperlink("item:" .. itemID)
+      end
+    end
+  end
+end
+
 -- UnitName-less helpers occasionally referenced.
 if not GetPhysicalScreenSize then
   function GetPhysicalScreenSize()

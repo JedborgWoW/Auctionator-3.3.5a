@@ -144,11 +144,22 @@ if not C_Item then
     return (select(4, GetItemInfo(link)))
   end
 
+  -- 3.3.5a has no GetItemClassInfo; map the numeric class IDs to (English) names
+  -- so callers that key tables by the name (e.g. Groups) do not get a nil key.
+  local ITEM_CLASS_NAMES = {
+    [0] = "Consumable", [1] = "Container", [2] = "Weapon", [3] = "Gem",
+    [4] = "Armor", [5] = "Reagent", [6] = "Projectile", [7] = "Trade Goods",
+    [8] = "Item Enhancement", [9] = "Recipe", [11] = "Quiver", [12] = "Quest",
+    [13] = "Key", [15] = "Miscellaneous", [16] = "Glyph",
+  }
   function C_Item.GetItemClassInfo(classID)
     if GetItemClassInfo then
-      return GetItemClassInfo(classID)
+      local name = GetItemClassInfo(classID)
+      if name then
+        return name
+      end
     end
-    return nil
+    return ITEM_CLASS_NAMES[classID] or ("Class " .. tostring(classID))
   end
 
   function C_Item.GetItemSubClassInfo(classID, subClassID)
@@ -319,50 +330,8 @@ if not C_AuctionHouse.IsSellItemValid then
   end
 end
 
--- ---------------------------------------------------------------------------
--- Settings / SettingsPanel (retail options canvas API, added in Dragonflight).
--- Bridge to the 3.3.5a InterfaceOptions system. Auctionator's Config panels are
--- parented to SettingsPanel and registered via Settings.RegisterCanvasLayout*.
--- ---------------------------------------------------------------------------
-if SettingsPanel == nil then
-  SettingsPanel = InterfaceOptionsFramePanelContainer or UIParent
-end
-
-if Settings == nil then
-  Settings = {}
-
-  local function MakeCategory(frame, name, parentName)
-    frame.name = name
-    frame.parent = parentName
-    if InterfaceOptions_AddCategory then
-      InterfaceOptions_AddCategory(frame)
-    end
-    return {
-      frame = frame,
-      name = name,
-      GetID = function() return name end,
-      GetName = function() return name end,
-    }
-  end
-
-  function Settings.RegisterCanvasLayoutCategory(frame, name)
-    return MakeCategory(frame, name, nil)
-  end
-
-  function Settings.RegisterCanvasLayoutSubcategory(parentCategory, frame, name)
-    local parentName = parentCategory and (parentCategory.name
-      or (parentCategory.frame and parentCategory.frame.name))
-    return MakeCategory(frame, name, parentName)
-  end
-
-  -- The frame is already registered with InterfaceOptions; nothing more to do.
-  function Settings.RegisterAddOnCategory() end
-
-  function Settings.OpenToCategory(id)
-    if InterfaceOptionsFrame_OpenToCategory then
-      -- 3.3.5a needs this called twice to reliably scroll to the panel.
-      InterfaceOptionsFrame_OpenToCategory(id)
-      InterfaceOptionsFrame_OpenToCategory(id)
-    end
-  end
-end
+-- NOTE: deliberately NOT defining a global `Settings`/`SettingsPanel`. Other
+-- addons (e.g. Ace3's AceConfigDialog) feature-detect `Settings` and then call
+-- the full retail canvas API; a partial shim breaks them. Auctionator's own
+-- Config code (Source/Config/...) is instead routed to the native 3.3.5a
+-- InterfaceOptions system directly.

@@ -14,5 +14,10 @@ function AuctionatorConfigTabMixin:OnLoad()
 end
 
 function AuctionatorConfigTabMixin:OpenOptions()
-  Settings.OpenToCategory(Auctionator.State.OptionsCategory:GetID())
+  local category = Auctionator.State.OptionsCategory
+  if InterfaceOptionsFrame_OpenToCategory and category then
+    -- 3.3.5a needs this called twice to reliably scroll to the panel.
+    InterfaceOptionsFrame_OpenToCategory(category)
+    InterfaceOptionsFrame_OpenToCategory(category)
+  end
 end

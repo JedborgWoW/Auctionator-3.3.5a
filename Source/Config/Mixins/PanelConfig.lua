@@ -17,13 +17,15 @@ function AuctionatorPanelConfigMixin:SetupPanel()
   self.OnDefault = function() end
   self.OnRefresh = function() end
 
+  -- Stock 3.3.5a has no retail Settings canvas API; register with the native
+  -- InterfaceOptions system instead (frame.name = title, frame.parent = parent
+  -- category name for subpanels).
   if self.parent == nil then
-    local category = Settings.RegisterCanvasLayoutCategory(self, self.name)
-    Settings.RegisterAddOnCategory(category)
-    Auctionator.State.OptionsCategory = category
+    InterfaceOptions_AddCategory(self)
+    Auctionator.State.OptionsCategory = self
   else
-    local subcategory = Settings.RegisterCanvasLayoutSubcategory(Auctionator.State.OptionsCategory, self, self.name)
-    Settings.RegisterAddOnCategory(subcategory)
+    self.parent = Auctionator.State.OptionsCategory and Auctionator.State.OptionsCategory.name
+    InterfaceOptions_AddCategory(self)
   end
 end
 

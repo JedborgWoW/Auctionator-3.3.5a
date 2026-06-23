@@ -8,6 +8,7 @@
   <Script file="Pools.lua" />
   <Script file="Timer.lua" />
   <Script file="CallbackRegistry.lua" />
+  <Script file="BlizzardUtil.lua" />
   <Script file="Widgets.lua" />
   <Script file="Items.lua" />
   <Script file="CAPI.lua" />
