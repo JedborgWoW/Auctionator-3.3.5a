@@ -10,7 +10,7 @@
     <Size x="350" y="320" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorExportTextFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorExportTextFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -44,7 +44,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnCloseClicked()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
     </Frames>
 

@@ -4,5 +4,5 @@
     inherits="AuctionatorStringCellTemplate"
     virtual="true"
   >
-  <Scripts><OnLoad>Mixin(self, AuctionatorTooltipStringCellTemplateMixin); </OnLoad></Scripts></Button>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorTooltipStringCellTemplateMixin); </OnLoad></Scripts></Button>
 </Ui>

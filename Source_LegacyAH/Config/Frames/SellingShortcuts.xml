@@ -4,7 +4,7 @@
     virtual="true">
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigSellingShortcutsFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigSellingShortcutsFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>
@@ -15,7 +15,7 @@
           
           
         
-      <Scripts><OnLoad>self.titleText = AUCTIONATOR_L_CONFIG_SELLING_SHORTCUTS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_SHORTCUTS_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_CONFIG_SELLING_SHORTCUTS_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_SELLING_SHORTCUTS_TEXT; </OnLoad></Scripts></Frame>
       <Frame inherits="AuctionatorDropDown" parentKey="BagSelectShortcut">
         
           
@@ -25,7 +25,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_BAG_SELECT_SHORTCUT; self.textString = "RIGHT_CLICK;ALT_LEFT_CLICK;ALT_RIGHT_CLICK;SHIFT_LEFT_CLICK;SHIFT_RIGHT_CLICK;DISABLED"; self.valuesString = "right click;alt left click;alt right click;shift left click;shift right click;none"; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_SELLING_BAG_SELECT_SHORTCUT; self.textString = "RIGHT_CLICK;ALT_LEFT_CLICK;ALT_RIGHT_CLICK;SHIFT_LEFT_CLICK;SHIFT_RIGHT_CLICK;DISABLED"; self.valuesString = "right click;alt left click;alt right click;shift left click;shift right click;none"; </OnLoad></Scripts></Frame>
       <Frame parentKey="PostShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.BagSelectShortcut"/>
@@ -35,7 +35,7 @@
           
           
         
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; </OnLoad></Scripts></Frame>
       <Frame parentKey="SkipShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.PostShortcut"/>
@@ -45,7 +45,7 @@
           
           
         
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_SKIP_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_SELLING_SKIP_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; </OnLoad></Scripts></Frame>
       <Frame parentKey="PrevShortcut" inherits="AuctionatorKeyBindingConfigTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.SkipShortcut"/>
@@ -55,7 +55,7 @@
           
           
         
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SELLING_PREV_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_SELLING_PREV_SHORTCUT; self.tooltipText = AUCTIONATOR_L_CONFIG_SELLING_POST_SHORTCUT_TOOLTIP_TEXT; self.tooltipTitleText = AUCTIONATOR_L_CUSTOM_KEYBOARD_SHORTCUTS; </OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

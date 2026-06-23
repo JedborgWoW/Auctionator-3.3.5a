@@ -25,6 +25,14 @@ if not FrameUtil.UnregisterFrameForEvents then
   end
 end
 
+-- GetAutoCompleteRealms (connected-realm list) does not exist on 3.3.5a; there
+-- are no connected realms, so return an empty list.
+if not GetAutoCompleteRealms then
+  function GetAutoCompleteRealms()
+    return {}
+  end
+end
+
 -- ---------------------------------------------------------------------------
 -- EventUtil
 -- ---------------------------------------------------------------------------

@@ -8,7 +8,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorDropDownMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorDropDownMixin); self:OnLoad()</OnLoad>
     </Scripts>
     <Size y="40"/>
 

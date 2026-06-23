@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <Frame name="AuctionatorItemIconDropDownTemplate" virtual="true">
         <Scripts>
-            <OnLoad>Mixin(self, AuctionatorItemIconDropDownMixin); self:OnLoad()</OnLoad>
+            <OnLoad inherit="append">Mixin(self, AuctionatorItemIconDropDownMixin); self:OnLoad()</OnLoad>
         </Scripts>
     </Frame>
 </Ui>

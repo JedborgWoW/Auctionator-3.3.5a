@@ -4,5 +4,5 @@
     inherits="AuctionatorResultsRowTemplate"
     virtual="true"
     enableMouse="true"
-  ><Scripts><OnLoad>Mixin(self, AuctionatorBuyingHistoricalPriceRowMixin)</OnLoad></Scripts></Frame>
+  ><Scripts><OnLoad inherit="append">Mixin(self, AuctionatorBuyingHistoricalPriceRowMixin)</OnLoad></Scripts></Frame>
 </Ui>

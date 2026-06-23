@@ -5,7 +5,7 @@
     parentKey="ListsContainer"
     >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorShoppingTabListsContainerMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabListsContainerMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -17,7 +17,7 @@
     parentKey="RecentsContainer"
     >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorShoppingTabRecentsContainerMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabRecentsContainerMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -29,7 +29,7 @@
     parentKey="SearchOptions"
     >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad()</OnLoad>
     </Scripts>
     <Layers>
       <Layer level="BACKGROUND">
@@ -50,7 +50,7 @@
         <Scripts>
           <OnEnterPressed>self:GetParent().SearchButton:Click();self:ClearFocus()</OnEnterPressed>
           <OnEscapePressed>self:ClearFocus()</OnEscapePressed>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </EditBox>
 
       <Button parentKey="ResetSearchStringButton" inherits="AuctionatorResetButton">
@@ -59,7 +59,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent().SearchString:SetText("")</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Button parentKey="SearchButton" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_SEARCH">
         <Anchors>
@@ -92,7 +92,7 @@
     </Anchors>
     <Size x="800" y="500"/>
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorShoppingTabFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
@@ -168,7 +168,7 @@
       <Frame parentKey="ContainerTabs">
         <Size x="10" y="10"/>
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorShoppingTabContainerTabsMixin); self:OnLoad()</OnLoad>
+          <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabContainerTabsMixin); self:OnLoad()</OnLoad>
         </Scripts>
         <Anchors>
           <Anchor point="BOTTOMLEFT" relativeKey="$parent.ListsContainer" relativePoint="TOPLEFT" x="20"/>
@@ -189,7 +189,7 @@
 
       <Frame parentKey="DataProvider">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorShoppingTabDataProviderMixin); self:OnLoad()</OnLoad>
+          <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabDataProviderMixin); self:OnLoad()</OnLoad>
           <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
         </Scripts>
       </Frame>
@@ -199,7 +199,7 @@
       >
         <Scripts>
           <OnEvent>self:OnEvent(event, ...)</OnEvent>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Frame>
 
       <Frame inherits="AuctionatorResultsListingTemplate">
@@ -223,7 +223,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():ExportCSVClicked()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
     </Frames>
   </Frame>

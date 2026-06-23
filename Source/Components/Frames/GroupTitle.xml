@@ -7,7 +7,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigGroupTitleMixin); self:InitializeRadioButtonGroup()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigGroupTitleMixin); self:InitializeRadioButtonGroup()</OnLoad>
     </Scripts>
     <Anchors>
       <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT"/>

@@ -4,7 +4,7 @@
     virtual="true">
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigProfileFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigProfileFrameMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:Save()</OnHide>
     </Scripts>
@@ -15,7 +15,7 @@
           
           
         
-      <Scripts><OnLoad>self.titleText = AUCTIONATOR_L_CONFIG_PROFILE_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_PROFILE_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.titleText = AUCTIONATOR_L_CONFIG_PROFILE_CATEGORY; self.subTitleText = AUCTIONATOR_L_CONFIG_PROFILE_TEXT; </OnLoad></Scripts></Frame>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ProfileToggle">
         
@@ -26,7 +26,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.TitleArea" relativePoint="BOTTOMLEFT"/>
         </Anchors>
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_PROFILE_TOGGLE; self.tooltipTitleText = AUCTIONATOR_L_PROFILE_TOGGLE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_PROFILE_TOGGLE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_PROFILE_TOGGLE; self.tooltipTitleText = AUCTIONATOR_L_PROFILE_TOGGLE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_PROFILE_TOGGLE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

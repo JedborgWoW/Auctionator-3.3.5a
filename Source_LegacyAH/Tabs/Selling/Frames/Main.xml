@@ -6,7 +6,7 @@
     hidden="true"
   >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorSellingTabMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorSellingTabMixin); self:OnLoad()</OnLoad>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
 

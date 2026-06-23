@@ -8,7 +8,7 @@
     <Size x="600" y="100" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorSaleItemMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorSaleItemMixin); self:OnLoad()</OnLoad>
       <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
@@ -37,7 +37,7 @@
           <OnShow>self:OnShow()</OnShow>
           <OnHide>self:OnHide()</OnHide>
           <OnEvent>self:OnEvent(event, ...)</OnEvent>
-        <OnLoad>Mixin(self, AuctionatorPostWatchMixin); </OnLoad></Scripts>
+        <OnLoad inherit="append">Mixin(self, AuctionatorPostWatchMixin); </OnLoad></Scripts>
       </Frame>
 
       <Button parentKey="Icon" inherits="AuctionatorGroupsViewItemTemplate" registerForClicks="LeftButtonUp, RightButtonUp">
@@ -47,7 +47,7 @@
         </Anchors>
         <Scripts>
           <OnReceiveDrag>self:OnReceiveDrag()</OnReceiveDrag>
-        <OnLoad>Mixin(self, AuctionatorBagItemSelectedMixin); </OnLoad></Scripts>
+        <OnLoad inherit="append">Mixin(self, AuctionatorBagItemSelectedMixin); </OnLoad></Scripts>
       </Button>
 
       <Frame parentKey="UnitPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">
@@ -59,7 +59,7 @@
         
           
         
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_UNIT_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_UNIT_PRICE; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="StackPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">
         <Anchors>
@@ -70,7 +70,7 @@
         
           
         
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_STACK_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_STACK_PRICE; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="Stacks" inherits="AuctionatorStackOfInputTemplate">
         <Anchors>
@@ -92,7 +92,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():PostItem()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Button parentKey="SkipButton" name="AuctionatorSkipPostingButton" inherits="UIPanelButtonTemplate" text="AUCTIONATOR_L_SKIP" hidden="true">
         <Size x="80" y="22"/>
@@ -101,7 +101,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():SkipItem()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Button parentKey="PrevButton" name="AuctionatorPrevPostingButton" inherits="UIPanelButtonTemplate" text="AUCTIONATOR_L_PREVIOUS" hidden="true">
         <Size x="80" y="22"/>
@@ -110,7 +110,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():PrevItem()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Frame parentKey="BidPrice" inherits="AuctionatorConfigurationMoneyInputAlternate" hidden="true">
@@ -121,7 +121,7 @@
         
           
         
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_STACK_BID_PRICE; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_STACK_BID_PRICE; </OnLoad></Scripts></Frame>
     </Frames>
 
     <Layers>

@@ -14,14 +14,14 @@
           <OnClick>
             self:GetParent():ToggleHistory()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
     </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorBuyFrameMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorBuyFrameMixin); </OnLoad></Scripts></Frame>
 
   <Frame name="AuctionatorBuyFrameTemplateForShopping" hidden="true" inherits="AuctionatorBuyFrameTemplate" virtual="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorBuyFrameMixinForShopping); self:Init()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -38,12 +38,12 @@
           <OnClick>
             self:GetParent():Hide()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Frame enableMouse="true">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad()</OnLoad>
+          <OnLoad inherit="append">Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad()</OnLoad>
           <OnEnter>self:OnEnter(motion)</OnEnter>
           <OnLeave>self:OnLeave(motion)</OnLeave>
           <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
@@ -79,6 +79,6 @@
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
-    <OnLoad>Mixin(self, AuctionatorBuyFrameMixinForSelling); </OnLoad></Scripts>
+    <OnLoad inherit="append">Mixin(self, AuctionatorBuyFrameMixinForSelling); </OnLoad></Scripts>
   </Frame>
 </Ui>

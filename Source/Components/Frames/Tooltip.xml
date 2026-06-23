@@ -7,7 +7,7 @@
       </KeyValues>
     -->
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigTooltipMixin); self:OnLoad()</OnLoad>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
     </Scripts>

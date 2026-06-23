@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
   <Frame name="AuctionatorInitializeFrame">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorInitializeMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorInitializeMixin); self:OnLoad()</OnLoad>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
     </Scripts>
   </Frame>

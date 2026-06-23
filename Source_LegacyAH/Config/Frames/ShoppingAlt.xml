@@ -14,7 +14,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ListMissingTerms" relativePoint="BOTTOMLEFT" />
         </Anchors>
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE; self.tooltipTitleText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CONFIG_SHOPPING_ALWAYS_LOAD_MORE_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
    </Frames>
-  <Scripts><OnLoad>Mixin(self, AuctionatorConfigShoppingAltFrameMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorConfigShoppingAltFrameMixin); </OnLoad></Scripts></Frame>
 </Ui>

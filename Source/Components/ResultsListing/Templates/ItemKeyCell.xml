@@ -38,6 +38,6 @@
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
       <OnMouseUp>self:OnClick(button)</OnMouseUp>
-    <OnLoad>Mixin(self, AuctionatorItemKeyCellTemplateMixin); </OnLoad></Scripts>
+    <OnLoad inherit="append">Mixin(self, AuctionatorItemKeyCellTemplateMixin); </OnLoad></Scripts>
   </Frame>
 </Ui>

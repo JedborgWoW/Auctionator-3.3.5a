@@ -120,6 +120,12 @@ function LinearViewMixin:SetElementInitializer(template, initializer)
 end
 -- Some callers pass an extent calculator; uniform extent is enough here.
 function LinearViewMixin:SetElementExtentCalculator(_) end
+function LinearViewMixin:SetPanExtent(panExtent)
+  self.panExtent = panExtent
+end
+function LinearViewMixin:GetPanExtent()
+  return self.panExtent
+end
 function LinearViewMixin:SetPadding(top, bottom, left, right, spacing)
   self.paddingTop, self.paddingBottom = top or 0, bottom or 0
   self.paddingLeft, self.paddingRight = left or 0, right or 0
@@ -164,8 +170,8 @@ end
 -- ---------------------------------------------------------------------------
 local ScrollBoxBaseMixin = {}
 
-function ScrollBoxBaseMixin:SetUpScroller(contentName)
-  self.panExtent = 40
+function ScrollBoxBaseMixin:SetUpScroller(contentName, existingContent)
+  self.panExtent = self.panExtent or 40
   self._scrollGuard = false
 
   local scroller = CreateFrame("ScrollFrame", nil, self)
@@ -173,15 +179,22 @@ function ScrollBoxBaseMixin:SetUpScroller(contentName)
   scroller:EnableMouseWheel(true)
   self.scroller = scroller
 
-  local content = CreateFrame("Frame", nil, scroller)
+  -- Use a consumer-provided content child if one was given (non-list ScrollBox),
+  -- otherwise create our own (list ScrollBox).
+  local content = existingContent or CreateFrame("Frame", nil, scroller)
+  content:SetParent(scroller)
+  content:ClearAllPoints()
   content:SetPoint("TOPLEFT")
-  content:SetSize(1, 1)
+  local width = self:GetWidth()
+  content:SetWidth((width and width > 0) and width or 1)
   scroller:SetScrollChild(content)
-  self[contentName] = content
+  if contentName then
+    self[contentName] = content
+  end
   self.scrollContent = content
 
   scroller:SetScript("OnSizeChanged", function(_, width)
-    content:SetWidth(width)
+    if width and width > 0 then content:SetWidth(width) end
     self:UpdateScrollRange()
   end)
   scroller:SetScript("OnMouseWheel", function(_, delta)
@@ -200,19 +213,24 @@ function ScrollBoxBaseMixin:SetUpScroller(contentName)
 end
 
 function ScrollBoxBaseMixin:GetVisibleExtent()
-  return self.scroller:GetHeight()
+  return self.scroller and self.scroller:GetHeight() or 0
 end
 
 function ScrollBoxBaseMixin:GetScrollRange()
-  local content = self.scrollContent
-  return math.max(0, content:GetHeight() - self.scroller:GetHeight())
+  if not self.scroller or not self.scrollContent then
+    return 0
+  end
+  return math.max(0, self.scrollContent:GetHeight() - self.scroller:GetHeight())
 end
 
 function ScrollBoxBaseMixin:GetDerivedScrollOffset()
-  return self.scroller:GetVerticalScroll()
+  return self.scroller and self.scroller:GetVerticalScroll() or 0
 end
 
 function ScrollBoxBaseMixin:SetScrollOffset(offset)
+  if not self.scroller then
+    return
+  end
   offset = Clamp(offset, 0, self:GetScrollRange())
   self.scroller:SetVerticalScroll(offset)
 end
@@ -265,15 +283,35 @@ end
 ScrollBoxMixin = CreateFromMixins(ScrollBoxBaseMixin)
 
 function ScrollBoxMixin:OnLoad()
-  self:SetUpScroller("ItemListingFrame")
+  self.panExtent = 40
+end
+
+-- Deferred: the consumer's content child (parentKey Content/ItemListingFrame/
+-- ListListingFrame) only exists once the owning frame is fully built, so wire the
+-- scroller up on the first SetView/use rather than in OnLoad.
+function ScrollBoxMixin:EnsureScroller()
+  if self.scroller then
+    return
+  end
+  local content = self.Content or self.ItemListingFrame or self.ListListingFrame
+  self:SetUpScroller(nil, content)
+  -- Point every alias the consumers use at the actual scroll content.
+  self.Content = self.scrollContent
+  self.ItemListingFrame = self.ItemListingFrame or self.scrollContent
+  self.ListListingFrame = self.ListListingFrame or self.scrollContent
 end
 
 function ScrollBoxMixin:SetView(view)
   self.view = view
+  if view and view.GetPanExtent and view:GetPanExtent() then
+    self.panExtent = view:GetPanExtent()
+  end
+  self:EnsureScroller()
 end
 
 function ScrollBoxMixin:FullUpdate()
-  -- ItemListingFrame height is set by the owner; just refresh the range/bar.
+  self:EnsureScroller()
+  -- Content height is managed by the owner; just refresh the range/bar.
   self:UpdateScrollRange()
 end
 

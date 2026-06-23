@@ -37,7 +37,7 @@
           <OnClick>
             self:GetParent():GetParent():Hide()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CONTINUE" parentKey="BuyStack">
         <Anchors>
@@ -47,13 +47,13 @@
           <OnClick>
             self:GetParent():GetParent():ContinueAfterWarning()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
     </Frames>
-  <Scripts><OnLoad>self.layoutType = "Dialog"; </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad inherit="append">self.layoutType = "Dialog"; </OnLoad></Scripts></Frame>
   <Frame name="AuctionatorBuyDialogTemplate" frameStrata="Dialog" virtual="true" enableMouse="true" movable="true" clampedToScreen="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBuyDialogMixin); self.layoutType = "Dialog"; self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorBuyDialogMixin); self.layoutType = "Dialog"; self:OnLoad()</OnLoad>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
@@ -118,7 +118,7 @@
           <OnClick>
             self:GetParent():Hide()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_BUY_STACK" parentKey="BuyStack">
         <Anchors>
@@ -128,7 +128,7 @@
           <OnClick>
             self:GetParent():BuyStackClicked()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Frame inherits="AuctionatorConfigurationCheckbox" parentKey="ChainBuy">
@@ -142,7 +142,7 @@
           <Anchor point="LEFT" x="0" />
           <Anchor point="RIGHT" relativeKey="$parent.BuyStack" relativePoint="LEFT"/>
         </Anchors>
-      <Scripts><OnLoad>self.labelText = AUCTIONATOR_L_CHAIN_BUY; self.tooltipTitleText = AUCTIONATOR_L_CHAIN_BUY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CHAIN_BUY_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.labelText = AUCTIONATOR_L_CHAIN_BUY; self.tooltipTitleText = AUCTIONATOR_L_CHAIN_BUY_TOOLTIP_HEADER; self.tooltipText = AUCTIONATOR_L_CHAIN_BUY_TOOLTIP_TEXT; </OnLoad></Scripts></Frame>
 
       <Frame parentKey="WarningDialog" inherits="AuctionatorBuyWarningDialogTemplate" hidden="true"/>
     </Frames>

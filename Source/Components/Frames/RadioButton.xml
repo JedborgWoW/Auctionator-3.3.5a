@@ -11,7 +11,7 @@
     -->
     <Size y="20" />
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigRadioButtonMixin); self:OnLoad()</OnLoad>
       <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
@@ -39,7 +39,7 @@
           <OnEnter>self:GetParent():OnEnter()</OnEnter>
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
           <OnClick>self:GetParent():OnClick()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </CheckButton>
     </Frames>
   </Frame>

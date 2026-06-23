@@ -5,7 +5,7 @@
     parentKey="BagListing"
   >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBagUseMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorBagUseMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -23,7 +23,7 @@
           <Anchor point="TOPLEFT"/>
           <Anchor point="BOTTOMRIGHT"/>
         </Anchors>
-      <Scripts><OnLoad>self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorSellingViewGroupTemplate"; self.clickEventName = "BagUse.BagItemClicked"; self.hideHiddenItems = true; self.applyVisibility = true; </OnLoad></Scripts></Frame>
+      <Scripts><OnLoad inherit="append">self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorSellingViewGroupTemplate"; self.clickEventName = "BagUse.BagItemClicked"; self.hideHiddenItems = true; self.applyVisibility = true; </OnLoad></Scripts></Frame>
     </Frames>
   </Frame>
 </Ui>

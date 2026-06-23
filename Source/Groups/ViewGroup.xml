@@ -7,5 +7,5 @@
       
     
     <Size y="20"/>
-  <Scripts><OnLoad>Mixin(self, AuctionatorGroupsViewGroupMixin); self.collapsable = true; self.insetLeft = 2; self.groupTitleHeight = 22; self.paddingBottom = 0; </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorGroupsViewGroupMixin); self.collapsable = true; self.insetLeft = 2; self.groupTitleHeight = 22; self.paddingBottom = 0; </OnLoad></Scripts></Frame>
 </Ui>

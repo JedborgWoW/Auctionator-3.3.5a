@@ -4,7 +4,7 @@
     hidden="true"
   >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigFrameMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigFrameMixin); self:OnLoad()</OnLoad>
     </Scripts>
   </Frame>
 </Ui>

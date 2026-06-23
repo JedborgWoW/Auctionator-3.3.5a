@@ -1,7 +1,7 @@
 <Ui>
   <Frame name="AuctionatorGroupsViewTemplate" virtual="true" parentKey="View">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorGroupsViewMixin); self.itemTemplate = "AuctionatorGroupsViewItemTemplate"; self.groupTemplate = "AuctionatorGroupsViewGroupTemplate"; self.groupInsetX = 0; self.clickEventName = "BagItemClicked"; self.completeEventName = "ViewComplete"; self.hideHiddenItems = false; self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
     </Scripts>
@@ -30,7 +30,7 @@
             
               
             
-          <Scripts><OnLoad>self.scrollable = true; </OnLoad></Scripts></Frame>
+          <Scripts><OnLoad inherit="append">self.scrollable = true; </OnLoad></Scripts></Frame>
         </Frames>
       </Frame>
     </Frames>

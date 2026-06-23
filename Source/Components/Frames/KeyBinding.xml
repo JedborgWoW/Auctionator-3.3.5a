@@ -24,7 +24,7 @@
       <OnLeave>
         self:GetParent():OnLeave()
       </OnLeave>
-    <OnLoad></OnLoad></Scripts>
+    <OnLoad inherit="append"></OnLoad></Scripts>
   </Button>
   <Frame name="AuctionatorKeyBindingConfigTemplate" virtual="true">
     <Size x="400" y="35"/>
@@ -46,7 +46,7 @@
       </Button>
     </Frames>
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorKeyBindingConfigMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorKeyBindingConfigMixin); self:OnLoad()</OnLoad>
       <OnMouseDown>self:OnClick(button)</OnMouseDown>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>

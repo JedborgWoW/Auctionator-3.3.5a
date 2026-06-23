@@ -14,7 +14,7 @@
     <Size y="50" x="150" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigMinMaxMixin); self:OnLoad()</OnLoad>
     </Scripts>
 
     <Anchors>
@@ -70,7 +70,7 @@
           <OnTabPressed>self:GetParent():MinTabPressed()</OnTabPressed>
           <OnTextChanged function="Auctionator_EditBox_OnTextChanged" />
           <OnKeyDown function="Auctionator_EditBox_OnKeyDown" />
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </EditBox>
 
       <EditBox autoFocus="false" inherits="InputBoxTemplate" parentKey="MaxBox" letters="10">
@@ -101,7 +101,7 @@
           <OnTabPressed>self:GetParent():MaxTabPressed()</OnTabPressed>
           <OnTextChanged function="Auctionator_EditBox_OnTextChanged" />
           <OnKeyDown function="Auctionator_EditBox_OnKeyDown" />
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </EditBox>
 
       <Button parentKey="ResetButton" inherits="AuctionatorResetButton">

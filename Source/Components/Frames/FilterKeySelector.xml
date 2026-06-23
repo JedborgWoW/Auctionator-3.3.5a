@@ -6,7 +6,7 @@
     <Size x="320" y="32"/>
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorFilterKeySelectorMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorFilterKeySelectorMixin); self:OnLoad()</OnLoad>
     </Scripts>
 
     <Frames>

@@ -4,11 +4,11 @@
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
-    <OnLoad>Mixin(self, AuctionatorBuyCurrentPricesFrameMixin); </OnLoad></Scripts>
+    <OnLoad inherit="append">Mixin(self, AuctionatorBuyCurrentPricesFrameMixin); </OnLoad></Scripts>
     <Frames>
       <Frame parentKey="SearchDataProvider">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorBuyAuctionsDataProviderMixin); self:OnLoad()</OnLoad>
+          <OnLoad inherit="append">Mixin(self, AuctionatorBuyAuctionsDataProviderMixin); self:OnLoad()</OnLoad>
           <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
         </Scripts>
       </Frame>
@@ -36,7 +36,7 @@
           <OnClick>
             self:GetParent():LoadAllPages()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Button parentKey="StopLoadingNowButton" inherits="AuctionatorLoadAllButton" text="AUCTIONATOR_L_STOP_LOADING_NOW">
@@ -48,7 +48,7 @@
           <OnClick>
             self:GetParent():StopLoadingPages()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="CANCEL_AUCTION" parentKey="CancelButton">
@@ -60,7 +60,7 @@
           <OnClick>
             self:GetParent():CancelFocussed()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_BUY" parentKey="BuyButton">
@@ -72,7 +72,7 @@
           <OnClick>
             self:GetParent():BuyClicked()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_REFRESH" parentKey="RefreshButton">
         <Anchors>
@@ -82,7 +82,7 @@
           <OnClick>
             self:GetParent():DoRefresh()
           </OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
       <Frame parentKey="BuyDialog" inherits="AuctionatorBuyDialogTemplate" />
     </Frames>

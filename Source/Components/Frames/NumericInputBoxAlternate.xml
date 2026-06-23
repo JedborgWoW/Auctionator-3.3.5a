@@ -10,7 +10,7 @@
     -->
     <Size y="40" />
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorConfigNumericInputMixin); self:OnLoad()</OnLoad>
       <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
     </Scripts>
     <Anchors>
@@ -38,7 +38,7 @@
           <OnLeave>self:GetParent():OnLeave()</OnLeave>
           <OnEscapePressed>self:ClearFocus()</OnEscapePressed>
           <OnEnterPressed>Auctionator.Components.ReportEnterPressed()</OnEnterPressed>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </EditBox>
     </Frames>
   </Frame>

@@ -7,7 +7,7 @@
 
     <Scripts>
       <OnShow>self:OnShow()</OnShow>
-    <OnLoad>Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts>
+    <OnLoad inherit="append">Mixin(self, AuctionatorResultsListingMixin); </OnLoad></Scripts>
 
     <Frames>
       <Frame parentKey="HeaderContainer">

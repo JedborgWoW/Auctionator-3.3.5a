@@ -41,6 +41,6 @@
       <OnMouseUp>self:OnClick(button)</OnMouseUp>
       <OnEnter>self:OnEnter(motion)</OnEnter>
       <OnLeave>self:OnLeave(motion)</OnLeave>
-    <OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin); </OnLoad></Scripts>
+    <OnLoad inherit="append">Mixin(self, AuctionatorResultsRowTemplateMixin); </OnLoad></Scripts>
   </Frame>
 </Ui>

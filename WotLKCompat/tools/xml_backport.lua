@@ -21,9 +21,11 @@ local SCRIPT_ARGS = {
   OnEnter="motion", OnLeave="motion",
   OnMouseDown="button", OnMouseUp="button", OnDoubleClick="button", OnDragStart="button",
   OnClick="button, down", PostClick="button, down",
+  -- Only OnEvent's inline handler is a vararg function on 3.3.5a; other handlers
+  -- compile with fixed params, so '...' must NOT appear in their bodies.
   OnUpdate="elapsed", OnEvent="event, ...",
   OnKeyDown="key", OnKeyUp="key", OnChar="text",
-  OnTextChanged="userInput, ...", OnValueChanged="value, ...",
+  OnTextChanged="userInput", OnValueChanged="value",
   OnSizeChanged="width, height", OnMouseWheel="delta",
   OnVerticalScroll="offset", OnHorizontalScroll="offset",
   OnScrollRangeChanged="xrange, yrange",
@@ -143,7 +145,7 @@ local function transform(text)
           local method = attrs:match('method="([%w_]+)"')
           if method then
             stats.method = stats.method + 1
-            local args = SCRIPT_ARGS[name] or "..."
+            local args = SCRIPT_ARGS[name] or ""
             local b = "self:" .. method .. "(" .. args .. ")"
             if name == "OnLoad" then
               local f = curframe()
@@ -240,6 +242,9 @@ for path in lf:lines() do
     local f = assert(io.open(path, "rb"))
     local src = f:read("*a"); f:close()
     local dst = transform(src)
+    -- Injected/converted OnLoads must chain with (not replace) the inherited
+    -- template OnLoad that applies the mixin, so force inherit="append" on 3.3.5a.
+    dst = dst:gsub("<OnLoad>", '<OnLoad inherit="append">')
     if dst ~= src then
       local w = assert(io.open(path, "wb")); w:write(dst); w:close()
       changed = changed + 1

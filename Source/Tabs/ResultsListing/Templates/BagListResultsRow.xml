@@ -6,5 +6,5 @@
     enableMouse="true"
   >
 
-  <Scripts><OnLoad>Mixin(self, AuctionatorBagListResultsRowMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorBagListResultsRowMixin); </OnLoad></Scripts></Frame>
 </Ui>

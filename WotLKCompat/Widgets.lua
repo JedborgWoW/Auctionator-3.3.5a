@@ -53,7 +53,16 @@ local function SetEnabled(self, enabled)
   end
 end
 
-local function SetPropagateKeyboardInput() end -- retail-only, safe no-op
+-- SetPropagateKeyboardInput(propagate): retail lets a frame receive keys AND let
+-- them pass to the game. 3.3.5a has no propagation, so emulate it by toggling
+-- keyboard capture: propagate=true -> release keyboard (keys reach the game);
+-- propagate=false -> capture. This stops EscapeToClose-style frames from eating
+-- all keyboard input (movement, Escape, etc.).
+local function SetPropagateKeyboardInput(self, propagate)
+  if self.EnableKeyboard then
+    self:EnableKeyboard(not propagate)
+  end
+end
 
 -- GetPointByName (added in Shadowlands): return the anchor matching a point name.
 local function GetPointByName(self, pointName)

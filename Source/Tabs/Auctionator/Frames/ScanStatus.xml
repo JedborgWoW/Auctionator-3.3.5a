@@ -1,7 +1,7 @@
 <Ui>
   <Frame name="AuctionatorFullScanStatusTemplate" virtual="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorFullScanStatusMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorFullScanStatusMixin); self:OnLoad()</OnLoad>
       <OnShow>self:OnShow()</OnShow>
     </Scripts>
     <Size y="15"/>

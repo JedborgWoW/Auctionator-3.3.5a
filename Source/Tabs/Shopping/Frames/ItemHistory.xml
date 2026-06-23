@@ -14,12 +14,12 @@
       <OnHide>self:OnHide()</OnHide>
       <OnKeyDown>self:OnKeyDown(key)</OnKeyDown>
       <OnKeyUp>self:OnKeyUp(key)</OnKeyUp>
-    <OnLoad>Mixin(self, AuctionatorItemHistoryFrameMixin); </OnLoad></Scripts>
+    <OnLoad inherit="append">Mixin(self, AuctionatorItemHistoryFrameMixin); </OnLoad></Scripts>
 
     <Frames>
       <Frame parentKey="DataProvider">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorShoppingHistoricalPriceProviderMixin); self:OnLoad()</OnLoad>
+          <OnLoad inherit="append">Mixin(self, AuctionatorShoppingHistoricalPriceProviderMixin); self:OnLoad()</OnLoad>
           <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
         </Scripts>
       </Frame>
@@ -56,7 +56,7 @@
         </Layers>
         <Scripts>
           <OnClick>self:GetParent():OnDockDialogClicked()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
 
       <Button parentKey="Close" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_CLOSE">
@@ -65,7 +65,7 @@
         </Anchors>
         <Scripts>
           <OnClick>self:GetParent():OnCloseDialogClicked()</OnClick>
-        <OnLoad></OnLoad></Scripts>
+        <OnLoad inherit="append"></OnLoad></Scripts>
       </Button>
     </Frames>
 

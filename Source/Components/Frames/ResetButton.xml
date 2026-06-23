@@ -13,7 +13,7 @@
     </Layers>
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad>
+      <OnLoad inherit="append">Mixin(self, AuctionatorResetButtonMixin); self:OnLoad()</OnLoad>
       <OnClick>self:OnClick(button, down)</OnClick>
     </Scripts>
   </Button>

@@ -5,5 +5,5 @@
 
     inherits="AuctionTabTemplate"
   >
-  <Scripts><OnLoad>Mixin(self, AuctionatorTabMixin); </OnLoad></Scripts></Button>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorTabMixin); </OnLoad></Scripts></Button>
 </Ui>

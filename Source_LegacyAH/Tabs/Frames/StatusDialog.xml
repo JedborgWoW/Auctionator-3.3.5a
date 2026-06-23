@@ -8,7 +8,7 @@
     <Anchor point="TOP" y="-20"/>
   </Anchors>
   <Scripts>
-    <OnLoad>self.layoutType = "Dialog"; self:OnLoad()</OnLoad>
+    <OnLoad inherit="append">self.layoutType = "Dialog"; self:OnLoad()</OnLoad>
     <OnHide>self:OnHide()</OnHide>
   </Scripts>
   <Size x="338" y="50"/>
@@ -35,6 +35,6 @@
   </Frames>
 </Frame>
 
-<Frame name="AuctionatorPageStatusDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true"><Scripts><OnLoad>Mixin(self, AuctionatorPageStatusDialogMixin)</OnLoad></Scripts></Frame>
-<Frame name="AuctionatorThrottlingTimeoutDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true" frameLevel="500" ><Scripts><OnLoad>Mixin(self, AuctionatorThrottlingTimeoutDialogMixin)</OnLoad></Scripts></Frame>
+<Frame name="AuctionatorPageStatusDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true"><Scripts><OnLoad inherit="append">Mixin(self, AuctionatorPageStatusDialogMixin)</OnLoad></Scripts></Frame>
+<Frame name="AuctionatorThrottlingTimeoutDialogTemplate" inherits="AuctionatorStatusDialogTemplate" virtual="true" frameLevel="500" ><Scripts><OnLoad inherit="append">Mixin(self, AuctionatorThrottlingTimeoutDialogMixin)</OnLoad></Scripts></Frame>
 </Ui>

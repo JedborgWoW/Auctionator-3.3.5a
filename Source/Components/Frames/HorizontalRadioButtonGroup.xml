@@ -4,5 +4,5 @@
     virtual="true"
     inherits="AuctionatorConfigurationRadioButtonGroup"
   >
-  <Scripts><OnLoad>Mixin(self, AuctionatorConfigHorizontalRadioButtonGroupMixin); </OnLoad></Scripts></Frame>
+  <Scripts><OnLoad inherit="append">Mixin(self, AuctionatorConfigHorizontalRadioButtonGroupMixin); </OnLoad></Scripts></Frame>
 </Ui>

@@ -11,7 +11,7 @@
           <Anchor point="TOPRIGHT" relativeKey="$parent.ShoppingResultsInset" relativePoint="BOTTOMRIGHT" y="20"/>
         </Anchors>
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorShoppingTabClassicLoadAllButtonMixin); self:OnLoad()</OnLoad>
+          <OnLoad inherit="append">Mixin(self, AuctionatorShoppingTabClassicLoadAllButtonMixin); self:OnLoad()</OnLoad>
           <OnClick>self:OnClick(button, down)</OnClick>
         </Scripts>
       </Button>

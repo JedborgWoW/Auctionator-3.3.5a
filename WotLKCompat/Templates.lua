@@ -52,6 +52,11 @@ function ResizeLayoutMixin:Layout()
   local height = top - minBottom + (self.heightPadding or 0)
   if width > 0 then self:SetWidth(width) end
   if height > 0 then self:SetHeight(height) end
+
+  -- Owners (e.g. config ScrollBox content) hook OnCleaned to refresh scrolling.
+  if self.OnCleaned then
+    self:OnCleaned()
+  end
 end
 
 function ResizeLayoutMixin:MarkDirty()
