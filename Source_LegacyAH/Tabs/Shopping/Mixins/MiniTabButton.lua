@@ -10,8 +10,15 @@ function AuctionatorShoppingListsMiniTabButtonMixinMixin:OnLoad()
 end
 
 function AuctionatorShoppingListsMiniTabButtonMixinMixin:OnShow()
-  local absoluteSize = nil
-  PanelTemplates_TabResize(self, TAB_PADDING, absoluteSize, MIN_TAB_WIDTH)
+  -- PanelTemplates_TabResize on 3.3.5a resolves the tab's side textures via
+  -- _G[tabName.."Middle"] etc., so it errors for an anonymous tab (these mini-tabs
+  -- have only a parentKey, no name). Size from the text width in that case.
+  if self:GetName() then
+    PanelTemplates_TabResize(self, TAB_PADDING, nil, MIN_TAB_WIDTH)
+  else
+    local textWidth = self.GetTextWidth and self:GetTextWidth() or 0
+    self:SetWidth(math.max(MIN_TAB_WIDTH, textWidth + TAB_PADDING))
+  end
 end
 
 function AuctionatorShoppingListsMiniTabButtonMixinMixin:OnClick()

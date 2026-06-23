@@ -1,6 +1,9 @@
 <Ui>
-  <Texture name="Auctionator_AuctionHouseBackgroundIndex" virtual="true" file="Interface\FrameGeneral\UI-Background-Marble"/>
-  <Texture name="Auctionator_AuctionHouseBackgroundSellRight" virtual="true" file="Interface\FrameGeneral\UI-Background-Marble"/>
+  <!-- UI-Background-Marble is absent on this 3.3.5a client (shows as the green
+       missing-texture placeholder); UI-Background-Rock is a core stone background
+       that is present. -->
+  <Texture name="Auctionator_AuctionHouseBackgroundIndex" virtual="true" file="Interface\FrameGeneral\UI-Background-Rock"/>
+  <Texture name="Auctionator_AuctionHouseBackgroundSellRight" virtual="true" file="Interface\FrameGeneral\UI-Background-Rock"/>
 
   <Texture name="Auctionator_UIFrameSimpleMetalCornerTopLeft" virtual="true" file="Interface\Addons\Auctionator\Images_Classic\UIFrameSimpleMetal">
     <Size x="64" y="64"/>

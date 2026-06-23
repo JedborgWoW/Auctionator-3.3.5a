@@ -308,3 +308,13 @@ if not SafeUnpack then
     return unpack(tbl, 1, tbl.n)
   end
 end
+
+-- SOUNDKIT: retail keys -> 3.3.5a PlaySound string names (PlaySound on 3.3.5a
+-- takes the old string identifiers, not numeric IDs).
+if not SOUNDKIT then
+  SOUNDKIT = {
+    IG_CHARACTER_INFO_TAB = "igCharacterInfoTab",
+    IG_MAINMENU_OPEN = "igMainMenuOpen",
+    IG_MAINMENU_OPTION_CHECKBOX_ON = "igMainMenuOptionCheckBoxOn",
+  }
+end

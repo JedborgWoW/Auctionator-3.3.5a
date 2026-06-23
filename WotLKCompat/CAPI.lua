@@ -120,7 +120,17 @@ if not C_Item then
   end
 
   function C_Item.IsItemDataCached(item)
-    return item ~= nil and GetItemInfo(item) ~= nil
+    if item == nil then
+      return false
+    end
+    -- Retail's C_Item.IsItemDataCached takes an ItemLocation (a table); callers
+    -- (e.g. Groups/BagCache) pass one. GetItemInfo only accepts an itemID/link/
+    -- name, so resolve a location to its link first.
+    if type(item) == "table" then
+      local link = Auctionator_GetLinkFromLocation and Auctionator_GetLinkFromLocation(item)
+      return link ~= nil and GetItemInfo(link) ~= nil
+    end
+    return GetItemInfo(item) ~= nil
   end
 
   function C_Item.IsItemDataCachedByID(itemID)
@@ -271,6 +281,23 @@ if not GetMerchantItemID then
       return nil
     end
     return tonumber(link:match("item:(%d+)"))
+  end
+end
+
+-- ExtractHyperlinkString (global, added in Legion) -> split a hyperlink into its
+-- prematch, the inner link string (e.g. "item:12345:0:..."), and postmatch.
+-- Auctionator's GetCleanItemLink uses the inner string. Falls back to treating
+-- the whole argument as the link body when it is not a full |H...|h hyperlink.
+if not ExtractHyperlinkString then
+  function ExtractHyperlinkString(text)
+    if type(text) ~= "string" then
+      return false, "", "", ""
+    end
+    local pre, link, post = text:match("^(.-)|H(.-)|h.-|h(.*)$")
+    if link then
+      return true, pre, link, post
+    end
+    return true, "", text, ""
   end
 end
 

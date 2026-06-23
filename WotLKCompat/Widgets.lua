@@ -158,6 +158,11 @@ AddMethods(tex, {
 
 local fontString = probe:CreateFontString()
 AddMethods(fontString, regionMethods)
+AddMethods(fontString, {
+  -- SetMaxLines (clamp number of wrapped lines) was added after 3.3.5a; the
+  -- results-listing column headers call it. No line-clamp API here -> no-op.
+  SetMaxLines = function() end,
+})
 
 -- ---------------------------------------------------------------------------
 -- GetItemInfoInstant: added in Legion. Best-effort on 3.3.5a — the itemID and

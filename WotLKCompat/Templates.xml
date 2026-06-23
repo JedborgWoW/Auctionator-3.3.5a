@@ -157,4 +157,27 @@
   <!-- Script-only input box (added in MoP); plain InputBox on 3.3.5a. -->
   <EditBox name="InputBoxScriptTemplate" inherits="InputBoxTemplate" virtual="true"/>
 
+  <!-- TabButtonTemplate (generic tab button, added to FrameXML after 3.3.5a).
+       Auctionator's Shopping mini-tabs (Lists / Recent searches) inherit it. A
+       minimal functional tab: a text label + mouse highlight. parentKey="LeftDisabled"
+       exists because the mini-tab mixin SetPoints self.LeftDisabled. No background
+       art (keeps it texture-safe); PanelTemplates_TabResize is guarded in the mixin
+       for these anonymous instances. -->
+  <Button name="TabButtonTemplate" virtual="true">
+    <Size x="115" y="24"/>
+    <Layers>
+      <Layer level="ARTWORK">
+        <Texture parentKey="LeftDisabled" hidden="true">
+          <Size x="1" y="1"/>
+          <Anchors><Anchor point="TOPLEFT"/></Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <ButtonText parentKey="Text"/>
+    <NormalFont style="GameFontNormalSmall"/>
+    <HighlightFont style="GameFontHighlightSmall"/>
+    <DisabledFont style="GameFontDisableSmall"/>
+    <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+  </Button>
+
 </Ui>
