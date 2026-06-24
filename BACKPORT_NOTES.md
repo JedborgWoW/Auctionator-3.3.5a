@@ -80,6 +80,13 @@ which builds the tab container.
 
 ## 3. Notable 3.3.5a traps fixed (root causes)
 
+- **`parentKey` on a *virtual template* does NOT propagate to instances on 3.3.5a**
+  (it does on Retail). This silently made `self.ListsContainer` / `self.ResultsListing`
+  / `self.SearchOptions` / `self.RecentsContainer` nil on the Shopping tab, so the
+  ResultsListing anchored to the parent's right edge and collapsed to negative width
+  (no rows, Price column outside the frame). Fix: add an EXPLICIT `parentKey` to each
+  concrete `<Frame inherits="T">` instance whose template `T` declared the parentKey.
+  `parentKey` on a concrete element (incl. inherited children) works fine.
 - **`getAll` absent** → the whole-AH scan is page-by-page with duplicate-page
   detection (`Source_LegacyAH/FullScan/Mixins/Frame.lua`); trigger `/atr scan`.
 - **`tDeleteItem` is native and returns nothing** → a guarded shim never applied and
@@ -101,11 +108,11 @@ which builds the tab container.
 
 ## 4. Known limitations / open items
 
-- **Results listing rendering** (Shopping/Cancelling): data reaches the provider
-  (`AppendEntries N`) but rows can be laid out before the ScrollBox frame has its
-  final size, so the `ScrollFrame` clips them. Mitigated by (a) forcing the scroll
-  content width and (b) re-running `FullUpdate` from the scroller's `OnSizeChanged`.
-  If still blank, capture the debug line `ScrollBox:FullUpdate count …` (see tests).
+- **Results listing rendering** (Shopping/Cancelling): root cause was the virtual-template
+  `parentKey` propagation bug above (negative listing width). Also hardened: force the
+  scroll content width and re-run `FullUpdate` from the scroller's `OnSizeChanged` so a
+  pre-layout update still renders. If a listing is still blank, capture the debug line
+  `ScrollBox:FullUpdate count <n> scrollerW <w> …` — `scrollerW` should now be positive.
 - **Selling multi-stack**: stock 3.3.5a empties the sell slot after each
   `StartAuction`; posting `numStacks > 1` relies on the SaleItem re-placement loop.
 - Atlas-based art is cosmetic-only and may differ from Retail.
