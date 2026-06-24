@@ -39,7 +39,16 @@ function AuctionatorAHScanFrameMixin:GotAllOwners()
 end
 
 function AuctionatorAHScanFrameMixin:OnEvent(eventName, ...)
-  if eventName == "AUCTION_ITEM_LIST_UPDATE" and self.waitingOnPage and self.sentQuery and self:GotAllOwners() then
+  if eventName == "AUCTION_ITEM_LIST_UPDATE" and self.waitingOnPage and self.sentQuery then
+    -- Owner names can arrive in a later AUCTION_ITEM_LIST_UPDATE on 3.3.5a, so give
+    -- them a couple of extra ticks to populate -- but NEVER hang the whole search
+    -- waiting for an owner that never resolves. The proven old Auctionator engine
+    -- processes the page regardless and simply accepts nil owners.
+    if not self:GotAllOwners() and (self.ownerWaits or 0) < 2 then
+      self.ownerWaits = (self.ownerWaits or 0) + 1
+      return
+    end
+    self.ownerWaits = 0
     self.waitingOnPage = false
     self:ProcessSearchResults()
   end
