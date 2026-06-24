@@ -17,7 +17,17 @@ local function InitializeFromDetails(details)
   frame:SetText(details.textLabel)
 
   frame:Initialize(details.name, details.tabTemplate, details.tabHeader, {details.tabFrameName})
-  PanelTemplates_TabResize(frame, tabPadding, tabAbsoluteSize, minTabWidth)
+
+  -- AuctionTabTemplate's label keeps a narrow width and truncates longer names to
+  -- "Shop.."/"Canc..". Clear the width cap so PanelTemplates_TabResize measures the
+  -- full string, then size the tab to fit it (+ padding for the tab side textures).
+  local label = frame:GetFontString()
+  if label then
+    label:SetWidth(0)
+    PanelTemplates_TabResize(frame, tabPadding, label:GetStringWidth() + 24, minTabWidth)
+  else
+    PanelTemplates_TabResize(frame, tabPadding, tabAbsoluteSize, minTabWidth)
+  end
 
   return frame
 end
