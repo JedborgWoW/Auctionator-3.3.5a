@@ -2,11 +2,12 @@
   <Frame name="AuctionatorInsetTemplate" useParentLevel="true" virtual="true">
     <Layers>
       <Layer level="BACKGROUND">
-        <Texture parentKey="Bg" file="Interface\Tooltips\UI-Tooltip-Background">
+        <Texture parentKey="Bg">
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
           </Anchors>
+          <Color r="0.07" g="0.07" b="0.09" a="0.92"/>
         </Texture>
       </Layer>
     </Layers>
@@ -23,11 +24,12 @@
   <Frame name="AuctionatorInsetDarkTemplate" useParentLevel="true" virtual="true">
     <Layers>
       <Layer level="BACKGROUND">
-        <Texture parentKey="Bg" file="Interface\Tooltips\UI-Tooltip-Background">
+        <Texture parentKey="Bg">
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
           </Anchors>
+          <Color r="0.07" g="0.07" b="0.09" a="0.92"/>
         </Texture>
       </Layer>
     </Layers>
@@ -44,11 +46,12 @@
   <Frame name="AuctionatorInsetLeaveScrollSpaceTemplate" useParentLevel="true" virtual="true">
     <Layers>
       <Layer level="BACKGROUND">
-        <Texture parentKey="Bg" file="Interface\Tooltips\UI-Tooltip-Background">
+        <Texture parentKey="Bg">
           <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-28"/>
           </Anchors>
+          <Color r="0.07" g="0.07" b="0.09" a="0.92"/>
         </Texture>
       </Layer>
     </Layers>

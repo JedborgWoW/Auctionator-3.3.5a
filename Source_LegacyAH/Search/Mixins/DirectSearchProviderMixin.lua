@@ -145,8 +145,7 @@ function AuctionatorDirectSearchProviderMixin:AddFinalResults()
       complete = not self.aborted,
       purchaseQuantity = self.resultMetadata.quantity,
     }
-    local item = Item:CreateFromItemID(C_Item.GetItemInfoInstant(key))
-    item:ContinueOnItemLoad(function()
+    local function finishKey()
       waiting = waiting - 1
       if Auctionator.Search.CheckFilters(possibleResult, self.currentFilter) then
         table.insert(results, possibleResult)
@@ -155,7 +154,18 @@ function AuctionatorDirectSearchProviderMixin:AddFinalResults()
         completed = true
         DoComplete()
       end
-    end)
+    end
+
+    -- On 3.3.5a an item whose data cannot be resolved makes ContinueOnItemLoad
+    -- return WITHOUT firing, which would leave `waiting` stuck > 0 and the whole
+    -- search showing "No results found". Guard so every key is always counted down.
+    local itemID = C_Item.GetItemInfoInstant(key)
+    local item = itemID and Item:CreateFromItemID(itemID)
+    if item and not item:IsItemEmpty() then
+      item:ContinueOnItemLoad(finishKey)
+    else
+      finishKey()
+    end
   end
   if waiting == 0 and not completed then
     DoComplete()

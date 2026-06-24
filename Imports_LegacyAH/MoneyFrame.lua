@@ -8,9 +8,12 @@ AuctionatorRetailImportMoneyDenominationDisplayType = {
 	Copper = { TextureType.File, [[Interface\MoneyFrame\UI-MoneyIcons]], 0.5, 0.75, 0, 1, },
 	Silver = { TextureType.File, [[Interface\MoneyFrame\UI-MoneyIcons]], 0.25, 0.5, 0, 1, },
 	Gold = { TextureType.File, [[Interface\MoneyFrame\UI-MoneyIcons]], 0, 0.25, 0, 1, },
-	AuctionHouseCopper = { TextureType.Atlas, "auctionhouse-icon-coin-copper" },
-	AuctionHouseSilver = { TextureType.Atlas, "auctionhouse-icon-coin-silver" },
-	AuctionHouseGold = { TextureType.Atlas, "auctionhouse-icon-coin-gold" },
+	-- 3.3.5a has no atlas system, so the "AuctionHouse*" coin icons (used by the
+	-- results listings) render blank with SetAtlas. Point them at the same 3.3.5a
+	-- coin file texture as Copper/Silver/Gold so the icons show.
+	AuctionHouseCopper = { TextureType.File, [[Interface\MoneyFrame\UI-MoneyIcons]], 0.5, 0.75, 0, 1, },
+	AuctionHouseSilver = { TextureType.File, [[Interface\MoneyFrame\UI-MoneyIcons]], 0.25, 0.5, 0, 1, },
+	AuctionHouseGold = { TextureType.File, [[Interface\MoneyFrame\UI-MoneyIcons]], 0, 0.25, 0, 1, },
 };
 
 AUCTIONATOR_IMPORT_DENOMINATION_SYMBOLS_BY_DISPLAY_TYPE = {
