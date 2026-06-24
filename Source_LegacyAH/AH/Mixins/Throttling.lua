@@ -70,10 +70,16 @@ function AuctionatorAHThrottlingFrameMixin:OnEvent(eventName, ...)
 
   elseif eventName == "CHAT_MSG_SYSTEM" then
     local msg = ...
-    -- Use "Auction ..." message to confirm the post/cancel went through
+    Auctionator.Debug.Message("Throttling CHAT_MSG_SYSTEM", msg)
+    -- Use "Auction ..." message to confirm the post/cancel went through. On stock
+    -- 3.3.5a (and especially custom servers) NEW_AUCTION_UPDATE is unreliable after a
+    -- post, so treat this server confirmation as completion for the WHOLE post -- not
+    -- just the status-message stage -- otherwise the post hangs for the full timeout.
     if msg == ERR_AUCTION_STARTED or msg == ERR_AUCTION_REMOVED then
       self:ResetTimeout()
       FrameUtil.UnregisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
+      FrameUtil.UnregisterFrameForEvents(self, NEW_AUCTION_EVENTS)
+      self.waitingForNewAuction = false
       self.waitingForStatusMessage = false
     end
 
@@ -152,6 +158,10 @@ end
 function AuctionatorAHThrottlingFrameMixin:AuctionsPosted()
   self:ResetTimeout()
   FrameUtil.RegisterFrameForEvents(self, NEW_AUCTION_EVENTS)
+  -- Also listen for the "Auction created." system message from the start: some
+  -- 3.3.5a servers never fire NEW_AUCTION_UPDATE after a post, so this is the only
+  -- reliable completion signal. (CHAT_MSG_SYSTEM handler clears the wait.)
+  FrameUtil.RegisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
   self.waitingForNewAuction = true
   self.oldReady = false
 end
