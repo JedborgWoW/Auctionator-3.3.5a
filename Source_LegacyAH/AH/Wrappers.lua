@@ -46,6 +46,10 @@ function Auctionator.AH.DumpAuctions(view)
   for index = 1, GetNumAuctionItems(view) do
     local auctionInfo = { GetAuctionItemInfo(view, index) }
     local itemLink = GetAuctionItemLink(view, index)
+    -- Stock 3.3.5a GetAuctionItemInfo does not return the itemID; derive it from
+    -- the link so Constants.AuctionItemInfo.ItemID resolves for downstream filters.
+    auctionInfo[Auctionator.Constants.AuctionItemInfo.ItemID] =
+      itemLink and tonumber(string.match(itemLink, "item:(%d+)")) or nil
     local timeLeft = GetAuctionItemTimeLeft(view, index)
     local entry = {
       info = auctionInfo,
