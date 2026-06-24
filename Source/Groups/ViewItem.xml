@@ -34,7 +34,7 @@
             <Anchor point="BOTTOMRIGHT"/>
           </Anchors>
         </Texture>
-        <Texture parentKey="IconSelectedHighlight" atlas="bags-glow-artifact">
+        <Texture parentKey="IconSelectedHighlight" file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD">
           <Anchors>
             <Anchor point="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT"/>

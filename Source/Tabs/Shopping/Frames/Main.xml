@@ -206,7 +206,7 @@
           <Anchor point="TOPLEFT" relativeKey="$parent.ListsContainer.ScrollBar" relativePoint="TOPRIGHT" x="5" y="27"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20"/>
         </Anchors>
-      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); self:ClearAllPoints(); self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", 285, -23); self:SetPoint("BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", -20, 30); self.ScrollArea:SetPoint("TOPLEFT", self.HeaderContainer, "BOTTOMLEFT", 15, -3); self.ScrollArea:SetPoint("RIGHT", self.HeaderContainer, "RIGHT", -3, 0)</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); self:ClearAllPoints(); self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", 285, -23); self:SetPoint("BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", -20, 55); self.ScrollArea:SetPoint("TOPLEFT", self.HeaderContainer, "BOTTOMLEFT", 15, -3); self.ScrollArea:SetPoint("RIGHT", self.HeaderContainer, "RIGHT", -3, 0)</OnLoad></Scripts></Frame>
 
       <Frame parentKey="ShoppingResultsInset" inherits="AuctionatorInsetTemplate">
         <Anchors>

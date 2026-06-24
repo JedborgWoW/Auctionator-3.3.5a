@@ -95,6 +95,18 @@ end
 
 function AuctionatorAHThrottlingFrameMixin:OnUpdate(elapsed)
   if self:AnyWaiting() then
+    -- Most reliable post-completion signal on 3.3.5a / custom servers: a successful
+    -- StartAuction empties the sell slot. NEW_AUCTION_UPDATE and the chat message are
+    -- both unreliable on some servers, so watch the slot directly. (If StartAuction is
+    -- rejected the item stays in the slot and we correctly fall through to the timeout.)
+    if self.waitingForNewAuction and not self.multisellInProgress
+        and GetAuctionSellItemInfo and GetAuctionSellItemInfo() == nil then
+      Auctionator.Debug.Message("Throttling: sell slot emptied -> post complete")
+      self.waitingForNewAuction = false
+      FrameUtil.UnregisterFrameForEvents(self, NEW_AUCTION_EVENTS)
+      self.waitingForStatusMessage = false
+      FrameUtil.UnregisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
+    end
     self.timeout = self.timeout - elapsed
     if self.timeout <= 0 then
       self:ResetWaiting()
