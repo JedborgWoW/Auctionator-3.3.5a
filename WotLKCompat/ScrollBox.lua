@@ -196,6 +196,13 @@ function ScrollBoxBaseMixin:SetUpScroller(contentName, existingContent)
   scroller:SetScript("OnSizeChanged", function(_, width)
     if width and width > 0 then content:SetWidth(width) end
     self:UpdateScrollRange()
+    -- A FullUpdate that ran before this frame had a real size laid the rows out
+    -- against a 0-size (clipping) scroller, so nothing was visible. Re-run it once
+    -- the scroller actually has a size so the rows appear. Guarded against the
+    -- re-entrancy that the content resize below would otherwise cause.
+    if self.FullUpdate and self.dataProvider and not self._inFullUpdate then
+      self:FullUpdate()
+    end
   end)
   scroller:SetScript("OnMouseWheel", function(_, delta)
     self:ScrollByDelta(delta)
@@ -381,6 +388,8 @@ function ScrollBoxListMixin:FullUpdate()
     end
   end
 
+  self._inFullUpdate = true
+
   -- Release current rows (and their table-builder cells).
   for frame in self.framePool:EnumerateActive() do
     for _, tb in ipairs(self.tableBuilders) do
@@ -435,6 +444,8 @@ function ScrollBoxListMixin:FullUpdate()
 
   self.Content:SetHeight(math.max(y + ((view and view.paddingBottom) or 0), 1))
   self:UpdateScrollRange()
+
+  self._inFullUpdate = false
 
   if self.TriggerEvent then
     self:TriggerEvent(ScrollBoxListMixin.Event.OnDataRangeChanged, true)
