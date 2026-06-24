@@ -21,9 +21,14 @@ function Auctionator.AH.AbortQuery()
   Auctionator.AH.Internals.scan:AbortQuery()
 end
 
--- Event ThrottleUpdate will fire whenever the state changes
+-- Event ThrottleUpdate will fire whenever the state changes.
+-- This gates the "grey post button" option. On stock 3.3.5a POSTING (StartAuction)
+-- is NOT subject to the auction QUERY throttle (CanSendAuctionQuery), so it must
+-- only consider whether a post/bid/cancel is already in progress -- otherwise the
+-- Post button stays greyed after the buy view's price search leaves
+-- CanSendAuctionQuery() false, and posting appears to do nothing.
 function Auctionator.AH.IsNotThrottled()
-  return Auctionator.AH.Internals.throttling:IsReady()
+  return not Auctionator.AH.Internals.throttling:AnyWaiting()
 end
 
 function Auctionator.AH.GetAuctionItemSubClasses(classID)
