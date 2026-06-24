@@ -369,6 +369,19 @@ if not C_AuctionHouse.IsSellItemValid then
   end
 end
 
+-- Several non-retail call sites use the GLOBAL GetDetailedItemLevelInfo (present on
+-- the Classic clients, absent on stock 3.3.5a) rather than the C_Item method --
+-- e.g. BuyAuctions/Filters/SaleItem/ItemStringLoading/UndercutScan. On 3.3.5a the
+-- item level is just GetItemInfo()'s 4th return; mirror C_Item.GetDetailedItemLevelInfo
+-- as a guarded global so those paths stop erroring ("attempt to call global ... a
+-- nil value").
+if not GetDetailedItemLevelInfo then
+  function GetDetailedItemLevelInfo(item)
+    local itemLevel = select(4, GetItemInfo(item))
+    return itemLevel, false, itemLevel
+  end
+end
+
 -- NOTE: deliberately NOT defining a global `Settings`/`SettingsPanel`. Other
 -- addons (e.g. Ace3's AceConfigDialog) feature-detect `Settings` and then call
 -- the full retail canvas API; a partial shim breaks them. Auctionator's own
