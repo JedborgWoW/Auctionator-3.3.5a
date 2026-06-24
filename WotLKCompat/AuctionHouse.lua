@@ -49,3 +49,21 @@ if not SortAuctionApplySort then
   function SortAuctionApplySort()
   end
 end
+
+-- Deposit preview. Stock 3.3.5a has NO GetAuctionDeposit global (the Classic
+-- clients do); the native function is CalculateAuctionDeposit(runTime), which
+-- returns the deposit for the item currently in the sell slot for the given run
+-- time (1/2/3 = 12h/24h/48h -- the same enum GetDuration() yields). Auctionator
+-- calls GetAuctionDeposit(runTime, minBid, buyout, stackSize, numStacks) every
+-- frame from SaleItem:OnUpdate, so a missing global spams infinitely; here we map
+-- it through, scaling the per-stack figure by numStacks. Falls back to 0 when no
+-- item is placed / the native is absent (the server charges the real deposit on
+-- post anyway).
+if not GetAuctionDeposit then
+  function GetAuctionDeposit(runTime, minBid, buyout, stackSize, numStacks)
+    if CalculateAuctionDeposit then
+      return (CalculateAuctionDeposit(runTime) or 0) * (numStacks or 1)
+    end
+    return 0
+  end
+end
