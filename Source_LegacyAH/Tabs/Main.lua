@@ -25,14 +25,6 @@ Auctionator.Tabs.Register( {
   tabOrder = 1,
 })
 Auctionator.Tabs.Register( {
-  name = "Auctionator",
-  textLabel = AUCTIONATOR_L_AUCTIONATOR,
-  tabTemplate = "AuctionatorConfigurationTabFrameTemplate",
-  tabHeader = AUCTIONATOR_L_INFO_TAB_HEADER,
-  tabFrameName = "AuctionatorConfigFrame",
-  tabOrder = 4,
-})
-Auctionator.Tabs.Register( {
   name = "Cancelling",
   textLabel = AUCTIONATOR_L_CANCELLING_TAB,
   tabTemplate = "AuctionatorCancellingTabFrameNoRefreshTemplate",

@@ -47,7 +47,7 @@
         </Anchors>
         <Scripts>
           <OnReceiveDrag>self:OnReceiveDrag()</OnReceiveDrag>
-        <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); Mixin(self, AuctionatorBagItemSelectedMixin); self.clickEventName = "BagItemClicked"; self:SetPoint("TOPLEFT", self:GetParent().Icon, "TOPLEFT"); self:SetPoint("BOTTOMRIGHT", self:GetParent().Icon, "BOTTOMRIGHT")</OnLoad></Scripts>
+        <OnLoad>Mixin(self, AuctionatorGroupsViewItemMixin); Mixin(self, AuctionatorBagItemSelectedMixin); self.clickEventName = "BagItemClicked"</OnLoad></Scripts>
       </Button>
 
       <Frame parentKey="UnitPrice" inherits="AuctionatorConfigurationMoneyInputAlternate">

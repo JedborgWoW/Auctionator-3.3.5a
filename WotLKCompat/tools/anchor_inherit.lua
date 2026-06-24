@@ -194,6 +194,21 @@ local function rewrite(path)
         for _, st in ipairs(splitStatements(capture.buf)) do present[trim(st)] = true end
         local acc = {}
         ancestorSetpointsFromInherits(node.inherits, acc, present)
+        -- Self-anchor guard: an ancestor template designed to overlay a SIBLING
+        -- (e.g. AuctionatorGroupsViewItemTemplate anchors to self:GetParent().Icon)
+        -- becomes a self-anchor when reused as the same-named child (SaleItem's
+        -- Icon button has parentKey="Icon", so GetParent().Icon == self). Drop any
+        -- propagated setpoint that resolves the relativeTo to this very frame.
+        if node.parentKey then
+          local pk = node.parentKey:gsub("(%W)", "%%%1")
+          local filtered = {}
+          for _, st in ipairs(acc) do
+            if not st:find("self:GetParent%(%)%." .. pk .. "%s*[,%)]") then
+              filtered[#filtered + 1] = st
+            end
+          end
+          acc = filtered
+        end
         local body = capture.buf
         if #acc > 0 then
           body = trim(body)
@@ -225,7 +240,7 @@ local function rewrite(path)
     end
     if isSelf then if capture then capture.buf = capture.buf .. tok else emit(tok) end; return end
     if name == "Scripts" then stack[#stack + 1] = { kind = "scripts" }
-    elseif isFrameTag(name) then stack[#stack + 1] = { kind = "frame", name = attrs:match('name="([^"]*)"'), inherits = attrs:match('inherits="([^"]*)"') }
+    elseif isFrameTag(name) then stack[#stack + 1] = { kind = "frame", name = attrs:match('name="([^"]*)"'), inherits = attrs:match('inherits="([^"]*)"'), parentKey = attrs:match('parentKey="([^"]*)"') }
     else stack[#stack + 1] = { kind = "content" } end
     emit(tok)
   end)
