@@ -91,3 +91,10 @@ end
 if C_Container and C_Container.PickupContainerItem then
   hooksecurefunc(C_Container, "PickupContainerItem", HookForPickup)
 end
+-- On stock 3.3.5a a manual bag drag/pickup goes through the GLOBAL PickupContainerItem
+-- (the Blizzard bag UI), not the C_Container shim, so hook it too. This records the
+-- bag/slot the dragged item came from so the drag-onto-Selling recovery can rebuild
+-- the item location (C_Cursor.GetCursorItem only reports that *an* item is held).
+if type(PickupContainerItem) == "function" then
+  hooksecurefunc("PickupContainerItem", HookForPickup)
+end

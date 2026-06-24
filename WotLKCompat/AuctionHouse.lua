@@ -34,6 +34,18 @@ if not PostAuction then
       end
       StartAuction(minBid, buyoutPrice, runTime)
     end
+    -- Diagnostic: 2s after the StartAuction call, report whether it had ANY effect.
+    -- slotItem nil OR moneySpent > 0  => the server accepted the post.
+    -- slotItem still set AND moneySpent 0 => StartAuction was ignored by the server.
+    if Auctionator and Auctionator.Debug and C_Timer and GetMoney then
+      local before = GetMoney()
+      C_Timer.After(2, function()
+        Auctionator.Debug.Message(
+          "PostAuction +2s slotItem", (GetAuctionSellItemInfo and GetAuctionSellItemInfo()) or "nil",
+          "moneySpent", before - GetMoney()
+        )
+      end)
+    end
   end
 end
 

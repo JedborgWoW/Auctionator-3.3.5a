@@ -325,7 +325,16 @@ end
 if not C_Cursor then
   C_Cursor = {}
 
+  -- On 3.3.5a the cursor only exposes the item (GetCursorInfo), not its bag/slot.
+  -- Return an EMPTY ItemLocation when an item is held so the Selling drag handler's
+  -- recovery path kicks in (it rebuilds the location from the last bag pickup that
+  -- the hooked PickupContainerItem recorded -- see BagItemSelected). Returning nil
+  -- here is what made dragging an item onto Selling say "nothing on cursor".
   function C_Cursor.GetCursorItem()
+    local infoType = GetCursorInfo()
+    if infoType == "item" then
+      return ItemLocation:CreateEmpty()
+    end
     return nil
   end
 
