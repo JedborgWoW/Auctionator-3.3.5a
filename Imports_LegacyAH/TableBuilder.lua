@@ -410,6 +410,20 @@ function AuctionatorRetailImportTableBuilderMixin:CalculateColumnSpacing()
 		paddingTotal = paddingTotal + column:GetPadding();
 	end
 
+	-- 3.3.5a fix: SetHeaderContainer() captured the container width once, during
+	-- ResultsListing:Init(), before the frame had been laid out -- so tableWidth was
+	-- stale/0 and the fill column was mis-sized (header columns overflowed the panel,
+	-- e.g. the Shopping "Price" column spilling past the right edge). Refresh from the
+	-- live container width here; Arrange() runs on show/update when it is resolved.
+	-- Guarded so a not-yet-laid-out container never makes it worse.
+	local headerContainer = self:GetHeaderContainer();
+	if headerContainer then
+		local liveWidth = headerContainer:GetWidth();
+		if liveWidth and liveWidth > 0 then
+			self:SetTableWidth(liveWidth);
+		end
+	end
+
 	local tableWidth = self:GetTableWidth();
 	local leftMargin, rightMargin = self:GetTableMargins();
 	local fillWidthTotal = tableWidth - paddingTotal - (leftMargin + rightMargin) - fixedWidthTotal;
