@@ -279,15 +279,20 @@ if not tAppendAll then
 end
 
 if not tDeleteItem then
+  -- Returns the number of removed elements (Blizzard's contract); TableBuilder
+  -- does `tDeleteItem(self.rows, row) > 0`, so returning nil crashed it.
   function tDeleteItem(tbl, item)
+    local count = 0
     local index = 1
     while index <= #tbl do
       if tbl[index] == item then
         table.remove(tbl, index)
+        count = count + 1
       else
         index = index + 1
       end
     end
+    return count
   end
 end
 
