@@ -396,6 +396,22 @@ function ScrollBoxListMixin:FullUpdate()
   local spacing = (view and view.spacing) or 0
   local count = dp and dp:GetSize() or 0
 
+  -- Make the scroll content match the visible width so rows are not laid out 1px
+  -- wide (SetUpScroller's OnSizeChanged may not have run yet on first layout).
+  local scrollerWidth = self.scroller and self.scroller:GetWidth() or 0
+  if scrollerWidth > 0 and self.Content then
+    self.Content:SetWidth(scrollerWidth)
+  end
+  if Auctionator and Auctionator.Debug then
+    Auctionator.Debug.Message(
+      "ScrollBox:FullUpdate count", count,
+      "scrollerW", scrollerWidth,
+      "scrollerH", self.scroller and self.scroller:GetHeight() or -1,
+      "contentW", self.Content and self.Content:GetWidth() or -1,
+      "extent", extent
+    )
+  end
+
   local y = top
   for i = 1, count do
     local elementData = dp:Find(i)
