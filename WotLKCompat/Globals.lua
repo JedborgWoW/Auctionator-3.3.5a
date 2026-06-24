@@ -326,6 +326,12 @@ if EXPANSION_NAME0 == nil then EXPANSION_NAME0 = "Classic" end
 if EXPANSION_NAME1 == nil then EXPANSION_NAME1 = "The Burning Crusade" end
 if EXPANSION_NAME2 == nil then EXPANSION_NAME2 = "Wrath of the Lich King" end
 
+-- AUCTION_CANCEL_COST: the cancellation-fee percentage charged when cancelling an
+-- auction that already has a bid. Defined as a Blizzard FrameXML global on later
+-- clients but NOT on stock 3.3.5a, so the Cancelling tab's
+-- `bidAmount * AUCTION_CANCEL_COST / 100` errored on a nil global. WotLK charges 5%.
+if AUCTION_CANCEL_COST == nil then AUCTION_CANCEL_COST = 5 end
+
 -- SOUNDKIT: retail keys -> 3.3.5a PlaySound string names (PlaySound on 3.3.5a
 -- takes the old string identifiers, not numeric IDs).
 if not SOUNDKIT then

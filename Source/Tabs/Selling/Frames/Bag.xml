@@ -11,7 +11,7 @@
     </Scripts>
 
     <Frames>
-      <Frame inherits="AuctionatorGroupsViewTemplate">
+      <Frame parentKey="View" inherits="AuctionatorGroupsViewTemplate">
         
           
           

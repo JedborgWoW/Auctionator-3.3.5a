@@ -24,7 +24,7 @@
         </Scripts>
       </Frame>
 
-      <Frame inherits="AuctionatorResultsListingTemplate">
+      <Frame parentKey="ResultsListing" inherits="AuctionatorResultsListingTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" x="8" y="-30"/>
           <Anchor point="BOTTOMRIGHT" x="-26" y="32"/>

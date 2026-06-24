@@ -98,7 +98,7 @@
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
     </Scripts>
     <Frames>
-      <Frame inherits="AuctionatorShoppingTabSearchOptionsTemplate">
+      <Frame parentKey="SearchOptions" inherits="AuctionatorShoppingTabSearchOptionsTemplate">
         <Anchors>
           <Anchor point="TOP"/>
           <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" y="-150"/>
@@ -106,7 +106,7 @@
         </Anchors>
         <Size x="280"/>
       <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0)</OnLoad></Scripts></Frame>
-      <Frame inherits="AuctionatorShoppingTabListsContainerTemplate" hidden="true">
+      <Frame parentKey="ListsContainer" inherits="AuctionatorShoppingTabListsContainerTemplate" hidden="true">
         <Anchors>
           <Anchor point="TOP" y="-50"/>
           <Anchor point="BOTTOM" y="35"/>
@@ -139,7 +139,7 @@
           </AnimationGroup>
         </Animations>
       <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabListsContainerMixin); self:OnLoad(); self.LoadingSpinner:SetPoint("CENTER", self.ListsContainer, "CENTER", -12, -13); self.ResultsText:SetPoint("TOP", self.LoadingSpinner, "CENTER")</OnLoad></Scripts></Frame>
-      <Frame inherits="AuctionatorShoppingTabRecentsContainerTemplate">
+      <Frame parentKey="RecentsContainer" inherits="AuctionatorShoppingTabRecentsContainerTemplate">
         <Anchors>
           <Anchor point="TOP" y="-50"/>
           <Anchor point="BOTTOM" y="10"/>
@@ -201,7 +201,7 @@
         <OnLoad>Mixin(self, AuctionatorDirectSearchProviderMixin)</OnLoad></Scripts>
       </Frame>
 
-      <Frame inherits="AuctionatorResultsListingTemplate">
+      <Frame parentKey="ResultsListing" inherits="AuctionatorResultsListingTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ListsContainer.ScrollBar" relativePoint="TOPRIGHT" x="5" y="27"/>
           <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20"/>
