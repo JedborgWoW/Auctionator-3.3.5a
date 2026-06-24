@@ -1,6 +1,7 @@
 local SLASH_COMMAND_DESCRIPTIONS = {
   {commands = "p, post", message = "Posts the chosen item from the \"Selling\" tab." },
   {commands = "cu, cancelundercut", message = "Cancels the next undercut auction in the \"Cancelling\" tab." },
+  {commands = "scan, fullscan", message = "Scan the whole auction house (page by page) to update prices. Open the AH first." },
   {commands = "ra, resetall", message = "Reset database and full scan timer." },
   {commands = "rdb, resetdatabase", message = "Reset Auctionator database."},
   {commands = "rt, resettimer", message = "Reset full scan timer."},
@@ -60,6 +61,22 @@ end
 function Auctionator.SlashCmd.CleanReset()
   Auctionator.SlashCmd.ResetTimer()
   Auctionator.SlashCmd.ResetDatabase()
+end
+
+-- Trigger a whole-AH page-by-page scan. The in-tab "Full Scan" button was removed
+-- with the Info tab, so this is the UI-independent trigger. Needs the AH open
+-- (you can only query auctions while it is).
+function Auctionator.SlashCmd.FullScan()
+  if not (AuctionFrame and AuctionFrame:IsShown()) then
+    Auctionator.Utilities.Message("Open the auction house first to run a full scan.")
+    return
+  end
+  local frame = Auctionator.State.FullScanFrameRef
+  if not frame then
+    Auctionator.Utilities.Message("Full scan not ready -- reopen the auction house and try again.")
+    return
+  end
+  frame:InitiateScan()
 end
 
 function Auctionator.SlashCmd.NoPriceDB()
