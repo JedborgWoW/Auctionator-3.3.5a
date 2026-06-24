@@ -97,8 +97,16 @@ function AuctionatorAHThrottlingFrameMixin:OnUpdate(elapsed)
   else
     self.timeout = TIMEOUT
   end
+  -- Only announce the countdown once per whole second instead of every frame,
+  -- otherwise the status dialog / debug log are spammed ~60x/sec while waiting.
   if self.timeout ~= TIMEOUT then
-    Auctionator.EventBus:Fire(self, Auctionator.AH.Events.CurrentThrottleTimeout, self.timeout)
+    local sec = math.ceil(self.timeout)
+    if sec ~= self.lastAnnouncedTimeoutSec then
+      self.lastAnnouncedTimeoutSec = sec
+      Auctionator.EventBus:Fire(self, Auctionator.AH.Events.CurrentThrottleTimeout, self.timeout)
+    end
+  else
+    self.lastAnnouncedTimeoutSec = nil
   end
 
   local ready = self:IsReady()
