@@ -19,12 +19,19 @@ local function InitializeFromDetails(details)
   frame:Initialize(details.name, details.tabTemplate, details.tabHeader, {details.tabFrameName})
 
   -- AuctionTabTemplate's label keeps a narrow width and truncates longer names to
-  -- "Shop.."/"Canc..". Clear the width cap so PanelTemplates_TabResize measures the
-  -- full string, then size the tab to fit it (+ padding for the tab side textures).
+  -- "Shop.."/"Canc..". On 3.3.5a PanelTemplates_TabResize(absoluteSize) sets the
+  -- text width to (absoluteSize - sideTextureWidths), so it still came up short.
+  -- Fix: size the tab background to text+padding via TabResize, THEN force the font
+  -- string back to its full natural width so the label is never clipped.
   local label = frame:GetFontString()
   if label then
     label:SetWidth(0)
-    PanelTemplates_TabResize(frame, tabPadding, label:GetStringWidth() + 24, minTabWidth)
+    local textW = math.ceil(label:GetStringWidth() or 0)
+    if textW <= 0 then
+      textW = 70
+    end
+    PanelTemplates_TabResize(frame, tabPadding, textW + 30, minTabWidth)
+    label:SetWidth(textW)
   else
     PanelTemplates_TabResize(frame, tabPadding, tabAbsoluteSize, minTabWidth)
   end

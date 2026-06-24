@@ -342,7 +342,17 @@ function AuctionatorRetailImportTableBuilderMixin:AddRow(row, dataProviderKey)
 end
 
 function AuctionatorRetailImportTableBuilderMixin:RemoveRow(row)
-	local deleted = tDeleteItem(self.rows, row) > 0;
+	-- NOTE: stock 3.3.5a has a NATIVE tDeleteItem that returns nil (no count), so
+	-- `tDeleteItem(...) > 0` errored ("compare number with nil") and blocked every
+	-- results update (search/shopping/selling showed nothing). Remove + detect the
+	-- row inline instead of relying on the return value.
+	local deleted = false;
+	for i = #self.rows, 1, -1 do
+		if self.rows[i] == row then
+			table.remove(self.rows, i);
+			deleted = true;
+		end
+	end
 	if not deleted then
 		return;
 	end
