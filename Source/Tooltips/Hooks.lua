@@ -141,8 +141,13 @@ end
 
 -- This is called when mousing over an item in the loot window
 TooltipHandlers["SetLootItem"] = function (tip, slot)
-  if LootSlotHasItem(slot) then
-    local itemLink, _, itemCount = GetLootSlotLink(slot);
+  -- LootSlotHasItem is Cata+ (absent on stock 3.3.5a). GetLootSlotLink is native on
+  -- both and returns nil for non-item (coin) slots, so it doubles as the has-item
+  -- check; the count comes from GetLootSlotInfo's quantity. Avoid defining a global
+  -- LootSlotHasItem since other addons feature-detect it to pick an API path.
+  local itemLink = GetLootSlotLink(slot)
+  if itemLink ~= nil then
+    local itemCount = select(3, GetLootSlotInfo(slot))
 
     Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, itemCount)
   end
