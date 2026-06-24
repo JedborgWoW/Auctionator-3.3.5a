@@ -19,9 +19,16 @@ if not PostAuction then
       return
     end
     numStacks = numStacks or 1
-    for _ = 1, numStacks do
+    for i = 1, numStacks do
       -- Only post while an item is actually in the sell slot (stops safely after
       -- the slot empties on stock 3.3.5a).
+      local slotName = GetAuctionSellItemInfo and GetAuctionSellItemInfo() or nil
+      if Auctionator and Auctionator.Debug then
+        Auctionator.Debug.Message(
+          "PostAuction try", i, "slotItem", slotName,
+          "minBid", minBid, "buyout", buyoutPrice, "runTime", runTime
+        )
+      end
       if GetAuctionSellItemInfo and GetAuctionSellItemInfo() == nil then
         break
       end
