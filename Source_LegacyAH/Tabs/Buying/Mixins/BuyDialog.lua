@@ -16,6 +16,11 @@ local MONEY_EVENTS = {
 }
 
 function AuctionatorBuyDialogMixin:OnLoad()
+  -- The XML frameStrata="Dialog" enum is not reliably honored on 3.3.5a, so the
+  -- dialog stayed at the listing's strata and the higher-level result rows ate the
+  -- clicks meant for its Buy Stack / Close buttons. Force it above the listing.
+  self:SetFrameStrata("DIALOG")
+  self:SetToplevel(true)
   self:RegisterForDrag("LeftButton")
   self.NumberPurchased:SetText(AUCTIONATOR_L_ALREADY_PURCHASED_X:format(15))
   self.PurchaseDetails:SetText(AUCTIONATOR_L_BUYING_X_FOR_X:format(BLUE_FONT_COLOR:WrapTextInColorCode("x20"), GetMoneyString(10998, true)))

@@ -2,7 +2,6 @@
   <Frame
     name="AuctionatorResultsListingTemplate"
     virtual="true"
-    parentKey="ResultsListing"
   >
 
     <Scripts>

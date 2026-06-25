@@ -2,7 +2,6 @@
   <Frame
     name="AuctionatorShoppingTabListsContainerTemplate"
     virtual="true"
-    parentKey="ListsContainer"
     >
     <Scripts>
       <OnLoad>Mixin(self, AuctionatorShoppingTabListsContainerMixin); self:OnLoad()</OnLoad>
@@ -14,7 +13,6 @@
   <Frame
     name="AuctionatorShoppingTabRecentsContainerTemplate"
     virtual="true"
-    parentKey="RecentsContainer"
     >
     <Scripts>
       <OnLoad>Mixin(self, AuctionatorShoppingTabRecentsContainerMixin); self:OnLoad()</OnLoad>
@@ -26,7 +24,6 @@
   <Frame
     name="AuctionatorShoppingTabSearchOptionsTemplate"
     virtual="true"
-    parentKey="SearchOptions"
     >
     <Scripts>
       <OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0)</OnLoad>
