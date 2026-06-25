@@ -332,12 +332,17 @@ if EXPANSION_NAME2 == nil then EXPANSION_NAME2 = "Wrath of the Lich King" end
 -- `bidAmount * AUCTION_CANCEL_COST / 100` errored on a nil global. WotLK charges 5%.
 if AUCTION_CANCEL_COST == nil then AUCTION_CANCEL_COST = 5 end
 
--- SOUNDKIT: retail keys -> 3.3.5a PlaySound string names (PlaySound on 3.3.5a
--- takes the old string identifiers, not numeric IDs).
-if not SOUNDKIT then
-  SOUNDKIT = {
-    IG_CHARACTER_INFO_TAB = "igCharacterInfoTab",
-    IG_MAINMENU_OPEN = "igMainMenuOpen",
-    IG_MAINMENU_OPTION_CHECKBOX_ON = "igMainMenuOptionCheckBoxOn",
-  }
-end
+-- SOUNDKIT: retail keys -> 3.3.5a PlaySound string names. PlaySound on 3.3.5a takes
+-- the OLD string identifiers, not numeric IDs.
+-- NOTE: fill the keys we use IN PLACE, never `if not SOUNDKIT`. A partial SOUNDKIT
+-- table from the client or another addon (keys nil, or holding numeric retail IDs)
+-- would defeat an existence guard, and PlaySound(nil)/PlaySound(<number>) then errors
+-- "Usage: PlaySound(\"sound\")" -- which, before the EventBus isolation fix, cascaded
+-- out of the Cancelling handler and broke unrelated listeners. Overwriting is safe:
+-- a numeric retail SOUNDKIT id is meaningless to 3.3.5a's string-based PlaySound, so
+-- the correct string name is always the right value on this client. (Same
+-- native-but-different-contract trap as tDeleteItem.)
+SOUNDKIT = SOUNDKIT or {}
+SOUNDKIT.IG_CHARACTER_INFO_TAB = "igCharacterInfoTab"
+SOUNDKIT.IG_MAINMENU_OPEN = "igMainMenuOpen"
+SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON = "igMainMenuOptionCheckBoxOn"

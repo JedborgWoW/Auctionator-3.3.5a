@@ -74,7 +74,18 @@ function AuctionatorEventBusMixin:Fire(source, eventName, ...)
       #self.registeredListeners[eventName]
     )
     for index, listener in ipairs(allListeners) do
-      listener:ReceiveEvent(eventName, ...)
+      -- Per-handler error isolation. On retail this loop runs each handler through
+      -- securecallfunction, which CONTAINS a handler error (reports it, keeps going).
+      -- On stock 3.3.5a securecallfunction is a passthrough, so a single handler that
+      -- hits a compat gap (e.g. PlaySound getting a bad SOUNDKIT arg) used to abort
+      -- delivery to EVERY later listener of the same event -- silently breaking
+      -- unrelated subsystems (Buy/Post buttons never receive ThrottleUpdate, the
+      -- cancel-all loop stalls, etc.). pcall keeps the bus robust to compat gaps while
+      -- geterrorhandler() keeps the error VISIBLE (not silenced) for diagnosis.
+      local ok, err = pcall(listener.ReceiveEvent, listener, eventName, ...)
+      if not ok then
+        geterrorhandler()(err)
+      end
     end
   end
 
