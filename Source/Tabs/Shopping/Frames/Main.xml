@@ -26,7 +26,7 @@
     virtual="true"
     >
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0)</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0); self.FullScanButton:SetPoint("BOTTOMLEFT", self.AddToListButton, "BOTTOMRIGHT", 5, 0)</OnLoad>
     </Scripts>
     <Layers>
       <Layer level="BACKGROUND">
@@ -73,6 +73,11 @@
           <Anchor point="BOTTOMLEFT" relativeKey="$parent.MoreButton" relativePoint="BOTTOMRIGHT" x="5"/>
         </Anchors>
       <Scripts><OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts></Button>
+      <Button parentKey="FullScanButton" inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_FULL_SCAN">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.AddToListButton" relativePoint="BOTTOMRIGHT" x="5"/>
+        </Anchors>
+      <Scripts><OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts></Button>
     </Frames>
   </Frame>
 
@@ -102,7 +107,7 @@
           <Anchor point="RIGHT"/>
         </Anchors>
         <Size x="280"/>
-      <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0)</OnLoad></Scripts></Frame>
+      <Scripts><OnLoad>Mixin(self, AuctionatorShoppingTabSearchOptionsMixin); self:OnLoad(); self.SearchString:SetPoint("TOPLEFT", self.SearchLabel, "TOPRIGHT", 10, 4); self.ResetSearchStringButton:SetPoint("TOPLEFT", self.SearchString, "TOPRIGHT", 3, -2); self.SearchButton:SetPoint("BOTTOMLEFT", self.ResetSearchStringButton, "BOTTOMRIGHT", 5, -3); self.MoreButton:SetPoint("BOTTOMLEFT", self.SearchButton, "BOTTOMRIGHT", 5, 0); self.AddToListButton:SetPoint("BOTTOMLEFT", self.MoreButton, "BOTTOMRIGHT", 5, 0); self.FullScanButton:SetPoint("BOTTOMLEFT", self.AddToListButton, "BOTTOMRIGHT", 5, 0)</OnLoad></Scripts></Frame>
       <Frame parentKey="ListsContainer" inherits="AuctionatorShoppingTabListsContainerTemplate" hidden="true">
         <Anchors>
           <Anchor point="TOP" y="-50"/>

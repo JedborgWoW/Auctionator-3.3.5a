@@ -23,6 +23,14 @@ function AuctionatorShoppingTabSearchOptionsMixin:OnLoad()
     end
   end)
 
+  -- Full Scan: reconnect the existing whole-AH scan engine
+  -- (AuctionatorFullScanFrameMixin:InitiateScan, reached through the shared
+  -- SlashCmd.FullScan guard) to a header button. The engine has always loaded;
+  -- it just lost its only UI trigger when the "Info" tab was removed.
+  self.FullScanButton:SetScript("OnClick", function()
+    Auctionator.SlashCmd.FullScan()
+  end)
+
   Auctionator.EventBus:Register(self, {
     Auctionator.Shopping.Tab.Events.SearchStart,
     Auctionator.Shopping.Tab.Events.SearchEnd,
