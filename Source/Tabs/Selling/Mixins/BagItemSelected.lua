@@ -96,5 +96,5 @@ end
 -- bag/slot the dragged item came from so the drag-onto-Selling recovery can rebuild
 -- the item location (C_Cursor.GetCursorItem only reports that *an* item is held).
 if type(PickupContainerItem) == "function" then
-  hooksecurefunc("PickupContainerItem", HookForPickup)
+  pcall(hooksecurefunc, "PickupContainerItem", HookForPickup)
 end

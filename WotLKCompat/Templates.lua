@@ -81,6 +81,27 @@ function NineSlicePanelMixin:OnLoad()
   end
 end
 
+-- Retail callers pass the panel's texture kit to NineSliceUtil; there is no atlas
+-- texture kit on 3.3.5a, so report none.
+function NineSlicePanelMixin:GetFrameLayoutTextureKit()
+  return nil
+end
+
+-- NineSliceUtil: retail helper that applies atlas-based nine-slice borders. 3.3.5a
+-- has no atlas system and NineSlicePanelMixin:OnLoad already draws a SetBackdrop
+-- border, so these are no-ops. Without this shim every Auctionator dialog errored on
+-- `NineSliceUtil.ApplyLayoutByName` (a nil global) -- e.g. the Shopping "New List"
+-- dialog and the post/cancel confirmation popups.
+if not NineSliceUtil then
+  NineSliceUtil = {}
+  function NineSliceUtil.ApplyLayout() end
+  function NineSliceUtil.ApplyLayoutByName() end
+  function NineSliceUtil.GetLayout() return nil end
+  function NineSliceUtil.AddLayout() end
+  function NineSliceUtil.DisableSharpening() end
+  function NineSliceUtil.ApplyUniqueCornersLayout() end
+end
+
 -- ---------------------------------------------------------------------------
 -- ButtonFrameTemplate (portrait frame; added in Cataclysm)
 -- Provides self.Inset, self.TitleText, self:SetTitle(), a close button and a
