@@ -13,7 +13,7 @@
 
     <Layers>
       <Layer level="OVERLAY">
-        <Texture parentKey="SelectedHighlight" atlas="auctionhouse-ui-row-select" alphaMode="ADD" hidden="true">
+        <Texture parentKey="SelectedHighlight" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD" hidden="true">
           <Anchors>
             <Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
@@ -21,7 +21,7 @@
         </Texture>
 
         <!-- Using a normal texture for highlight to control the behavior. -->
-        <Texture parentKey="HighlightTexture" atlas="auctionhouse-ui-row-highlight" alphaMode="ADD" setAllPoints="true" hidden="true">
+        <Texture parentKey="HighlightTexture" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD" setAllPoints="true" hidden="true">
           <Anchors>
             <Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
             <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
