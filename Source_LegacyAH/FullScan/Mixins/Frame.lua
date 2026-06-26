@@ -13,8 +13,14 @@ local FULL_SCAN_EVENTS = {
 }
 
 local PAGE_SIZE = Auctionator.Constants.MaxResultsPerPage -- 50 on 3.3.5a
-local RETRY_DELAY = 0.5   -- seconds before re-querying a not-ready / duplicate page
-local MAX_RETRIES = 12    -- give up on a page after this many stale responses
+-- Event-driven adaptive throttle. The old code waited a fixed 0.5s between pages
+-- (CanSendAuctionQuery() is briefly false right after a query), wasting ~0.5s/page.
+-- Instead poll the gate every MIN_DELAY and send the next page the instant it opens;
+-- only back off toward MAX_DELAY when the server hands back a stale/duplicate page.
+local MIN_DELAY = 0.05    -- gate poll / fastest spacing
+local MAX_DELAY = 0.75    -- backoff cap when the server is busy
+local MAX_RETRIES = 12    -- give up on a single page after this many stale responses
+local STUCK_TIMEOUT = 15  -- seconds with no accepted page -> abort as stuck
 
 local AII = Auctionator.Constants.AuctionItemInfo
 
@@ -56,6 +62,8 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   self.totalAuctions = 0
   self.auctionsProcessed = 0
   self.scanStartTime = GetTime()
+  self.lastAcceptTime = GetTime()
+  self.scanDelay = MIN_DELAY
   self.retries = 0
   self.prevPageSig = nil
   self.awaitingPage = false
@@ -78,13 +86,24 @@ end
 
 -- Live progress snapshot for the scan progress UI.
 function AuctionatorFullScanFrameMixin:GetProgressInfo()
+  local elapsed = self.scanStartTime and (GetTime() - self.scanStartTime) or 0
+  local processed = self.auctionsProcessed or 0
+  local total = self.totalAuctions or 0
+  local auctionsPerSec = elapsed > 0 and (processed / elapsed) or 0
+  local eta = 0
+  if total > 0 and auctionsPerSec > 0 and processed < total then
+    eta = (total - processed) / auctionsPerSec
+  end
   return {
     inProgress = self.inProgress == true,
     currentPage = self.currentPage or 0,
     totalPages = self.totalPages or 0,
-    totalAuctions = self.totalAuctions or 0,
-    auctionsProcessed = self.auctionsProcessed or 0,
-    elapsed = self.scanStartTime and (GetTime() - self.scanStartTime) or 0,
+    totalAuctions = total,
+    auctionsProcessed = processed,
+    elapsed = elapsed,
+    auctionsPerSec = auctionsPerSec,
+    pagesPerSec = elapsed > 0 and ((self.currentPage or 0) / elapsed) or 0,
+    eta = eta,
   }
 end
 
@@ -135,6 +154,16 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
   if not self.inProgress then
     return
   end
+  -- Watchdog: if no page has been accepted for STUCK_TIMEOUT, give up cleanly.
+  if self.lastAcceptTime and (GetTime() - self.lastAcceptTime) > STUCK_TIMEOUT then
+    Auctionator.Utilities.Message(string.format(
+      "|cffff4040Auctionator:|r Full Scan aborted -- stuck on page %d (AH query throttle).",
+      self.currentPage
+    ))
+    self:Abort()
+    return
+  end
+
   if CanSendAuctionQuery() then
     self.awaitingPage = true
     -- 3.3.5a signature: (name, minLevel, maxLevel, invType, class, subclass,
@@ -142,8 +171,8 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
     Auctionator.Debug.Message("FullScan: QueryAuctionItems page", self.currentPage)
     QueryAuctionItems("", nil, nil, nil, nil, nil, self.currentPage, nil, nil)
   else
-    Auctionator.Debug.Message("FullScan: throttled, retrying page", self.currentPage)
-    C_Timer.After(RETRY_DELAY, function() self:QueryNextPage() end)
+    -- Gate closed (just queried). Poll frequently and fire the moment it reopens.
+    C_Timer.After(MIN_DELAY, function() self:QueryNextPage() end)
   end
 end
 
@@ -183,7 +212,7 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
     if self.currentPage == 0 and self.retries < MAX_RETRIES then
       self.retries = self.retries + 1
       self.awaitingPage = false
-      C_Timer.After(RETRY_DELAY, function() self:QueryNextPage() end)
+      C_Timer.After(self.scanDelay, function() self:QueryNextPage() end)
       return
     end
     self.awaitingPage = false
@@ -198,9 +227,12 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   -- as last time, re-query (up to a limit) instead of accepting it.
   local sig = self:PageSignature(numBatch)
   if self.prevPageSig ~= nil and sig == self.prevPageSig and self.retries < MAX_RETRIES then
+    -- Stale/duplicate page = server is behind. Back off (up to MAX_DELAY) and re-query
+    -- the SAME page, so we never hammer a busy server.
     self.retries = self.retries + 1
+    self.scanDelay = math.min(MAX_DELAY, self.scanDelay * 1.5)
     self.awaitingPage = false
-    C_Timer.After(RETRY_DELAY, function() self:QueryNextPage() end)
+    C_Timer.After(self.scanDelay, function() self:QueryNextPage() end)
     return
   end
 
@@ -221,6 +253,9 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
 
   self.prevPageSig = sig
   self.retries = 0
+  -- Page accepted: recover the delay toward the minimum and reset the watchdog.
+  self.scanDelay = math.max(MIN_DELAY, self.scanDelay * 0.7)
+  self.lastAcceptTime = GetTime()
   self.auctionsProcessed = (self.auctionsProcessed or 0) + numBatch
   self.currentPage = self.currentPage + 1
   self.awaitingPage = false

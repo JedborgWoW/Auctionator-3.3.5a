@@ -45,15 +45,17 @@ function AuctionatorFullScanProgressMixin:UpdateProgressText()
     return
   end
   local elapsed = math.floor(p.elapsed)
+  local speed = math.floor((p.auctionsPerSec or 0) + 0.5)
   if p.totalAuctions > 0 then
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds",
-      p.currentPage, p.totalPages, p.auctionsProcessed, p.totalAuctions, elapsed
+      "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d auctions/s   ·   ETA: %ds|r",
+      p.currentPage, p.totalPages, p.auctionsProcessed, p.totalAuctions, elapsed,
+      speed, math.floor(p.eta or 0)
     ))
   else
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds",
-      p.currentPage, p.auctionsProcessed, elapsed
+      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d auctions/s|r",
+      p.currentPage, p.auctionsProcessed, elapsed, speed
     ))
   end
 end
@@ -99,7 +101,7 @@ function Auctionator.FullScan.InitializeProgressUI()
   end
 
   local frame = CreateFrame("Frame", "AuctionatorFullScanProgressFrame", AuctionFrame or UIParent)
-  frame:SetSize(400, 80)
+  frame:SetSize(420, 96)
   frame:SetPoint("TOP", AuctionFrame or UIParent, "TOP", 0, -130)
   frame:SetFrameStrata("DIALOG")
   frame:SetToplevel(true)
