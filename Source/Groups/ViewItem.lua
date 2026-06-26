@@ -9,7 +9,11 @@ function AuctionatorGroupsViewItemMixin:SetItemInfo(info)
 
   if info ~= nil then
 
-    self.Icon:SetTexture(info.iconTexture)
+    -- Selling slot / groups item icon. info.iconTexture can be nil/black when the
+    -- bag-cache icon path did not resolve; fall back to a synchronous lookup so the
+    -- slot never renders an empty/black square over a valid item.
+    self.Icon:SetTexture(info.iconTexture or Auctionator.Utilities.GetItemIconSafe(info.itemLink))
+    self.Icon:SetVertexColor(1, 1, 1, 1)
     self.Icon:Show()
 
     if info.selected then

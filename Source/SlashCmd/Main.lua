@@ -2,6 +2,10 @@ function Auctionator.SlashCmd.Initialize()
   SlashCmdList["Auctionator"] = Auctionator.SlashCmd.Handler
   SLASH_Auctionator1 = "/auctionator"
   SLASH_Auctionator2 = "/atr"
+
+  -- Dedicated /atrui for the layout dump (also available as `/atr ui`).
+  SlashCmdList["AuctionatorUIDump"] = Auctionator.SlashCmd.UIDump
+  SLASH_AuctionatorUIDump1 = "/atrui"
 end
 
 --Update SLASH_COMMAND_DESCRIPTIONS in Commands.lua for new commands
@@ -12,6 +16,7 @@ local SLASH_COMMANDS = {
   ["cancelundercut"] = Auctionator.SlashCmd.CancelUndercut,
   ["scan"] = Auctionator.SlashCmd.FullScan,
   ["fullscan"] = Auctionator.SlashCmd.FullScan,
+  ["ui"] = Auctionator.SlashCmd.UIDump,
   ["ra"] = Auctionator.SlashCmd.CleanReset,
   ["resetall"] = Auctionator.SlashCmd.CleanReset,
   ["rt"] = Auctionator.SlashCmd.ResetTimer,

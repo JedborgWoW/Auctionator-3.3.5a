@@ -17,6 +17,7 @@
   <Script file="IsShortcutActive.lua"/>
   <Script file="GetQualityColorFromLink.lua"/>
   <Script file="GetNameFromLink.lua"/>
+  <Script file="GetItemIconSafe.lua"/>
   <Script file="FormatTime.lua"/>
   <Script file="StringJoin.lua"/>
   <Script file="SplitCommand.lua"/>

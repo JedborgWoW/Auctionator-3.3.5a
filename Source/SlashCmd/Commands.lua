@@ -79,6 +79,85 @@ function Auctionator.SlashCmd.FullScan()
   frame:InitiateScan()
 end
 
+-- /atrui: dump the live Auctionator frame tree (geometry, parent, strata, level, shown)
+-- so layout/overflow/parenting bugs can be diagnosed by measurement instead of guessing.
+-- Frames whose right edge spills past the AuctionFrame are flagged RIGHT-OVERFLOW.
+function Auctionator.SlashCmd.UIDump()
+  local ref = _G.AuctionFrame
+  local root = _G.AuctionatorAHFrame or ref
+  if root == nil then
+    Auctionator.Utilities.Message("Open the auction house first, then /atrui.")
+    return
+  end
+
+  local function num(v)
+    return v and math.floor(v + 0.5) or 0
+  end
+
+  local printed = 0
+  local MAX_LINES = 90
+
+  local function describe(frame, label)
+    local l, r, t, b = frame:GetLeft(), frame:GetRight(), frame:GetTop(), frame:GetBottom()
+    local overflow = ""
+    if r and ref and ref.GetRight and ref:GetRight() then
+      local d = r - ref:GetRight()
+      if d > 0.5 then
+        overflow = "  |cffff4040>>RIGHT-OVERFLOW " .. num(d) .. "px|r"
+      end
+    end
+    local geom = l and string.format("L%d R%d T%d B%d", num(l), num(r), num(t), num(b)) or "unanchored"
+    Auctionator.Utilities.Message(string.format(
+      "%s [%s] %s lvl%d %dx%d %s%s",
+      label,
+      frame:IsShown() and "shown" or "hidden",
+      frame:GetFrameStrata() or "?",
+      frame:GetFrameLevel() or 0,
+      num(frame:GetWidth()), num(frame:GetHeight()),
+      geom, overflow
+    ))
+  end
+
+  local function labelOf(frame, parent)
+    if frame.GetName and frame:GetName() then
+      return frame:GetName()
+    end
+    if parent then
+      for k, v in pairs(parent) do
+        if v == frame and type(k) == "string" then
+          return "." .. k
+        end
+      end
+    end
+    return "<anon>"
+  end
+
+  local function dump(frame, depth, indent, parent)
+    if depth < 0 or printed >= MAX_LINES then
+      return
+    end
+    describe(frame, indent .. labelOf(frame, parent))
+    printed = printed + 1
+    if frame.GetChildren then
+      local kids = { frame:GetChildren() }
+      for _, child in ipairs(kids) do
+        if child.IsShown and child:IsShown() and (child:GetWidth() or 0) > 1 then
+          dump(child, depth - 1, indent .. "  ", frame)
+        end
+      end
+    end
+  end
+
+  Auctionator.Utilities.Message("|cffffd100=== /atrui frame dump (right-overflow flagged) ===|r")
+  if ref then
+    describe(ref, "AuctionFrame (reference)")
+  end
+  dump(root, 4, "", nil)
+  if printed >= MAX_LINES then
+    Auctionator.Utilities.Message("|cff888888(truncated at " .. MAX_LINES .. " frames)|r")
+  end
+end
+
 function Auctionator.SlashCmd.NoPriceDB()
   Auctionator.Config.Set(Auctionator.Config.Options.NO_PRICE_DATABASE, true)
 

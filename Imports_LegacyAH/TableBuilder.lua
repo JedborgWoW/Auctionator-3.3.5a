@@ -429,6 +429,16 @@ function AuctionatorRetailImportTableBuilderMixin:CalculateColumnSpacing()
 	local headerContainer = self:GetHeaderContainer();
 	if headerContainer then
 		local liveWidth = headerContainer:GetWidth();
+		-- Defensive clamp (3.3.5a): never let the table be wider than the container's
+		-- parent region, so fill columns can never spill past the panel's right edge
+		-- even if the header container is briefly mis-sized before layout settles.
+		local parent = headerContainer:GetParent();
+		if parent and parent.GetWidth then
+			local parentWidth = parent:GetWidth();
+			if parentWidth and parentWidth > 0 and liveWidth and liveWidth > parentWidth then
+				liveWidth = parentWidth;
+			end
+		end
 		if liveWidth and liveWidth > 0 then
 			self:SetTableWidth(liveWidth);
 		end

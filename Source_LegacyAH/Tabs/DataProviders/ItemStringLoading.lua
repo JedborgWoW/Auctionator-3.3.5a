@@ -1,7 +1,18 @@
 AuctionatorItemStringLoadingMixin = {}
 
 function AuctionatorItemStringLoadingMixin:OnLoad()
+  -- When the client finishes caching items shown with a placeholder icon, re-render
+  -- so the real icons replace the placeholders (no re-search needed).
+  Auctionator.Utilities.RegisterIconRefresh(function()
+    self:SetDirty()
+  end)
+
   self:SetOnEntryProcessedCallback(function(entry)
+    -- Synchronous best-effort icon immediately, so an uncached item is never blank
+    -- (ContinueOnItemLoad does not fire for an item the client has not cached yet).
+    if entry.iconTexture == nil then
+      entry.iconTexture = Auctionator.Utilities.GetItemIconSafe(entry.itemString)
+    end
     local item = Item:CreateFromItemID((C_Item.GetItemInfoInstant(entry.itemString)))
     local complete = false
     item:ContinueOnItemLoad(function()
@@ -32,6 +43,7 @@ function AuctionatorItemStringLoadingMixin:ProcessItemString(rowEntry, itemInfo)
   rowEntry.itemName = qualityColor:WrapTextInColorCode(rowEntry.name)
 
   rowEntry.iconTexture = itemInfo[Auctionator.Constants.ITEM_INFO.TEXTURE]
+    or Auctionator.Utilities.GetItemIconSafe(rowEntry.itemLink or rowEntry.itemString)
 
   rowEntry.noneAvailable = rowEntry.totalQuantity == 0
 
