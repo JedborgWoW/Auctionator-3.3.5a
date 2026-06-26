@@ -9,11 +9,17 @@ function AuctionatorItemKeyCellTemplateMixin:Populate(rowData, index)
 
   self.Text:SetText(rowData.itemName or "")
 
-  -- Always set an icon. Cells are pooled, so a nil iconTexture used to leave the
+  -- Always set a VALID icon. Cells are pooled, so a missing icon used to leave the
   -- PREVIOUS row's icon (or blank) in place -- the "only some items have icons" bug
-  -- for items the client had not cached yet. GetItemIconSafe gives a placeholder now
-  -- and the real icon resolves on GET_ITEM_INFO_RECEIVED (see GetItemIconSafe.lua).
-  self.Icon:SetTexture(rowData.iconTexture or Auctionator.Utilities.GetItemIconSafe(rowData.itemLink or rowData.itemString))
+  -- for items the client had not cached yet. A non-string iconTexture (numeric fileID)
+  -- would render green, so accept it only when it is a string; otherwise resolve
+  -- through GetItemIconSafe (real icon once cached, else a question-mark placeholder
+  -- that the GET_ITEM_INFO_RECEIVED refresh later replaces).
+  local icon = rowData.iconTexture
+  if type(icon) ~= "string" or icon == "" then
+    icon = Auctionator.Utilities.GetItemIconSafe(rowData.itemLink or rowData.itemString)
+  end
+  self.Icon:SetTexture(icon)
   self.Icon:SetVertexColor(1, 1, 1, 1)
   self.Icon:Show()
 

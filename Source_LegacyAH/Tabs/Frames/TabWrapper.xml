@@ -4,9 +4,14 @@
     hidden="true"
     virtual="true"
   >
+    <!-- This wrapper is the layout root for every Auctionator tab (AuctionFrame ->
+         wrapper -> ShoppingFrame/SellingFrame/CancellingFrame). The right edge had no
+         inset (x=0) while the left had x=12, so tab content ran to the very frame edge
+         / into the right border and overflowed. Make the right inset symmetric with the
+         left so all tab content stays inside the bordered frame. -->
     <Anchors>
       <Anchor point="TOPLEFT" x="12"/>
-      <Anchor point="BOTTOMRIGHT" y="10"/>
+      <Anchor point="BOTTOMRIGHT" x="-12" y="10"/>
     </Anchors>
     <Layers>
       <Layer>

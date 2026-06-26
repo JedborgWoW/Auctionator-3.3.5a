@@ -79,13 +79,13 @@ function Auctionator.SlashCmd.FullScan()
   frame:InitiateScan()
 end
 
--- /atrui: dump the live Auctionator frame tree (geometry, parent, strata, level, shown)
--- so layout/overflow/parenting bugs can be diagnosed by measurement instead of guessing.
--- Frames whose right edge spills past the AuctionFrame are flagged RIGHT-OVERFLOW.
+-- /atrui: dump the key Auctionator layout frames by name/path so overflow/parent/size
+-- bugs are diagnosed by measurement, not guessing. Always prints each target (even 0x0
+-- or unanchored) and MISSING if absent; flags any frame whose right edge spills past
+-- AuctionFrame, lists every SetPoint, and shows the texture for icon regions.
 function Auctionator.SlashCmd.UIDump()
   local ref = _G.AuctionFrame
-  local root = _G.AuctionatorAHFrame or ref
-  if root == nil then
+  if ref == nil then
     Auctionator.Utilities.Message("Open the auction house first, then /atrui.")
     return
   end
@@ -94,67 +94,90 @@ function Auctionator.SlashCmd.UIDump()
     return v and math.floor(v + 0.5) or 0
   end
 
-  local printed = 0
-  local MAX_LINES = 90
+  local function pointsOf(f)
+    if not f.GetNumPoints then
+      return ""
+    end
+    local parts = {}
+    for i = 1, (f:GetNumPoints() or 0) do
+      local p, rel, rp, x, y = f:GetPoint(i)
+      local relName = "nil"
+      if rel then
+        relName = (rel.GetName and rel:GetName()) or "anon"
+      end
+      table.insert(parts, string.format("%s>%s.%s(%d,%d)", tostring(p), relName, tostring(rp), num(x), num(y)))
+    end
+    return table.concat(parts, " ")
+  end
 
-  local function describe(frame, label)
-    local l, r, t, b = frame:GetLeft(), frame:GetRight(), frame:GetTop(), frame:GetBottom()
+  local function dumpFrame(label, f)
+    if f == nil then
+      Auctionator.Utilities.Message(label .. ": |cffff4040MISSING|r")
+      return
+    end
+    local l = f.GetLeft and f:GetLeft()
+    local r = f.GetRight and f:GetRight()
     local overflow = ""
-    if r and ref and ref.GetRight and ref:GetRight() then
+    if r and ref:GetRight() then
       local d = r - ref:GetRight()
       if d > 0.5 then
-        overflow = "  |cffff4040>>RIGHT-OVERFLOW " .. num(d) .. "px|r"
+        overflow = "  |cffff4040>>OVERFLOW " .. num(d) .. "px|r"
       end
     end
-    local geom = l and string.format("L%d R%d T%d B%d", num(l), num(r), num(t), num(b)) or "unanchored"
+    local par = f.GetParent and f:GetParent()
+    local tex = ""
+    if f.GetTexture then
+      tex = " tex=" .. tostring(f:GetTexture())
+    elseif f.Icon and f.Icon.GetTexture then
+      tex = " iconTex=" .. tostring(f.Icon:GetTexture())
+    end
     Auctionator.Utilities.Message(string.format(
-      "%s [%s] %s lvl%d %dx%d %s%s",
+      "%s: [%s] par=%s %s lvl%d %dx%d L%s R%s {%s}%s%s",
       label,
-      frame:IsShown() and "shown" or "hidden",
-      frame:GetFrameStrata() or "?",
-      frame:GetFrameLevel() or 0,
-      num(frame:GetWidth()), num(frame:GetHeight()),
-      geom, overflow
+      (f.IsShown and f:IsShown()) and "shown" or "hidden",
+      (par and ((par.GetName and par:GetName()) or "anon")) or "nil",
+      (f.GetFrameStrata and f:GetFrameStrata()) or "?",
+      (f.GetFrameLevel and f:GetFrameLevel()) or 0,
+      num(f.GetWidth and f:GetWidth()), num(f.GetHeight and f:GetHeight()),
+      l and num(l) or "nil", r and num(r) or "nil",
+      pointsOf(f), tex, overflow
     ))
   end
 
-  local function labelOf(frame, parent)
-    if frame.GetName and frame:GetName() then
-      return frame:GetName()
-    end
-    if parent then
-      for k, v in pairs(parent) do
-        if v == frame and type(k) == "string" then
-          return "." .. k
-        end
+  local function resolve(path)
+    local parts = { strsplit(".", path) }
+    local f = _G[parts[1]]
+    for i = 2, #parts do
+      if type(f) ~= "table" then
+        return nil
       end
+      f = f[parts[i]]
     end
-    return "<anon>"
+    return f
   end
 
-  local function dump(frame, depth, indent, parent)
-    if depth < 0 or printed >= MAX_LINES then
-      return
-    end
-    describe(frame, indent .. labelOf(frame, parent))
-    printed = printed + 1
-    if frame.GetChildren then
-      local kids = { frame:GetChildren() }
-      for _, child in ipairs(kids) do
-        if child.IsShown and child:IsShown() and (child:GetWidth() or 0) > 1 then
-          dump(child, depth - 1, indent .. "  ", frame)
-        end
-      end
-    end
-  end
-
-  Auctionator.Utilities.Message("|cffffd100=== /atrui frame dump (right-overflow flagged) ===|r")
-  if ref then
-    describe(ref, "AuctionFrame (reference)")
-  end
-  dump(root, 4, "", nil)
-  if printed >= MAX_LINES then
-    Auctionator.Utilities.Message("|cff888888(truncated at " .. MAX_LINES .. " frames)|r")
+  Auctionator.Utilities.Message("|cffffd100=== /atrui (overflow vs AuctionFrame flagged) ===|r")
+  dumpFrame("AuctionFrame(ref)", ref)
+  local targets = {
+    "AuctionatorAHFrame",
+    "AuctionatorShoppingFrame",
+    "AuctionatorShoppingFrame.ListsContainer",
+    "AuctionatorShoppingFrame.SearchOptions",
+    "AuctionatorShoppingFrame.ResultsListing",
+    "AuctionatorShoppingFrame.ResultsListing.HeaderContainer",
+    "AuctionatorShoppingFrame.ResultsListing.ScrollArea",
+    "AuctionatorShoppingFrame.ImportButton",
+    "AuctionatorShoppingFrame.ExportButton",
+    "AuctionatorShoppingFrame.ExportCSV",
+    "AuctionatorSellingFrame",
+    "AuctionatorSellingFrame.SaleItem",
+    "AuctionatorSellingFrame.SaleItem.Icon",
+    "AuctionatorCancellingFrame",
+    "AuctionatorCancellingFrame.ResultsListing",
+    "AuctionatorCancellingFrame.ResultsListing.HeaderContainer",
+  }
+  for _, path in ipairs(targets) do
+    dumpFrame(path, resolve(path))
   end
 end
 

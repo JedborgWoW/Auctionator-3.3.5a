@@ -36,6 +36,12 @@ function AuctionatorInitializeClassicMixin:AuctionHouseShown()
 
   if Auctionator.State.AuctionatorFrame == nil then
     Auctionator.State.AuctionatorFrame = CreateFrame("FRAME", "AuctionatorAHFrame", AuctionFrame, "AuctionatorAHFrameTemplate")
+    -- This frame is the addon's event/logic root (AUCTION_HOUSE_SHOW/CLOSED); the tab
+    -- content is parented to AuctionFrame via the tab wrappers, NOT to this frame. It
+    -- had no anchors/size, so it showed as a 0x0 "unanchored" phantom in /atrui. Pin it
+    -- to AuctionFrame so it has a real, stable rect (no layout children depend on it,
+    -- but this removes the confusing 0x0 and is harmless -- it has no mouse/textures).
+    Auctionator.State.AuctionatorFrame:SetAllPoints(AuctionFrame)
   end
 
   FrameUtil.RegisterFrameForEvents(Auctionator.State.AuctionatorFrame, { "AUCTION_HOUSE_SHOW", "AUCTION_HOUSE_CLOSED" })

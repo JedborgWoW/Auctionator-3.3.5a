@@ -22,32 +22,39 @@ local function ToItemID(itemLinkOrID)
   return tonumber(itemLinkOrID) or tonumber(string.match(tostring(itemLinkOrID), "item:(%d+)"))
 end
 
+-- Returns ONLY a valid texture-path string, never a number or nil. On 3.3.5a a valid
+-- icon is always a string path; a numeric fileID (the value Classic bag-cache code can
+-- produce) is NOT a valid texture here and SetTexture(number) renders a solid GREEN
+-- square. So every candidate is type-checked and a numeric/empty value is rejected in
+-- favour of the question-mark placeholder.
 function Auctionator.Utilities.GetItemIconSafe(itemLinkOrID, fallbackTexture)
-  fallbackTexture = fallbackTexture or QUESTION_MARK
-  if itemLinkOrID == nil or itemLinkOrID == "" then
-    return fallbackTexture
-  end
+  -- 1. Authoritative: GetItemInfo texture (string) for a cached item; also triggers
+  --    caching when it is not (GET_ITEM_INFO_RECEIVED then refreshes).
+  if itemLinkOrID ~= nil and itemLinkOrID ~= "" then
+    local texture = select(10, GetItemInfo(itemLinkOrID))
+    if type(texture) == "string" and texture ~= "" then
+      return texture
+    end
 
-  -- 1. GetItemInfo texture (10th return); works once the item is cached, and triggers
-  --    caching for next time when it is not.
-  local texture = select(10, GetItemInfo(itemLinkOrID))
-  if texture then
-    return texture
-  end
-
-  -- 2. Some 3.3.5a cores expose a synchronous global GetItemIcon(itemID).
-  if GetItemIcon then
-    local itemID = ToItemID(itemLinkOrID)
-    if itemID then
-      local viaIcon = GetItemIcon(itemID)
-      if viaIcon then
-        return viaIcon
+    -- 2. Some 3.3.5a cores expose a synchronous global GetItemIcon(itemID).
+    if GetItemIcon then
+      local itemID = ToItemID(itemLinkOrID)
+      if itemID then
+        local viaIcon = GetItemIcon(itemID)
+        if type(viaIcon) == "string" and viaIcon ~= "" then
+          return viaIcon
+        end
       end
     end
   end
 
-  -- 3. Never leave the region blank/stale.
-  return fallbackTexture
+  -- 3. Only honour a STRING fallback (reject numeric fileIDs -> they render green).
+  if type(fallbackTexture) == "string" and fallbackTexture ~= "" then
+    return fallbackTexture
+  end
+
+  -- 4. Guaranteed-valid placeholder; never blank, never green.
+  return QUESTION_MARK
 end
 
 -- Listings register a refresh function; we call them (throttled) when the client

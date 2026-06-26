@@ -28,10 +28,15 @@
         </Texture>
       </Layer>
       <Layer level="BACKGROUND" textureSubLevel="3">
-        <Texture parentKey="IconBorder" file="Interface\Common\WhiteIconFrame">
+        <!-- Interface\Common\WhiteIconFrame is a Cataclysm+ texture absent on 3.3.5a;
+             a missing file renders a SOLID GREEN square, and this border sits ABOVE the
+             icon (textureSubLevel 3) so it covered the item icon entirely. Use the
+             stock WotLK achievement icon frame (present, transparent centre) so it still
+             tints by item quality but never goes green. -->
+        <Texture parentKey="IconBorder" file="Interface\AchievementFrame\UI-Achievement-IconFrame">
           <Anchors>
-            <Anchor point="TOPLEFT"/>
-            <Anchor point="BOTTOMRIGHT"/>
+            <Anchor point="TOPLEFT" x="-2" y="2"/>
+            <Anchor point="BOTTOMRIGHT" x="2" y="-2"/>
           </Anchors>
         </Texture>
         <Texture parentKey="IconSelectedHighlight" file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD">

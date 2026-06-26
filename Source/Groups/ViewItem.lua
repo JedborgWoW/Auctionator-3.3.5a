@@ -9,11 +9,15 @@ function AuctionatorGroupsViewItemMixin:SetItemInfo(info)
 
   if info ~= nil then
 
-    -- Selling slot / groups item icon. info.iconTexture can be nil/black when the
-    -- bag-cache icon path did not resolve; fall back to a synchronous lookup so the
-    -- slot never renders an empty/black square over a valid item.
-    self.Icon:SetTexture(info.iconTexture or Auctionator.Utilities.GetItemIconSafe(info.itemLink))
+    -- Selling slot / groups item icon. info.iconTexture from the bag cache can be a
+    -- numeric fileID or otherwise invalid on 3.3.5a, which renders a solid GREEN
+    -- square -- so resolve authoritatively through GetItemIconSafe (GetItemInfo first;
+    -- the bag item is always cached) and only accept a string. Reset the texture region
+    -- so a previous tint/coord can never leave it green/black.
+    self.Icon:SetTexture(Auctionator.Utilities.GetItemIconSafe(info.itemLink, info.iconTexture))
+    self.Icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     self.Icon:SetVertexColor(1, 1, 1, 1)
+    self.Icon:SetDrawLayer("ARTWORK")
     self.Icon:Show()
 
     if info.selected then
