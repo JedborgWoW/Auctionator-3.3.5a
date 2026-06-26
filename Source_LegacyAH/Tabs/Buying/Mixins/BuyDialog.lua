@@ -65,6 +65,19 @@ function AuctionatorBuyDialogMixin:OnShow()
   Auctionator.EventBus:Register(self, EVENTS)
   FrameUtil.RegisterFrameForEvents(self, MONEY_EVENTS)
   self.ChainBuy:SetChecked(Auctionator.Config.Get(Auctionator.Config.Options.CHAIN_BUY_STACKS))
+
+  -- Mouse-input layering fix (re-asserted on every show, after the dialog reaches its
+  -- shown/raised frame level). The modal Overlay (enableMouse, spans the whole tab to
+  -- block click-through to the listing) is declared with useParentLevel="true", which
+  -- stock 3.3.5a does NOT honor -- it landed ABOVE the Buy Stack / Close buttons and
+  -- swallowed their clicks (only the ChainBuy checkbox, which sits higher, still
+  -- toggled). Pin the Overlay just above the dialog (still over the listing via the
+  -- DIALOG strata) and raise the interactive controls clearly above the Overlay.
+  local base = self:GetFrameLevel()
+  self.Overlay:SetFrameLevel(base + 1)
+  self.BuyStack:SetFrameLevel(base + 5)
+  self.Cancel:SetFrameLevel(base + 5)
+  self.ChainBuy:SetFrameLevel(base + 5)
 end
 
 function AuctionatorBuyDialogMixin:OnHide()
