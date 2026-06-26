@@ -291,6 +291,19 @@ function AuctionatorShoppingTabFrameMixin:OnShow()
   self.SearchOptions:FocusSearchBox()
   Auctionator.EventBus:Register(self, EVENTBUS_EVENTS)
 
+  -- The footer buttons (Export / Import / Export Results) must draw ABOVE the results
+  -- panel and its passive black inset background, which otherwise covered "Export
+  -- Results" on 3.3.5a (it appeared behind the black panel). Re-assert the ordering on
+  -- every show, after the panel/inset have their frame levels.
+  local panelLevel = math.max(
+    self.ResultsListing:GetFrameLevel() or 0,
+    self.ShoppingResultsInset:GetFrameLevel() or 0
+  )
+  local footerLevel = panelLevel + 10
+  self.ExportCSV:SetFrameLevel(footerLevel)
+  self.ExportButton:SetFrameLevel(footerLevel)
+  self.ImportButton:SetFrameLevel(footerLevel)
+
   if self.shouldDefaultOpenOnShow then
     self:OpenDefaultList()
     self.shouldDefaultOpenOnShow = false

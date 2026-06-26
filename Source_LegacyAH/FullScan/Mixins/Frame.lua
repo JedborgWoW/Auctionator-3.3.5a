@@ -77,24 +77,37 @@ function AuctionatorFullScanFrameMixin:NextScanMessage()
   return AUCTIONATOR_L_NEXT_SCAN_MESSAGE:format(minutesUntilNextScan, secondsUntilNextScan)
 end
 
--- During the scan we must stop the regular search/throttle frames from reacting
--- to our per-page AUCTION_ITEM_LIST_UPDATE events, so steal the event for the
--- duration and restore the other listeners afterwards.
+-- During the scan we must stop the regular search/throttle frames from reacting to our
+-- per-page AUCTION_ITEM_LIST_UPDATE events (they would treat the results as a user
+-- search). The retail code used GetFramesRegisteredForEvent -- a Cataclysm (4.0) API
+-- that is NIL on stock 3.3.5a, so it errored here and the scan never started. On 3.3.5a
+-- the only listeners that matter are Auctionator's own AH frames, so suppress those by
+-- reference (IsEventRegistered/UnregisterEvent are native) and restore them afterwards.
 function AuctionatorFullScanFrameMixin:RegisterForEvents()
-  self.otherFramesForEvent = { GetFramesRegisteredForEvent("AUCTION_ITEM_LIST_UPDATE") }
-  for _, f in ipairs(self.otherFramesForEvent) do
-    f:UnregisterEvent("AUCTION_ITEM_LIST_UPDATE")
+  self.suppressedFrames = {}
+  local internals = Auctionator.AH.Internals
+  local candidates = {}
+  if internals then
+    if internals.scan then table.insert(candidates, internals.scan) end
+    if internals.throttling then table.insert(candidates, internals.throttling) end
+  end
+  for _, f in ipairs(candidates) do
+    if f.IsEventRegistered and f:IsEventRegistered("AUCTION_ITEM_LIST_UPDATE") then
+      f:UnregisterEvent("AUCTION_ITEM_LIST_UPDATE")
+      table.insert(self.suppressedFrames, f)
+    end
   end
   FrameUtil.RegisterFrameForEvents(self, FULL_SCAN_EVENTS)
+  Auctionator.Debug.Message("FullScan: registered events; suppressed", #self.suppressedFrames, "frames")
 end
 
 function AuctionatorFullScanFrameMixin:UnregisterForEvents()
   FrameUtil.UnregisterFrameForEvents(self, FULL_SCAN_EVENTS)
-  if self.otherFramesForEvent then
-    for _, f in ipairs(self.otherFramesForEvent) do
+  if self.suppressedFrames then
+    for _, f in ipairs(self.suppressedFrames) do
       f:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
     end
-    self.otherFramesForEvent = nil
+    self.suppressedFrames = nil
   end
 end
 
@@ -106,8 +119,10 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
     self.awaitingPage = true
     -- 3.3.5a signature: (name, minLevel, maxLevel, invType, class, subclass,
     --                    page, isUsable, qualityIndex) -- no getAll.
+    Auctionator.Debug.Message("FullScan: QueryAuctionItems page", self.currentPage)
     QueryAuctionItems("", nil, nil, nil, nil, nil, self.currentPage, nil, nil)
   else
+    Auctionator.Debug.Message("FullScan: throttled, retrying page", self.currentPage)
     C_Timer.After(RETRY_DELAY, function() self:QueryNextPage() end)
   end
 end
@@ -124,6 +139,7 @@ function AuctionatorFullScanFrameMixin:PageSignature(numBatch)
 end
 
 function AuctionatorFullScanFrameMixin:OnEvent(event, ...)
+  Auctionator.Debug.Message("FullScan: event", event, "inProgress", self.inProgress, "awaiting", self.awaitingPage)
   if event == "AUCTION_ITEM_LIST_UPDATE" then
     if self.inProgress and self.awaitingPage then
       self:ProcessPage()
@@ -139,6 +155,7 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   end
 
   local numBatch, total = GetNumAuctionItems("list")
+  Auctionator.Debug.Message("FullScan: ProcessPage page", self.currentPage, "numBatch", numBatch, "total", total)
 
   -- Empty response: on page 0 the server may just be slow -> retry; otherwise we
   -- have run off the end of the list.

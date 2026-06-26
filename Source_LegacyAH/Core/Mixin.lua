@@ -56,10 +56,12 @@ end
 
 local function InitializeFullScanFrame()
   if Auctionator.State.FullScanFrameRef == nil then
+    -- AuctionHouseFrame is the modern (BfA+) AH name and is nil on 3.3.5a; use the
+    -- stock AuctionFrame so the scan frame has a real parent.
     Auctionator.State.FullScanFrameRef = CreateFrame(
       "FRAME",
       "AuctionatorFullScanFrame",
-      AuctionHouseFrame,
+      AuctionFrame or AuctionHouseFrame,
       "AuctionatorFullScanFrameTemplate"
     )
   end
