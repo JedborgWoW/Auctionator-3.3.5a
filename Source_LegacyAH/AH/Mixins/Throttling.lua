@@ -24,6 +24,13 @@ local AUCTIONS_UPDATED_EVENTS = {
 }
 local BID_PLACED_EVENTS = {
   "AUCTION_ITEM_LIST_UPDATE",
+  -- On stock 3.3.5a a buyout/bid does NOT auto-refresh the browse list, so
+  -- AUCTION_ITEM_LIST_UPDATE never fires after PlaceAuctionBid and ComparePages can
+  -- never see the change -> the bid waited the full 10s timeout ("server took too
+  -- long"), which also left IsNotThrottled() false and silently blocked the
+  -- throttle-gated Cancelling row-click. A successful bid/buyout ALWAYS spends gold,
+  -- so PLAYER_MONEY is the reliable completion signal on this client.
+  "PLAYER_MONEY",
 }
 local TIMEOUT = 10
 
@@ -85,6 +92,16 @@ function AuctionatorAHThrottlingFrameMixin:OnEvent(eventName, ...)
 
   elseif eventName == "AUCTION_ITEM_LIST_UPDATE" then
     self:ComparePages()
+
+  elseif eventName == "PLAYER_MONEY" then
+    -- Gold changed while a bid/buyout was pending => the purchase went through.
+    -- This is the only completion signal that reliably fires on stock 3.3.5a
+    -- (the post-buyout AUCTION_ITEM_LIST_UPDATE that ComparePages relies on does not).
+    if self.waitingOnBid then
+      Auctionator.Debug.Message("Throttling: PLAYER_MONEY -> bid/buyout complete")
+      self.waitingOnBid = false
+      FrameUtil.UnregisterFrameForEvents(self, BID_PLACED_EVENTS)
+    end
 
   elseif eventName == "UI_ERROR_MESSAGE" then
     if AuctionFrame:IsShown() and self:AnyWaiting() then
@@ -211,7 +228,7 @@ function AuctionatorAHThrottlingFrameMixin:ComparePages()
     local newMinBid = newPage[index].info[Auctionator.Constants.AuctionItemInfo.MinBid]
     local newBidAmount = newPage[index].info[Auctionator.Constants.AuctionItemInfo.BidAmount]
     if stackPrice ~= newStackPrice or stackSize ~= newStackSize or
-       minBid ~= newMinBid or bidAmount ~= newMinBidAmount or
+       minBid ~= newMinBid or bidAmount ~= newBidAmount or
        newPage[index].itemLink ~= auction.itemLink then
       self.waitingOnBid = false
       FrameUtil.UnregisterFrameForEvents(self, BID_PLACED_EVENTS)

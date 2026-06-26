@@ -1,7 +1,14 @@
 AuctionatorCancellingListResultsRowMixin = CreateFromMixins(AuctionatorResultsRowTemplateMixin)
 
 function AuctionatorCancellingListResultsRowMixin:OnClick(button, ...)
-  Auctionator.Debug.Message("AuctionatorCancellingListResultsRowMixin:OnClick", self.rowData and self.rowData.id)
+  -- Diagnostic: a left-click only cancels when the throttle is free (gate below). If a
+  -- background undercut scan / pending action holds the throttle, the click is dropped
+  -- here -- which is why row-click "did nothing" while Cancel Undercut (scan-aware) worked.
+  Auctionator.Debug.Message(
+    "AuctionatorCancellingListResultsRowMixin:OnClick", button,
+    "throttleReady", Auctionator.AH.IsNotThrottled(),
+    self.rowData and self.rowData.itemLink
+  )
 
   if IsModifiedClick("DRESSUP") then
     DressUpLink(self.rowData.itemLink);

@@ -245,6 +245,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["BUY_STACK"] = "Buy Stack"
   L["NONE_LEFT"] = "None Left"
   L["BUY"] = "Buy"
+  L["BUY_AUCTION_CHANGED"] = "Auction data changed. Refresh and try again."
   L["BUYING"] = "Buying"
   L["REFRESH"] = "Refresh"
 

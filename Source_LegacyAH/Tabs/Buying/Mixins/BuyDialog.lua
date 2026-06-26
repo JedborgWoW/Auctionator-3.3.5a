@@ -213,7 +213,36 @@ function AuctionatorBuyDialogMixin:BuyStackClicked()
   self:SetChainBuy()
   self:FindAuctionOnCurrentPage()
   if self.buyInfo ~= nil then
-    Auctionator.AH.PlaceAuctionBid(self.buyInfo.index, self.auctionData.stackPrice)
+    -- Re-validate against the LIVE auction list immediately before bidding. On
+    -- 3.3.5a PlaceAuctionBid("list", index, price) addresses the current server
+    -- "list"; read the buyout straight from GetAuctionItemInfo so we never bid on a
+    -- stale price, and bail (forcing a refresh) if the row moved under us. This also
+    -- emits the diagnostic trail for the buy pipeline.
+    local index = self.buyInfo.index
+    local info = { GetAuctionItemInfo("list", index) }
+    local liveName = info[1]
+    local liveCount = info[Auctionator.Constants.AuctionItemInfo.Quantity]
+    local liveBuyout = info[Auctionator.Constants.AuctionItemInfo.Buyout]
+    local liveLink = GetAuctionItemLink("list", index)
+    Auctionator.Debug.Message(
+      "BuyDialog:BuyStackClicked", "index", index, "name", liveName,
+      "displayStackPrice", self.auctionData.stackPrice, "liveBuyout", liveBuyout,
+      "liveCount", liveCount, "stackSize", self.auctionData.stackSize
+    )
+
+    local linksMatch = liveLink ~= nil and self.auctionData.itemLink ~= nil
+      and Auctionator.Search.GetCleanItemLink(liveLink) == Auctionator.Search.GetCleanItemLink(self.auctionData.itemLink)
+    if liveBuyout == nil or liveBuyout == 0 or liveCount ~= self.auctionData.stackSize or not linksMatch then
+      Auctionator.Debug.Message("BuyDialog:BuyStackClicked aborted -- live list data changed")
+      Auctionator.Utilities.Message(AUCTIONATOR_L_BUY_AUCTION_CHANGED)
+      self.buyInfo = nil
+      self:UpdateButtons()
+      self:GetParent():DoMinimalRefresh()
+      return
+    end
+
+    Auctionator.Debug.Message("BuyDialog -> PlaceAuctionBid", "list", index, liveBuyout)
+    Auctionator.AH.PlaceAuctionBid(index, liveBuyout)
     self.auctionData.numStacks = self.auctionData.numStacks - 1
     Auctionator.Utilities.SetStacksText(self.auctionData)
     self.lastBuyStackSize = self.auctionData.stackSize
