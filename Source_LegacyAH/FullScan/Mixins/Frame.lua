@@ -305,8 +305,14 @@ function AuctionatorFullScanFrameMixin:EndProcessing()
 
   local rawFullScan = self.scanData
 
+  -- ProcessScan returns the number of DISTINCT items priced (e.g. ~2453), which is
+  -- confusing next to the ~31000 auctions the panel reported. Show both so the count is
+  -- unambiguous and consistent with the progress panel.
   local count = Auctionator.Database:ProcessScan(MergeInfo(self.scanData, self.dbKeysMapping))
-  Auctionator.Utilities.Message(AUCTIONATOR_L_FINISHED_PROCESSING:format(count))
+  Auctionator.Utilities.Message(string.format(
+    "|cffffd100Auctionator:|r Full Scan complete -- %d auctions scanned, %d items priced.",
+    self.auctionsProcessed or 0, count
+  ))
 
   self.inProgress = false
   self.awaitingPage = false

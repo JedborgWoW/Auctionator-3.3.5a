@@ -305,13 +305,30 @@ function AuctionatorShoppingTabFrameMixin:OnShow()
     { self.ImportButton, self.ExportButton },
     self.NewListButton, "LEFT", "RIGHT", 12, 0, 8
   )
+  -- Export Results on the SAME bottom strip as New List (its right edge aligned to the
+  -- results panel), so all footer buttons share New List's height -- a clean action row.
   self.ExportCSV:ClearAllPoints()
-  self.ExportCSV:SetPoint("TOPRIGHT", self.ShoppingResultsInset, "BOTTOMRIGHT", 0, -6)
+  self.ExportCSV:SetPoint("BOTTOM", self.NewListButton, "BOTTOM")
+  self.ExportCSV:SetPoint("RIGHT", self.ShoppingResultsInset, "RIGHT")
 
   -- Footer buttons must draw above the passive black inset background.
   Auctionator.Layout.RaiseAbove(self.ImportButton, self.ResultsListing, self.ShoppingResultsInset)
   Auctionator.Layout.RaiseAbove(self.ExportButton, self.ResultsListing, self.ShoppingResultsInset)
   Auctionator.Layout.RaiseAbove(self.ExportCSV, self.ResultsListing, self.ShoppingResultsInset)
+
+  -- Dark sidebar background: the left list panel had no background, so the AH interior
+  -- showed through and it did not read as one panel with the dark results area. Put a
+  -- themed dark backdrop BEHIND the sidebar content (a dedicated frame -- does not touch
+  -- the working list container's own layout).
+  if not self.SidebarBg then
+    self.SidebarBg = CreateFrame("Frame", nil, self)
+    self.SidebarBg:SetFrameLevel(self:GetFrameLevel())
+    Auctionator.Theme.ApplySidebarBackdrop(self.SidebarBg)
+  end
+  self.SidebarBg:ClearAllPoints()
+  self.SidebarBg:SetPoint("TOPLEFT", self, "TOPLEFT", 6, -46)
+  self.SidebarBg:SetPoint("BOTTOMLEFT", self.NewListButton, "TOPLEFT", -6, 6)
+  self.SidebarBg:SetWidth(278)
 
   if self.shouldDefaultOpenOnShow then
     self:OpenDefaultList()
