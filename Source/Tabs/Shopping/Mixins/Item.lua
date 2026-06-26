@@ -139,6 +139,26 @@ function AuctionatorShoppingItemMixin:OnShow()
   self:ResetAll()
   self.SearchContainer.SearchString:SetFocus()
 
+  -- Diagnostic dump of the Search Options dialog container (enable Auctionator debug
+  -- to see it). Confirms the dialog has a real backdrop/strata/level after the
+  -- ButtonFrameTemplate OnLoad fix; "backdrop NONE" would mean the container is
+  -- transparent again.
+  if Auctionator.Debug.IsOn() then
+    local parent = self:GetParent()
+    local bd = self.GetBackdrop and self:GetBackdrop()
+    Auctionator.Debug.Message(
+      "SearchOptions dialog",
+      "name", self:GetName() or "<anon>",
+      "parent", parent and (parent:GetName() or "<anon>") or "nil",
+      "strata", self:GetFrameStrata(),
+      "level", self:GetFrameLevel(),
+      "shown", tostring(self:IsShown()),
+      "size", math.floor((self:GetWidth() or 0) + 0.5) .. "x" .. math.floor((self:GetHeight() or 0) + 0.5),
+      "points", self:GetNumPoints(),
+      "backdrop", (bd and bd.bgFile) or "NONE"
+    )
+  end
+
   Auctionator.EventBus
     :RegisterSource(self, "add item dialog")
     :Fire(self, Auctionator.Shopping.Tab.Events.DialogOpened)
