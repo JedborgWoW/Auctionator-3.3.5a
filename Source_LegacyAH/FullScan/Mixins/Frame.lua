@@ -36,8 +36,14 @@ function AuctionatorFullScanFrameMixin:CanInitiate()
 end
 
 function AuctionatorFullScanFrameMixin:InitiateScan()
-  if not self:CanInitiate() then
-    Auctionator.Utilities.Message(self:NextScanMessage())
+  Auctionator.Debug.Message("FullScan: InitiateScan", "canQuery", tostring(CanSendAuctionQuery()), "inProgress", tostring(self.inProgress))
+  -- Always give clear, user-visible feedback so a Full Scan click is never silent.
+  if self.inProgress then
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r Full scan already running.")
+    return
+  end
+  if not CanSendAuctionQuery() then
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r Auction house busy -- wait a few seconds, then click Full Scan again.")
     return
   end
 

@@ -67,6 +67,11 @@ end
 -- with the Info tab, so this is the UI-independent trigger. Needs the AH open
 -- (you can only query auctions while it is).
 function Auctionator.SlashCmd.FullScan()
+  Auctionator.Debug.Message(
+    "SlashCmd.FullScan",
+    "ahShown", tostring(AuctionFrame ~= nil and AuctionFrame:IsShown()),
+    "frameRef", tostring(Auctionator.State.FullScanFrameRef)
+  )
   if not (AuctionFrame and AuctionFrame:IsShown()) then
     Auctionator.Utilities.Message("Open the auction house first to run a full scan.")
     return
