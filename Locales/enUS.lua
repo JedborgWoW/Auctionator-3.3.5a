@@ -165,6 +165,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["SEARCH_OPTIONS"] = "Search Options"
   L["ADD_TO_LIST"] = "Add To List"
   L["FULL_SCAN"] = "Full Scan"
+  L["SCANNING"] = "Scanning..."
   L["SEARCH_ALL"] = "Search All"
   L["EXPORT"] = "Export"
   L["IMPORT"] = "Import"

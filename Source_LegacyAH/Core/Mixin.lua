@@ -65,6 +65,9 @@ local function InitializeFullScanFrame()
       "AuctionatorFullScanFrameTemplate"
     )
   end
+  if Auctionator.FullScan.InitializeProgressUI then
+    Auctionator.FullScan.InitializeProgressUI()
+  end
 end
 
 local setupSearchCategories = false

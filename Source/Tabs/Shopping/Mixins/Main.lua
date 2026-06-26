@@ -297,23 +297,21 @@ function AuctionatorShoppingTabFrameMixin:OnShow()
   -- frame). Re-anchor deterministically to the results inset: Import + Export as a LEFT
   -- group just below the black results panel, Export Results at the RIGHT of the same
   -- footer row -- a clean single row that does not overlap or sit behind the panel.
-  self.ImportButton:ClearAllPoints()
-  self.ImportButton:SetPoint("TOPLEFT", self.ShoppingResultsInset, "BOTTOMLEFT", 0, -6)
-  self.ExportButton:ClearAllPoints()
-  self.ExportButton:SetPoint("LEFT", self.ImportButton, "RIGHT", 8, 0)
+  -- Footer: Import + Export are list-management actions, so group them on the bottom
+  -- LEFT next to New List ([New List] [Import] [Export]); the left of the results-panel
+  -- row is occupied by the lists panel, so anchoring there left them mid-view. Export
+  -- Results (a results action) stays at the bottom RIGHT of the panel.
+  Auctionator.Layout.SetButtonRow(
+    { self.ImportButton, self.ExportButton },
+    self.NewListButton, "LEFT", "RIGHT", 12, 0, 8
+  )
   self.ExportCSV:ClearAllPoints()
   self.ExportCSV:SetPoint("TOPRIGHT", self.ShoppingResultsInset, "BOTTOMRIGHT", 0, -6)
 
-  -- Footer buttons must draw ABOVE the passive black inset background (which otherwise
-  -- covered "Export Results" on 3.3.5a).
-  local panelLevel = math.max(
-    self.ResultsListing:GetFrameLevel() or 0,
-    self.ShoppingResultsInset:GetFrameLevel() or 0
-  )
-  local footerLevel = panelLevel + 10
-  self.ExportCSV:SetFrameLevel(footerLevel)
-  self.ExportButton:SetFrameLevel(footerLevel)
-  self.ImportButton:SetFrameLevel(footerLevel)
+  -- Footer buttons must draw above the passive black inset background.
+  Auctionator.Layout.RaiseAbove(self.ImportButton, self.ResultsListing, self.ShoppingResultsInset)
+  Auctionator.Layout.RaiseAbove(self.ExportButton, self.ResultsListing, self.ShoppingResultsInset)
+  Auctionator.Layout.RaiseAbove(self.ExportCSV, self.ResultsListing, self.ShoppingResultsInset)
 
   if self.shouldDefaultOpenOnShow then
     self:OpenDefaultList()

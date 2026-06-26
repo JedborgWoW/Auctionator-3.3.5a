@@ -4,4 +4,5 @@
 
   <Include file="Mixins\Manifest.xml"/>
   <Include file="Frame.xml"/>
+  <Script file="Progress.lua"/>
 </Ui>

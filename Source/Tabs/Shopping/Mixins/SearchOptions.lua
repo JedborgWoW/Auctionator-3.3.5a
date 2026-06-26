@@ -34,6 +34,9 @@ function AuctionatorShoppingTabSearchOptionsMixin:OnLoad()
   Auctionator.EventBus:Register(self, {
     Auctionator.Shopping.Tab.Events.SearchStart,
     Auctionator.Shopping.Tab.Events.SearchEnd,
+    Auctionator.FullScan.Events.ScanStart,
+    Auctionator.FullScan.Events.ScanComplete,
+    Auctionator.FullScan.Events.ScanFailed,
   })
 
   -- Autocompletion with recents and shopping list terms for the search box
@@ -82,6 +85,20 @@ function AuctionatorShoppingTabSearchOptionsMixin:OnLoad()
 end
 
 function AuctionatorShoppingTabSearchOptionsMixin:ReceiveEvent(eventName, ...)
+  -- Full Scan button state: disabled "Scanning..." while a scan runs, restored after.
+  if eventName == Auctionator.FullScan.Events.ScanStart then
+    self.FullScanButton:SetText(AUCTIONATOR_L_SCANNING)
+    self.FullScanButton:Disable()
+    DynamicResizeButton_Resize(self.FullScanButton)
+    return
+  elseif eventName == Auctionator.FullScan.Events.ScanComplete
+      or eventName == Auctionator.FullScan.Events.ScanFailed then
+    self.FullScanButton:SetText(AUCTIONATOR_L_FULL_SCAN)
+    self.FullScanButton:Enable()
+    DynamicResizeButton_Resize(self.FullScanButton)
+    return
+  end
+
   -- Change text to Cancel when a list search is ongoing and swap back to Search
   -- when the search is over
   if eventName == Auctionator.Shopping.Tab.Events.SearchStart then

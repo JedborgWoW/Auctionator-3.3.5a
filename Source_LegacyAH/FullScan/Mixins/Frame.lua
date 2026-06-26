@@ -54,6 +54,8 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   self.currentPage = 0
   self.totalPages = 0
   self.totalAuctions = 0
+  self.auctionsProcessed = 0
+  self.scanStartTime = GetTime()
   self.retries = 0
   self.prevPageSig = nil
   self.awaitingPage = false
@@ -72,6 +74,18 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
 
   Auctionator.EventBus:Fire(self, Auctionator.FullScan.Events.ScanProgress, 0.01)
   self:QueryNextPage()
+end
+
+-- Live progress snapshot for the scan progress UI.
+function AuctionatorFullScanFrameMixin:GetProgressInfo()
+  return {
+    inProgress = self.inProgress == true,
+    currentPage = self.currentPage or 0,
+    totalPages = self.totalPages or 0,
+    totalAuctions = self.totalAuctions or 0,
+    auctionsProcessed = self.auctionsProcessed or 0,
+    elapsed = self.scanStartTime and (GetTime() - self.scanStartTime) or 0,
+  }
 end
 
 function AuctionatorFullScanFrameMixin:NextScanMessage()
@@ -207,6 +221,7 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
 
   self.prevPageSig = sig
   self.retries = 0
+  self.auctionsProcessed = (self.auctionsProcessed or 0) + numBatch
   self.currentPage = self.currentPage + 1
   self.awaitingPage = false
 
