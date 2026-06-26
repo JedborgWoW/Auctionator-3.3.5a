@@ -2,7 +2,7 @@
   <Frame
     name="AuctionatorShoppingItemTemplate"
     inherits="ButtonFrameTemplate"
-    frameStrata="Dialog"
+    frameStrata="DIALOG"
     enableMouse="true"
     virtual="true"
     hidden="true"

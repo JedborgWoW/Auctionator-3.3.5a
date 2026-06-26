@@ -51,7 +51,7 @@
       </Button>
     </Frames>
   <Scripts><OnLoad>self.layoutType = "Dialog"; self.BuyStack:SetPoint("TOPRIGHT", self.Stop, "TOPLEFT")</OnLoad></Scripts></Frame>
-  <Frame name="AuctionatorBuyDialogTemplate" frameStrata="Dialog" virtual="true" enableMouse="true" movable="true" clampedToScreen="true">
+  <Frame name="AuctionatorBuyDialogTemplate" frameStrata="DIALOG" virtual="true" enableMouse="true" movable="true" clampedToScreen="true">
     <Scripts>
       <OnLoad>Mixin(self, AuctionatorBuyDialogMixin); self.layoutType = "Dialog"; self:OnLoad(); self.Overlay:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -10, 0); self.Overlay:SetPoint("BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, -22); self.UnitPrice:SetPoint("TOP", self.PurchaseDetails, "BOTTOM", 0, -6); self.NumberPurchased:SetPoint("TOP", self.UnitPrice, "BOTTOM", 0, -8); self.BuyStack:SetPoint("TOPRIGHT", self.Cancel, "TOPLEFT"); self.ChainBuy:SetPoint("RIGHT", self.BuyStack, "LEFT")</OnLoad>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>

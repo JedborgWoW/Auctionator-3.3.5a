@@ -2,7 +2,7 @@
   <Frame
     name="AuctionatorExportListTemplate"
     inherits="AuctionatorSimplePanelTemplate"
-    frameStrata="Dialog"
+    frameStrata="DIALOG"
     enableMouse="true"
     virtual="true"
     hidden="true"

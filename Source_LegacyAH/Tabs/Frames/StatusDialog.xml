@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
- <Frame name="AuctionatorStatusDialogTemplate" virtual="true" frameStrata="Dialog">
+ <Frame name="AuctionatorStatusDialogTemplate" virtual="true" frameStrata="DIALOG">
   
     
   

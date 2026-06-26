@@ -143,6 +143,20 @@ for _, t in ipairs(frameTypes) do
   end
 end
 
+-- Atlas -> 3.3.5a file-texture resolution (shared). 3.3.5a has no atlas system, so
+-- SetAtlas was a no-op and every atlas-driven texture (row highlight, selection, sort
+-- arrow, row stripe) rendered invisible. A handful of Auctionator's UI atlases have a
+-- clean stock-client equivalent; map those to a real file so they render. Anything not
+-- in the table stays a no-op exactly as before, so this can never make another texture
+-- worse. NOTE: this only affects Lua SetAtlas() call sites; XML `atlas=` attributes are
+-- parsed by the C engine and must be converted to `file=` in the XML separately.
+local ATLAS_TO_TEXTURE = {
+  ["auctionhouse-ui-row-highlight"] = "Interface\\QuestFrame\\UI-QuestTitleHighlight",
+  ["auctionhouse-ui-row-select"]    = "Interface\\QuestFrame\\UI-QuestTitleHighlight",
+  ["auctionhouse-ui-sortarrow"]     = "Interface\\Buttons\\UI-SortArrow",
+  ["auctionhouse-rowstripe-1"]      = "Interface\\Tooltips\\UI-Tooltip-Background",
+}
+
 -- Textures and font strings (regions, not frames).
 local tex = probe:CreateTexture()
 AddMethods(tex, regionMethods)
@@ -150,9 +164,13 @@ AddMethods(tex, {
   SetColorTexture = function(self, r, g, b, a)
     self:SetTexture(r, g, b, a)
   end,
-  -- 3.3.5a has no atlas system; treat as a no-op (the texture simply stays
-  -- whatever it was). Cosmetic only.
-  SetAtlas = function() end,
+  -- Resolve known UI atlases to stock textures; unknown atlases are a no-op (cosmetic).
+  SetAtlas = function(self, atlas)
+    local file = atlas and ATLAS_TO_TEXTURE[atlas]
+    if file then
+      self:SetTexture(file)
+    end
+  end,
   GetAtlas = function() return nil end,
 })
 
