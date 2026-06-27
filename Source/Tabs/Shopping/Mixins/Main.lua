@@ -414,6 +414,23 @@ function AuctionatorShoppingTabFrameMixin:NormalizeVisuals()
   Auctionator.Visual.RaiseAbove(self.ImportButton, self.ShoppingResultsInset, sidebarInset)
   Auctionator.Visual.RaiseAbove(self.ExportButton, self.ShoppingResultsInset, sidebarInset)
   Auctionator.Visual.RaiseAbove(self.ExportCSV, self.ShoppingResultsInset, sidebarInset)
+
+  -- HEADER BLEED FIX 2 (reset/clear "X" button). It inherits UIPanelButtonTemplate, so it
+  -- carries the dark stone button background (UI-Panel-Button-Up) behind the small red "no"
+  -- icon -- that is the dark patch beside the red button. Blank the button-chrome textures so
+  -- only the red icon shows, and pin the icon (its template texture has no anchors) to fill it.
+  local resetBtn = self.SearchOptions and self.SearchOptions.ResetSearchStringButton
+  if resetBtn then
+    if resetBtn.SetNormalTexture then resetBtn:SetNormalTexture("") end
+    if resetBtn.SetPushedTexture then resetBtn:SetPushedTexture("") end
+    if resetBtn.SetDisabledTexture then resetBtn:SetDisabledTexture("") end
+    if resetBtn.SetHighlightTexture then resetBtn:SetHighlightTexture("") end
+    if resetBtn.texture then
+      resetBtn.texture:ClearAllPoints()
+      resetBtn.texture:SetAllPoints(resetBtn)
+    end
+  end
+
 end
 
 function AuctionatorShoppingTabFrameMixin:OnHide()

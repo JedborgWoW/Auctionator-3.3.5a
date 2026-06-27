@@ -300,15 +300,19 @@ function AuctionatorLegacy_LayoutShoppingSearchRow(frame)
 
   if input then
     Clear(input)
+    -- Keep the input at its original height so the Search/Options/Full Scan buttons (which sit
+    -- on the input's line) stay clear of the tab/column-header row below.
     input:SetPoint("TOPLEFT", frame, "TOPLEFT", inputStart, -6)
     if input.SetSize then
       input:SetSize(inputW, 22)
     end
   end
-  -- Label to the LEFT of the input, vertically centred on it.
+  -- Label CENTERED ABOVE the input (was previously to its left). It sits in the otherwise empty
+  -- strip above the input (between the input top and the window title), so it does not push the
+  -- input or the buttons down into the tabs/headers.
   if label and input then
     Clear(label)
-    label:SetPoint("RIGHT", input, "LEFT", -INPUT_GAP, 0)
+    label:SetPoint("BOTTOM", input, "TOP", 0, 2)
   end
   -- Reset ("X") hugs the input's right edge.
   if reset and input then
