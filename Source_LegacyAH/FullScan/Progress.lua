@@ -46,16 +46,17 @@ function AuctionatorFullScanProgressMixin:UpdateProgressText()
   end
   local elapsed = math.floor(p.elapsed)
   local speed = math.floor((p.auctionsPerSec or 0) + 0.5)
+  local recent = math.floor((p.recentSpeed or 0) + 0.5)
   if p.totalAuctions > 0 then
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d auctions/s   ·   ETA: %ds|r",
+      "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s avg · %d/s recent   ·   ETA: %ds|r",
       p.currentPage, p.totalPages, p.auctionsProcessed, p.totalAuctions, elapsed,
-      speed, math.floor(p.eta or 0)
+      speed, recent, math.floor(p.eta or 0)
     ))
   else
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d auctions/s|r",
-      p.currentPage, p.auctionsProcessed, elapsed, speed
+      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s avg · %d/s recent|r",
+      p.currentPage, p.auctionsProcessed, elapsed, speed, recent
     ))
   end
 end

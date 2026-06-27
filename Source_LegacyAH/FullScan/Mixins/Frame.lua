@@ -32,7 +32,6 @@ end
 
 function AuctionatorFullScanFrameMixin:ResetData()
   self.scanData = {}
-  self.dbKeysMapping = {}
 end
 
 -- On 3.3.5a a full scan is just a normal query repeated per page, so all we need
@@ -63,6 +62,7 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   self.auctionsProcessed = 0
   self.scanStartTime = GetTime()
   self.lastAcceptTime = GetTime()
+  self.speedSamples = {}
   self.scanDelay = MIN_DELAY
   self.retries = 0
   self.prevPageSig = nil
@@ -90,9 +90,24 @@ function AuctionatorFullScanFrameMixin:GetProgressInfo()
   local processed = self.auctionsProcessed or 0
   local total = self.totalAuctions or 0
   local auctionsPerSec = elapsed > 0 and (processed / elapsed) or 0
+
+  -- Recent speed over the last ~15 pages -- distinguishes a real current slowdown from
+  -- an early-average that was skewed high.
+  local recentSpeed = auctionsPerSec
+  local samples = self.speedSamples
+  if samples and #samples >= 2 then
+    local first, last = samples[1], samples[#samples]
+    local dt = last.t - first.t
+    if dt > 0 then
+      recentSpeed = (last.a - first.a) / dt
+    end
+  end
+
+  -- ETA uses recent speed (more representative of the current rate).
+  local etaSpeed = recentSpeed > 0 and recentSpeed or auctionsPerSec
   local eta = 0
-  if total > 0 and auctionsPerSec > 0 and processed < total then
-    eta = (total - processed) / auctionsPerSec
+  if total > 0 and etaSpeed > 0 and processed < total then
+    eta = (total - processed) / etaSpeed
   end
   return {
     inProgress = self.inProgress == true,
@@ -102,6 +117,7 @@ function AuctionatorFullScanFrameMixin:GetProgressInfo()
     auctionsProcessed = processed,
     elapsed = elapsed,
     auctionsPerSec = auctionsPerSec,
+    recentSpeed = recentSpeed,
     pagesPerSec = elapsed > 0 and ((self.currentPage or 0) / elapsed) or 0,
     eta = eta,
   }
@@ -166,6 +182,7 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
 
   if CanSendAuctionQuery() then
     self.awaitingPage = true
+    self.lastQueryTime = GetTime() -- for the per-page wait/process profile
     -- 3.3.5a signature: (name, minLevel, maxLevel, invType, class, subclass,
     --                    page, isUsable, qualityIndex) -- no getAll.
     Auctionator.Debug.Message("FullScan: QueryAuctionItems page", self.currentPage)
@@ -203,6 +220,9 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
     return
   end
 
+  local procStart = GetTime()
+  local waitTime = self.lastQueryTime and (procStart - self.lastQueryTime) or 0
+
   local numBatch, total = GetNumAuctionItems("list")
   Auctionator.Debug.Message("FullScan: ProcessPage page", self.currentPage, "numBatch", numBatch, "total", total)
 
@@ -236,18 +256,18 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
     return
   end
 
-  -- Accept the page: accumulate each auction (DBKeyFromLink is synchronous on the
-  -- LegacyAH path, so this completes in-line).
+  -- Accept the page: store RAW page data only (auction info + link). DB-key resolution
+  -- is deferred to EndProcessing -- DBKeyFromLink calls GetItemInfo per row, which for
+  -- uncached items queues a client-side item query; doing that 31000x interleaved with
+  -- the scan floods the client's item-query queue and progressively slows the scan.
+  -- Deferring keeps per-page cost flat (cheap AH reads only).
+  local scanData = self.scanData
+  local n = #scanData -- hoist the length search out of the per-row loop (O(1) append)
   for x = 1, numBatch do
-    local info = { GetAuctionItemInfo("list", x) }
     local link = GetAuctionItemLink("list", x)
     if link then
-      Auctionator.Utilities.DBKeyFromLink(link, function(dbKeys)
-        if #dbKeys > 0 then
-          table.insert(self.scanData, { auctionInfo = info, itemLink = link })
-          table.insert(self.dbKeysMapping, dbKeys)
-        end
-      end)
+      n = n + 1
+      scanData[n] = { auctionInfo = { GetAuctionItemInfo("list", x) }, itemLink = link }
     end
   end
 
@@ -259,6 +279,25 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   self.auctionsProcessed = (self.auctionsProcessed or 0) + numBatch
   self.currentPage = self.currentPage + 1
   self.awaitingPage = false
+
+  -- Recent-speed sample window (last ~15 accepted pages).
+  local samples = self.speedSamples
+  samples[#samples + 1] = { t = self.lastAcceptTime, a = self.auctionsProcessed }
+  while #samples > 15 do
+    table.remove(samples, 1)
+  end
+
+  -- Compact profile every 25 pages (debug only): proves whether per-page cost is flat
+  -- (server-bound) or growing (addon-side). wait = AH response, process = addon work.
+  if Auctionator.Debug.IsOn() and (self.currentPage % 25) == 0 then
+    local p = self:GetProgressInfo()
+    Auctionator.Debug.Message(string.format(
+      "FullScan page=%d wait=%.2fs process=%.3fs delay=%.2fs mem=%dKB speed=%d/s recent=%d/s",
+      self.currentPage, waitTime, GetTime() - procStart, self.scanDelay or 0,
+      math.floor(collectgarbage("count")),
+      math.floor(p.auctionsPerSec or 0), math.floor(p.recentSpeed or 0)
+    ))
+  end
 
   Auctionator.EventBus:Fire(
     self,
@@ -282,12 +321,13 @@ local function GetInfo(auctionInfo)
   return math.ceil(buyoutPrice / available), available
 end
 
-local function MergeInfo(scanData, dbKeysMapping)
+local function MergeInfo(scanData)
   local allInfo = {}
   for index = 1, #scanData do
-    local effectivePrice, available = GetInfo(scanData[index].auctionInfo)
-    if available > 0 and effectivePrice ~= 0 then
-      for _, dbKey in ipairs(dbKeysMapping[index]) do
+    local entry = scanData[index]
+    local effectivePrice, available = GetInfo(entry.auctionInfo)
+    if available > 0 and effectivePrice ~= 0 and entry.dbKeys then
+      for _, dbKey in ipairs(entry.dbKeys) do
         if allInfo[dbKey] == nil then
           allInfo[dbKey] = {}
         end
@@ -305,10 +345,19 @@ function AuctionatorFullScanFrameMixin:EndProcessing()
 
   local rawFullScan = self.scanData
 
+  -- Resolve all DB keys ONCE here (deferred out of the per-page scan loop). DBKeyFromLink
+  -- is synchronous on the LegacyAH path, so dbKeys are filled in-line.
+  local scanData = self.scanData
+  for index = 1, #scanData do
+    Auctionator.Utilities.DBKeyFromLink(scanData[index].itemLink, function(dbKeys)
+      scanData[index].dbKeys = dbKeys
+    end)
+  end
+
   -- ProcessScan returns the number of DISTINCT items priced (e.g. ~2453), which is
   -- confusing next to the ~31000 auctions the panel reported. Show both so the count is
   -- unambiguous and consistent with the progress panel.
-  local count = Auctionator.Database:ProcessScan(MergeInfo(self.scanData, self.dbKeysMapping))
+  local count = Auctionator.Database:ProcessScan(MergeInfo(self.scanData))
   Auctionator.Utilities.Message(string.format(
     "|cffffd100Auctionator:|r Full Scan complete -- %d auctions scanned, %d items priced.",
     self.auctionsProcessed or 0, count

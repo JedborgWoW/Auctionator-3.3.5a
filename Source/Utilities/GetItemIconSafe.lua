@@ -68,6 +68,14 @@ local watcher = CreateFrame("Frame")
 watcher:RegisterEvent("GET_ITEM_INFO_RECEIVED")
 local queued = false
 watcher:SetScript("OnEvent", function()
+  -- During a Full Scan the client caches tens of thousands of items, firing this event in
+  -- a continuous storm. Refreshing the Shopping results on each burst is pure wasted work
+  -- (the scan does not use those listings) and is itself a source of progressive slowdown,
+  -- so suppress refreshes while a scan is in progress.
+  local fullScan = Auctionator.State.FullScanFrameRef
+  if fullScan and fullScan.inProgress then
+    return
+  end
   if queued then
     return
   end
