@@ -1,5 +1,5 @@
-local MIN_TAB_WIDTH = 70;
-local TAB_PADDING = 20;
+local MIN_TAB_WIDTH = 50;
+local TAB_PADDING = 14;
 
 AuctionatorShoppingListsMiniTabButtonMixinMixin = {}
 
@@ -30,6 +30,20 @@ function AuctionatorShoppingListsMiniTabButtonMixinMixin:HideTabArt()
       end
     end
   end
+end
+
+-- Since the tab background art is blanked (HideTabArt), mark the ACTIVE tab with a gold
+-- underline so it is obvious which of the two tabs you are on. Created lazily, sized to the tab.
+function AuctionatorShoppingListsMiniTabButtonMixinMixin:SetActive(isActive)
+  if not self.ActiveMarker then
+    local t = self:CreateTexture(nil, "OVERLAY")
+    t:SetTexture(1, 0.82, 0, 0.9)
+    t:SetHeight(2)
+    t:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 6, 3)
+    t:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -6, 3)
+    self.ActiveMarker = t
+  end
+  self.ActiveMarker:SetShown(isActive)
 end
 
 function AuctionatorShoppingListsMiniTabButtonMixinMixin:OnShow()

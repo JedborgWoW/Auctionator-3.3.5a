@@ -358,13 +358,28 @@ function AuctionatorShoppingTabFrameMixin:NormalizeVisuals()
   if insetBorder and insetBorder.Hide then
     insetBorder:Hide()
   end
-  --   (b) The lists/recents sidebar is anchored to the tab frame's RAW left edge
-  --       (parent+0 = AuctionFrame+12), ~6px OUTSIDE the dark inset (AuctionFrame+18), so the
-  --       sidebar (and its content) sits over the stone border instead of inside the panel.
-  --       Re-anchor its LEFT to the inset's left so the whole sidebar lives INSIDE the panel,
-  --       matching the Selling/Cancelling model where all content stays within the inset.
-  self.ListsContainer:SetPoint("LEFT", inset, "LEFT", 4, 0)
-  self.RecentsContainer:SetPoint("LEFT", inset, "LEFT", 4, 0)
+  --   (b) Confine the lists/recents sidebar to the LEFT column of the dark panel. The authored
+  --       XML anchors (point="TOP" + "BOTTOM" + "LEFT" together) pin the horizontal CENTRE to
+  --       the tab frame, which over-constrains the frame so it STRETCHES to FULL WIDTH -- an
+  --       expanded list's rows (sized to the container width, ListsContainer.lua) then ran
+  --       across the whole panel, over the results columns. Re-anchor by the LEFT EDGE
+  --       (TOPLEFT + BOTTOMLEFT, no centre-pin) with an explicit width that ends before the
+  --       results listing (which starts at parent+285), so it stays a narrow left sidebar
+  --       inside the dark panel.
+  local SIDEBAR_W = 255
+  self.ListsContainer:ClearAllPoints()
+  self.ListsContainer:SetPoint("TOPLEFT", inset, "TOPLEFT", 4, -2)
+  self.ListsContainer:SetPoint("BOTTOMLEFT", inset, "BOTTOMLEFT", 4, 2)
+  self.ListsContainer:SetWidth(SIDEBAR_W)
+  self.RecentsContainer:ClearAllPoints()
+  self.RecentsContainer:SetPoint("TOPLEFT", inset, "TOPLEFT", 4, -2)
+  self.RecentsContainer:SetPoint("BOTTOMLEFT", inset, "BOTTOMLEFT", 4, 2)
+  self.RecentsContainer:SetWidth(SIDEBAR_W)
+  -- List rows are sized to the container width when populated, so refresh now that it is narrow
+  -- (otherwise rows built before this width change keep the old full-width size).
+  if self.ListsContainer.Populate then
+    self.ListsContainer:Populate()
+  end
 
   -- The lists/recents search-status text used a broken 3.3.5a anchor and floated OUTSIDE
   -- the window (the "Searching for items in no list..." that appeared on Load more / scan);

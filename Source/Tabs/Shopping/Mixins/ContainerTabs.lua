@@ -13,6 +13,15 @@ function AuctionatorShoppingTabContainerTabsMixin:SetView(viewIndex)
   self.selectedTab = viewIndex
   Auctionator.Config.Set(Auctionator.Config.Options.SHOPPING_LAST_CONTAINER_VIEW, viewIndex)
 
+  -- Mark the active tab (gold underline) so it is clear which of the two tabs is selected.
+  if self.Tabs then
+    for _, tab in ipairs(self.Tabs) do
+      if tab.SetActive then
+        tab:SetActive(tab:GetID() == viewIndex)
+      end
+    end
+  end
+
   self:GetParent().NewListButton:Hide()
   self:GetParent().ImportButton:Hide()
   self:GetParent().ExportButton:Hide()

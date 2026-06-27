@@ -26,23 +26,24 @@ function Auctionator.Shopping.Tab.CreateOptionButton(button, xOffset, width, hei
 end
 
 function Auctionator.Shopping.Tab.SetupContainerRow(button, buttonHeight, buttonSpacing)
-  local fontString = button:CreateFontString(nil, nil, "GameFontHighlightSmall")
+  local fontString = button:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
   fontString:SetJustifyH("LEFT")
   fontString:SetPoint("RIGHT", button, "RIGHT", -buttonSpacing, 0)
   fontString:SetWordWrap(false)
   button.Text = fontString
-  button.Bg = button:CreateTexture()
-  button.Bg:SetAtlas("auctionhouse-rowstripe-1")
-  button.Bg:SetBlendMode("ADD")
+  -- The retail row atlases (auctionhouse-rowstripe-1 / -ui-row-highlight / -ui-row-select) do
+  -- NOT exist on 3.3.5a and render as solid WHITE blocks behind every row -- that was the
+  -- "white" look. Use WotLK-safe solid colours instead: no permanent stripe (flat dark rows),
+  -- a subtle hover, and a gold-tinted selected state.
+  button.Bg = button:CreateTexture(nil, "BACKGROUND")
   button.Bg:SetAllPoints()
-  button.Highlight = button:CreateTexture()
-  button.Highlight:SetAtlas("auctionhouse-ui-row-highlight")
-  button.Highlight:SetBlendMode("ADD")
+  button.Bg:Hide()
+  button.Highlight = button:CreateTexture(nil, "ARTWORK")
+  button.Highlight:SetTexture(1, 1, 1, 0.10)
   button.Highlight:SetAllPoints()
   button.Highlight:Hide()
-  button.Selected = button:CreateTexture()
-  button.Selected:SetAtlas("auctionhouse-ui-row-select")
-  button.Selected:SetBlendMode("ADD")
+  button.Selected = button:CreateTexture(nil, "ARTWORK")
+  button.Selected:SetTexture(1, 0.82, 0, 0.16)
   button.Selected:SetAllPoints()
   button.Selected:Hide()
 end

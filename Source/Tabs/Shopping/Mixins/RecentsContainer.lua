@@ -120,6 +120,10 @@ function AuctionatorShoppingTabRecentsContainerMixin:SetupContent()
     if not button.setup then
       SetupButton(button)
     end
+    -- Match the ListsContainer: give each row an explicit width. On the 3.3.5a compat ScrollBox
+    -- the content width can still be 1px when rows are first laid out, so without this the recent
+    -- rows render 1px wide (invisible) -- which is why recents never appeared while lists did.
+    button:SetSize(self:GetWidth(), buttonHeight)
     button.elementData = elementData
     button.Text:SetText(Auctionator.Search.PrettifySearchString(elementData))
     button.Selected:Hide()
