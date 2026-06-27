@@ -57,6 +57,14 @@ end
 
 function AuctionatorShoppingItemMixin:OnLoad()
   ButtonFrameTemplate_HidePortrait(self)
+
+  -- WotLK 3.3.5a: guarantee a fully OPAQUE backdrop on the Search Options dialog.
+  -- ButtonFrameTemplate's shim sets one, but the native self.Inset content area is
+  -- semi-transparent (search fields read as unreadable over the AH window behind).
+  -- Re-assert an opaque DialogBox backdrop on the outer frame so the whole panel is
+  -- solid behind the controls.
+  Auctionator.Theme.ApplyOpaqueDialogBackdrop(self)
+
   local _, rt, rp, ox, oy = self.Inset:GetPointByName("TOPLEFT")
   self.Inset:SetPoint("TOPLEFT", rt, rp, ox, -25)
   self.onFinishedClicked = function() end

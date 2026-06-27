@@ -27,6 +27,12 @@ end
 
 function AuctionatorShoppingTabClassicLoadAllButtonMixin:OnClick()
   if self.lastTerms ~= nil then
-    self:GetParent():DoSearch(self.lastTerms, { searchAllPages = true })
+    -- Hide immediately for feedback; SearchEnd will re-show it only if results are
+    -- still incomplete after loading all pages.
+    self:Hide()
+    -- LoadAllPages appends the remaining pages to the current results instead of
+    -- doing a fresh search (which would blank the panel). It does not fire
+    -- SearchStart, so unlike DoSearch it does not Reset/clear the visible results.
+    self:GetParent():LoadAllPages(self.lastTerms)
   end
 end

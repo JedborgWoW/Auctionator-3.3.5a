@@ -7,7 +7,10 @@ function AuctionatorBuyingItemTooltipMixin:OnLoad()
 end
 
 function AuctionatorBuyingItemTooltipMixin:OnEnter()
-  GameTooltip:SetOwner(self, "ANCHOR_TOP")
+  if self.itemLink == nil then
+    return
+  end
+  GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
   GameTooltip:SetHyperlink(self.itemLink)
   GameTooltip:Show()
 end

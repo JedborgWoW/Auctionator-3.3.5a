@@ -57,6 +57,84 @@ local BOX_GAP = 12   -- horizontal gap between boxes
 local LABEL_SPACE = 104 -- room reserved on the row's left for the label
 local LABEL_GAP = 12 -- gap between label and the first (gold) box
 
+-- BLEED ROOT CAUSE (coin boxes): the coin EditBox template inherits the (shimmed)
+-- InputBoxTemplate, so the native client adds its OWN 3-slice border textures named
+-- $parentLeft/$parentMiddle/$parentRight from Interface\Common\Common-Input-Border.
+-- AuctionatorRetailImportLargeInputBoxTemplate then ADDS A SECOND set of border textures
+-- (parentKey Left/Middle/Right) over the top, with different sizes/anchors. The two
+-- overlapping, partially-tiled border sets (and a 25px border on a 22px box) render as the
+-- broken, non-solid "bleed" around each coin box.
+--
+-- Fix at the source: hide BOTH border-texture sets and give each box one clean SOLID
+-- background plus a thin solid frame, the same flat look used elsewhere in the backport.
+local COIN_BG     = { 0.06, 0.06, 0.08, 1.0 } -- solid fill (matches the dark inset family)
+local COIN_BORDER = { 0.35, 0.35, 0.35, 1.0 } -- thin solid edge (matches Visual.Palette.Border)
+
+-- Hide one border slice whether it is exposed via parentKey or via the native $parent name.
+local function HideSlice(box, key)
+  local tex = box[key]
+  if not tex then
+    local name = box.GetName and box:GetName()
+    if name then
+      tex = _G[name .. key]
+    end
+  end
+  if tex and tex.SetTexture then
+    tex:SetTexture(nil)
+    if tex.Hide then
+      tex:Hide()
+    end
+  end
+end
+
+-- Give a single coin box a clean solid background + 1px solid border, created once and
+-- cached on the box (box.SolidBg / box.SolidEdges) so repeated layout calls don't stack
+-- textures.
+local function SolidifyBox(box)
+  if not box or not box.CreateTexture then
+    return
+  end
+
+  -- Kill the broken double border (custom parentKeys + native $parent names).
+  HideSlice(box, "Left")
+  HideSlice(box, "Middle")
+  HideSlice(box, "Right")
+
+  if not box.SolidBg then
+    local bg = box:CreateTexture(nil, "BACKGROUND")
+    bg:SetTexture(COIN_BG[1], COIN_BG[2], COIN_BG[3], COIN_BG[4])
+    bg:SetAllPoints(box)
+    box.SolidBg = bg
+
+    -- Four thin solid edges drawn just outside the fill -> clean rectangular border.
+    box.SolidEdges = {}
+    for _, edge in ipairs({ "TOP", "BOTTOM", "LEFT", "RIGHT" }) do
+      local line = box:CreateTexture(nil, "BORDER")
+      line:SetTexture(COIN_BORDER[1], COIN_BORDER[2], COIN_BORDER[3], COIN_BORDER[4])
+      box.SolidEdges[edge] = line
+    end
+  end
+
+  -- (Re)anchor edges to the current box bounds each call (the box is resized after OnLoad).
+  local e = box.SolidEdges
+  e.TOP:ClearAllPoints()
+  e.TOP:SetPoint("TOPLEFT", box, "TOPLEFT", -1, 1)
+  e.TOP:SetPoint("TOPRIGHT", box, "TOPRIGHT", 1, 1)
+  e.TOP:SetHeight(1)
+  e.BOTTOM:ClearAllPoints()
+  e.BOTTOM:SetPoint("BOTTOMLEFT", box, "BOTTOMLEFT", -1, -1)
+  e.BOTTOM:SetPoint("BOTTOMRIGHT", box, "BOTTOMRIGHT", 1, -1)
+  e.BOTTOM:SetHeight(1)
+  e.LEFT:ClearAllPoints()
+  e.LEFT:SetPoint("TOPLEFT", box, "TOPLEFT", -1, 1)
+  e.LEFT:SetPoint("BOTTOMLEFT", box, "BOTTOMLEFT", -1, -1)
+  e.LEFT:SetWidth(1)
+  e.RIGHT:ClearAllPoints()
+  e.RIGHT:SetPoint("TOPRIGHT", box, "TOPRIGHT", 1, 1)
+  e.RIGHT:SetPoint("BOTTOMRIGHT", box, "BOTTOMRIGHT", 1, -1)
+  e.RIGHT:SetWidth(1)
+end
+
 -- Replace the (dead atlas) coin icon with the always-present 3.3.5a money-icon sheet so
 -- each box shows a real gold/silver/copper coin. l/r are the horizontal texcoords.
 local function StyleCoin(box, l, r)
@@ -113,6 +191,7 @@ function AuctionatorLegacy_LayoutMoneyInput(row)
       if box.SetTextInsets then
         box:SetTextInsets(8, 18, 0, 0) -- right inset leaves room for the coin icon
       end
+      SolidifyBox(box) -- clean solid background; removes the double-border bleed
       previous = box
     end
   end
@@ -136,8 +215,11 @@ function AuctionatorLegacy_LayoutSaleItemFrame(frame)
     return
   end
 
+  -- Wide enough to contain the Duration column PLUS the Deposit/Total read-out block that
+  -- now sits well to its right (see DEPOSIT_RIGHT_GAP below). The tab gives ~750px of room
+  -- right of this frame's left edge, so 760 keeps everything inside without spilling.
   if frame.SetSize then
-    frame:SetSize(600, 110)
+    frame:SetSize(760, 110)
   end
 
   local icon         = frame.Icon
@@ -212,10 +294,15 @@ function AuctionatorLegacy_LayoutSaleItemFrame(frame)
     end
   end
 
-  -- Deposit / Total read-outs (right column under Duration).
+  -- Deposit / Total read-outs. These used to sit just 20px right of the Duration column,
+  -- which dropped the block straight down onto the Post button (Post is anchored under
+  -- Duration's BOTTOMLEFT) and crowded it, while the whole right side of the panel sat
+  -- empty. Push the block well to the RIGHT, into that empty space, so it is clearly
+  -- separated from Post and the buttons.
+  local DEPOSIT_RIGHT_GAP = 55 -- right of the Duration column, into the empty right area
   if deposit and duration then
     Clear(deposit)
-    deposit:SetPoint("TOPLEFT", duration, "TOPRIGHT", 20, 0)
+    deposit:SetPoint("TOPLEFT", duration, "TOPRIGHT", DEPOSIT_RIGHT_GAP, 0)
   end
   if depositPrice and deposit then
     Clear(depositPrice)

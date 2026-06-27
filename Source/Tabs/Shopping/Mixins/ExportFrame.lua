@@ -3,6 +3,11 @@ AuctionatorListExportFrameMixin = {}
 function AuctionatorListExportFrameMixin:OnLoad()
   Auctionator.Debug.Message("AuctionatorListExportFrameMixin:OnLoad()")
 
+  -- WotLK 3.3.5a: this dialog inherits AuctionatorSimplePanelTemplate whose rock-file
+  -- background is absent (rendered GREEN) and whose metal border is invisible. Apply a
+  -- real opaque DialogBox backdrop so the frame is solid and bordered.
+  Auctionator.Theme.ApplyOpaqueDialogBackdrop(self)
+
   -- Setup scrolling region
   local view = CreateScrollBoxLinearView()
   view:SetPadding(5, 5, 0, 0, 0)

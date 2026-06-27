@@ -97,11 +97,23 @@ function AuctionatorShoppingTabListsContainerMixin:TemporarilySelectSearchTerm(i
 end
 
 function AuctionatorShoppingTabListsContainerMixin:ScrollToList(list)
+  if list == nil then
+    return
+  end
   local dataIndex = self.ScrollBox:FindElementDataIndexByPredicate(function(elementData)
     return elementData.type == RowType.List and elementData.list:GetName() == list:GetName()
   end)
+  -- The list header row may not be in the current data provider yet (or at all),
+  -- in which case there is nothing to scroll to -- bail rather than doing
+  -- arithmetic on a nil index below.
+  if dataIndex == nil then
+    return
+  end
+  local visibleExtent = self.ScrollBox:GetVisibleExtent()
   local scrollOffset = self.ScrollBox:GetDerivedScrollOffset()
-  local dataIndexExtent = (self.ScrollBox:GetExtentUntil(dataIndex) - scrollOffset) / self.ScrollBox:GetVisibleExtent()
+  local dataIndexExtent = visibleExtent > 0
+    and (self.ScrollBox:GetExtentUntil(dataIndex) - scrollOffset) / visibleExtent
+    or 0
   if dataIndexExtent > 0.5 then
     self.ScrollBox:ScrollToElementDataIndex(dataIndex, 0.5)
   else
@@ -113,10 +125,24 @@ function AuctionatorShoppingTabListsContainerMixin:ScrollToListEnd()
   if not self.expandedList then
     return
   end
+  -- Make sure the expanded list's rows (including the just-added term) are present
+  -- in the data provider before we try to locate the last one. Adding an item fires
+  -- ListItemChange which normally repopulates, but repopulate defensively here so
+  -- ScrollToListEnd is correct even if it is ever called out of that order.
+  self:Populate()
   local listLength = self.expandedList:GetItemCount()
+  if listLength == 0 then
+    return
+  end
   local dataIndex = self.ScrollBox:FindElementDataIndexByPredicate(function(elementData)
     return elementData.type == RowType.SearchTerm and elementData.index == listLength
   end)
+  -- FindElementDataIndexByPredicate returns nil if the row is not in the data
+  -- provider (e.g. the list is not actually expanded in the current view). The
+  -- hardened ScrollBox API no-ops on a nil index, but guard here too for clarity.
+  if dataIndex == nil then
+    return
+  end
   self.ScrollBox:ScrollToNearest(dataIndex)
 end
 

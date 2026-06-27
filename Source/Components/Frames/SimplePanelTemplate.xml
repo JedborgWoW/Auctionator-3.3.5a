@@ -3,11 +3,16 @@
     <Size x="338" y="424"/>
     <Layers>
       <Layer level="BACKGROUND" textureSubLevel="-6">
-        <Texture name="$parentBg" file="Interface\FrameGeneral\UI-Background-Rock" horizTile="true" vertTile="true" parentKey="Bg">
+        <!-- WotLK 3.3.5a: Interface\FrameGeneral\UI-Background-Rock is absent on the
+             HD client and renders a bright GREEN placeholder. Use a solid opaque dark
+             colour instead (Color AFTER Anchors per schema; reliable on 3.3.5a). The
+             real bordered backdrop is applied in Lua via Auctionator.Theme. -->
+        <Texture name="$parentBg" parentKey="Bg">
           <Anchors>
             <Anchor point="TOPLEFT" x="0" y="-6"/>
             <Anchor point="BOTTOMRIGHT" x="-2" y="3"/>
           </Anchors>
+          <Color r="0.06" g="0.06" b="0.07" a="1.0"/>
         </Texture>
       </Layer>
     </Layers>

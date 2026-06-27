@@ -69,6 +69,27 @@ function Auctionator.Theme.ApplyDialogBackdrop(frame)
   })
 end
 
+-- Opaque backdrop for the Shopping pop-up dialogs (Import / Export / Export Results
+-- / Price History). These inherit AuctionatorSimplePanelTemplate, whose original
+-- rock-file background is absent on this client (rendered bright GREEN) and whose
+-- metal border uses virtual-texture inheritance (invisible on 3.3.5a). We give the
+-- frame a real, present DialogBox backdrop so it is fully opaque WITH a visible
+-- border, regardless of the broken XML art. Safe on a frame that already has a
+-- solid <Color> Bg behind it (the backdrop just draws on top, also opaque).
+function Auctionator.Theme.ApplyOpaqueDialogBackdrop(frame)
+  if not frame or not frame.SetBackdrop then
+    return
+  end
+  frame:SetBackdrop({
+    bgFile = Auctionator.Theme.Textures.DialogBg,
+    edgeFile = Auctionator.Theme.Textures.DialogBorder,
+    tile = true, tileSize = 32, edgeSize = 32,
+    insets = { left = 11, right = 12, top = 12, bottom = 11 },
+  })
+  frame:SetBackdropColor(1, 1, 1, 1)
+  frame:SetBackdropBorderColor(1, 1, 1, 1)
+end
+
 function Auctionator.Theme.ApplyTextColor(fontString, color)
   if fontString and fontString.SetTextColor then
     fontString:SetTextColor(color[1], color[2], color[3], color[4] or 1)

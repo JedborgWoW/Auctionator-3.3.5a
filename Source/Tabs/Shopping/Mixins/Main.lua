@@ -30,6 +30,36 @@ function AuctionatorShoppingTabFrameMixin:StopSearch()
   self.SearchProvider:AbortSearch()
 end
 
+-- "Load more results" on the Legacy AH: load EVERY page of the active search and
+-- APPEND the additional results to what is already shown, instead of doing a fresh
+-- search.
+--
+-- A normal search goes through DoSearch, which fires SearchStart. The Shopping data
+-- provider handles SearchStart by calling Reset(), and Reset() empties the visible
+-- table on the next OnUpdate -- so the whole results panel blanks to the dark inset
+-- ("goes black") while the multi-page scan runs and only repopulates at the very end.
+--
+-- Here we deliberately DO NOT fire SearchStart: the data provider keeps its current
+-- rows, and the all-pages results arrive through the normal incremental/SearchEnd
+-- callbacks which APPEND (de-duplicated by item) rather than reset. The panel stays
+-- populated and simply grows as further pages load.
+function AuctionatorShoppingTabFrameMixin:LoadAllPages(terms)
+  if terms == nil or #terms == 0 then
+    return
+  end
+
+  -- If a search is mid-flight, stop it cleanly first (without firing SearchStart so
+  -- the existing results survive), then load all pages.
+  if self.searchRunning then
+    self.SearchProvider:AbortSearch()
+  end
+
+  self.searchRunning = true
+  -- Note: intentionally no SearchStart fire here (that would Reset/blank the panel).
+  self.SearchProvider:Search(terms, { searchAllPages = true })
+  self:StartSpinner()
+end
+
 function AuctionatorShoppingTabFrameMixin:StartSpinner()
   self.ListsContainer.SpinnerAnim:Play()
   self.ListsContainer.LoadingSpinner:Show()
@@ -244,7 +274,11 @@ function AuctionatorShoppingTabFrameMixin:SetupTopSearch()
     self.itemDialog:SetItemString(searchTerm)
   end)
   self.SearchOptions:SetOnAddToList(function(searchTerm)
-    self.ListsContainer:GetExpandedList():InsertItem(searchTerm)
+    local list = self.ListsContainer:GetExpandedList()
+    if list == nil then
+      return
+    end
+    list:InsertItem(searchTerm)
     self.ListsContainer:ScrollToListEnd()
   end)
 end

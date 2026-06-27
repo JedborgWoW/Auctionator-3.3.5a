@@ -43,29 +43,20 @@
 
       <Frame enableMouse="true">
         <Scripts>
-          <OnLoad>Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad(); self:SetPoint("LEFT", self:GetParent().ReturnButton, "RIGHT")</OnLoad>
+          <OnLoad>Mixin(self, AuctionatorBuyingItemTooltipMixin); self:OnLoad(); self:SetSize(40, 40); local listing = self:GetParent().CurrentPrices and self:GetParent().CurrentPrices.SearchResultsListing; self:ClearAllPoints(); self:SetPoint("LEFT", self:GetParent().ReturnButton, "RIGHT", 10, 0); if listing and listing.HeaderContainer then self:SetPoint("BOTTOM", listing.HeaderContainer, "TOP", 0, 2) else self:SetPoint("TOP", 0, -9) end; self.Text:ClearAllPoints(); self.Text:SetPoint("LEFT", self.Icon, "RIGHT", 6, 0)</OnLoad>
           <OnEnter>self:OnEnter(motion)</OnEnter>
           <OnLeave>self:OnLeave(motion)</OnLeave>
           <OnMouseUp>self:OnMouseUp(button)</OnMouseUp>
         </Scripts>
-        <Anchors>
-            <Anchor point="TOP" y="-9"/>
-            <Anchor point="LEFT" relativeKey="$parent.ReturnButton" relativePoint="RIGHT"/>
-        </Anchors>
         <Layers>
           <Layer>
-            <Texture parentKey="Icon">
+            <Texture parentKey="Icon" setAllPoints="true">
               <Size x="40" y="40"/>
-              <Anchors>
-                  <Anchor point="TOP" y="-10"/>
-                  <Anchor point="LEFT" x="15"/>
-              </Anchors>
             </Texture>
             <FontString parentKey="Text" text="Item text" inherits="GameFontHighlight" justifyH="LEFT">
               <Size x="400" y="50"/>
               <Anchors>
-                <Anchor point="TOP" y="-5"/>
-                <Anchor point="LEFT" x="65"/>
+                <Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="6"/>
               </Anchors>
             </FontString>
           </Layer>

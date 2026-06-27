@@ -24,6 +24,50 @@ local STUCK_TIMEOUT = 15  -- seconds with no accepted page -> abort as stuck
 
 local AII = Auctionator.Constants.AuctionItemInfo
 
+-- Link-only DB-key resolver for the full scan. The shared Auctionator.Utilities.DBKeyFromLink
+-- calls IsGear() -> C_Item.GetItemInfoInstant() -> GetItemInfo() PER ROW; on 3.3.5a that shim
+-- is GetItemInfo(), which for any uncached item returns nil AND queues a server item-info
+-- request. Running it across all ~31000 scanned auctions floods the client item-query queue
+-- and blocks a whole frame (the visible freeze "on complete"). It is also unnecessary: on the
+-- LegacyAH path the only thing the gear branch adds is a "gr:<id>:<suffixString>" key, and that
+-- key can ONLY exist when the item link carries a non-zero suffix in its 7th item-field. So we
+-- parse the link directly (pure string work, zero API calls) and only emit the extra gear key
+-- when there is an actual suffix to resolve -- identical output to DBKeyFromLink, no GetItemInfo.
+local SuffixIDToSuffixStringID = Auctionator.Utilities.SuffixIDToSuffixStringID
+local SuffixStringIDTOSuffixString = Auctionator.Utilities.SuffixStringIDTOSuffixString
+
+local function ResolveDBKeysFast(itemLink)
+  if itemLink == nil then
+    return nil
+  end
+  local _, _, itemString = string.find(itemLink, "^|c%w+:?|H(.+)|h%[.*%]")
+  if itemString == nil and string.find(itemLink, "^item") then
+    itemString = itemLink
+  end
+  if itemString == nil then
+    return nil
+  end
+  local linkType, itemId = strsplit(":", itemString)
+  if linkType == "battlepet" then
+    return { "p:" .. itemId }
+  elseif linkType ~= "item" then
+    return nil
+  end
+
+  -- Suffix is the 7th colon-delimited field of an item link (after the itemId, enchant and
+  -- four gem slots). A 0 / absent suffix means no gear-suffix key is possible -> basic key only,
+  -- which covers the overwhelming majority of auctions (trade goods, consumables, etc.).
+  local suffix = tonumber((itemLink:match("item:.-:.-:.-:.-:.-:.-:(.-):")))
+  if suffix and suffix ~= 0 then
+    local suffixStringID = SuffixIDToSuffixStringID[suffix]
+    local suffixString = suffixStringID and SuffixStringIDTOSuffixString[suffixStringID]
+    if suffixString then
+      return { "gr:" .. itemId .. ":" .. suffixString, itemId }
+    end
+  end
+  return { itemId }
+end
+
 function AuctionatorFullScanFrameMixin:OnLoad()
   Auctionator.Debug.Message("AuctionatorFullScanFrameMixin:OnLoad")
   Auctionator.EventBus:RegisterSource(self, "AuctionatorFullScanFrameMixin")
@@ -194,9 +238,14 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
 end
 
 -- Lightweight fingerprint of the current result list, to detect a duplicate page.
+-- The full-list concat was wasteful (a second GetAuctionItemInfo pass over all 50 rows plus a
+-- big string alloc EVERY page). A re-sent (stale) page on 3.3.5a is byte-identical, so sampling
+-- a handful of anchor rows -- first, middle, last -- alongside the batch count is enough to spot
+-- a duplicate while doing a fraction of the work on the hot path.
 function AuctionatorFullScanFrameMixin:PageSignature(numBatch)
-  local parts = {}
-  for x = 1, numBatch do
+  local mid = math.floor((numBatch + 1) / 2)
+  local parts = { numBatch }
+  for _, x in ipairs({ 1, mid, numBatch }) do
     local name, _, count, _, _, _, minBid, _, buyout, bid = GetAuctionItemInfo("list", x)
     parts[#parts + 1] = (name or "?") .. "/" .. (count or 0) .. "/" ..
       (minBid or 0) .. "/" .. (buyout or 0) .. "/" .. (bid or 0)
@@ -312,26 +361,30 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   end
 end
 
-local function GetInfo(auctionInfo)
-  local available = auctionInfo[AII.Quantity]
-  local buyoutPrice = auctionInfo[AII.Buyout]
-  if not available or available == 0 or not buyoutPrice then
-    return 0, 0
-  end
-  return math.ceil(buyoutPrice / available), available
-end
-
+-- Resolve DB keys and merge to lowest-buyout-per-key in a SINGLE pass over the raw scan data.
+-- Uses the link-only resolver (no GetItemInfo), so even ~31000 rows stay cheap and never touch
+-- the client item-query queue. Folding resolve + merge together also avoids materialising a
+-- per-row dbKeys table for every auction (less GC churn on a big scan).
 local function MergeInfo(scanData)
   local allInfo = {}
   for index = 1, #scanData do
     local entry = scanData[index]
-    local effectivePrice, available = GetInfo(entry.auctionInfo)
-    if available > 0 and effectivePrice ~= 0 and entry.dbKeys then
-      for _, dbKey in ipairs(entry.dbKeys) do
-        if allInfo[dbKey] == nil then
-          allInfo[dbKey] = {}
+    local auctionInfo = entry.auctionInfo
+    local available = auctionInfo[AII.Quantity]
+    local buyoutPrice = auctionInfo[AII.Buyout]
+    if available and available > 0 and buyoutPrice and buyoutPrice ~= 0 then
+      local dbKeys = ResolveDBKeysFast(entry.itemLink)
+      if dbKeys then
+        local effectivePrice = math.ceil(buyoutPrice / available)
+        for k = 1, #dbKeys do
+          local dbKey = dbKeys[k]
+          local bucket = allInfo[dbKey]
+          if bucket == nil then
+            bucket = {}
+            allInfo[dbKey] = bucket
+          end
+          bucket[#bucket + 1] = { price = effectivePrice, available = available }
         end
-        table.insert(allInfo[dbKey], { price = effectivePrice, available = available })
       end
     end
   end
@@ -344,15 +397,6 @@ function AuctionatorFullScanFrameMixin:EndProcessing()
   end
 
   local rawFullScan = self.scanData
-
-  -- Resolve all DB keys ONCE here (deferred out of the per-page scan loop). DBKeyFromLink
-  -- is synchronous on the LegacyAH path, so dbKeys are filled in-line.
-  local scanData = self.scanData
-  for index = 1, #scanData do
-    Auctionator.Utilities.DBKeyFromLink(scanData[index].itemLink, function(dbKeys)
-      scanData[index].dbKeys = dbKeys
-    end)
-  end
 
   -- ProcessScan returns the number of DISTINCT items priced (e.g. ~2453), which is
   -- confusing next to the ~31000 auctions the panel reported. Show both so the count is

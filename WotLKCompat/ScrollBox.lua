@@ -468,19 +468,40 @@ function ScrollBoxListMixin:FindElementDataIndexByPredicate(predicate)
 end
 
 function ScrollBoxListMixin:GetExtentUntil(dataIndex)
+  -- Callers derive dataIndex from FindElementDataIndexByPredicate, which returns nil
+  -- when nothing matches (e.g. scrolling to a row that is not in the current data
+  -- provider). Treat a nil/out-of-range index as the top of the list rather than
+  -- performing arithmetic on nil (which crashed onAddToList -> ScrollToListEnd).
+  if type(dataIndex) ~= "number" then
+    return 0
+  end
   local extent = self:GetElementExtent()
   local top = (self.view and self.view.paddingTop) or 0
   return top + (dataIndex - 1) * extent
 end
 
 function ScrollBoxListMixin:ScrollToElementDataIndex(dataIndex, alignment)
+  if type(dataIndex) ~= "number" then
+    return
+  end
   alignment = alignment or 0
   local offset = self:GetExtentUntil(dataIndex)
     - alignment * (self:GetVisibleExtent() - self:GetElementExtent())
   self:SetScrollOffset(offset)
 end
 
+function ScrollBoxListMixin:ScrollToElementDataIndexByPredicate(predicate, alignment)
+  local dataIndex = self:FindElementDataIndexByPredicate(predicate)
+  if dataIndex ~= nil then
+    self:ScrollToElementDataIndex(dataIndex, alignment)
+  end
+  return dataIndex
+end
+
 function ScrollBoxListMixin:ScrollToNearest(dataIndex)
+  if type(dataIndex) ~= "number" then
+    return
+  end
   local top = self:GetExtentUntil(dataIndex)
   local bottom = top + self:GetElementExtent()
   local viewTop = self:GetDerivedScrollOffset()
