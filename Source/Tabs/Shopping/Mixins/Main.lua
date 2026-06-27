@@ -98,6 +98,11 @@ function AuctionatorShoppingTabFrameMixin:OnLoad()
 
   self.ContainerTabs:SetView(Auctionator.Config.Get(Auctionator.Config.Options.SHOPPING_LAST_CONTAINER_VIEW))
 
+  -- Explicit search-row layout (label / input / buttons on one centerline). The inherited
+  -- Retail anchors leave the input tiny and misaligned, so re-lay it deterministically in
+  -- Lua after the SearchOptions child has finished its own OnLoad.
+  AuctionatorLegacy_LayoutShoppingSearchRow(self.SearchOptions)
+
   self.shouldDefaultOpenOnShow = true
   if Auctionator.Constants.IsVanilla then
     self:RegisterEvent("AUCTION_HOUSE_CLOSED")
@@ -312,33 +317,97 @@ end
 -- Re-asserted on every show because the 3.3.5a XML parser does not reliably honour the
 -- inherited/dotted anchors these frames were authored with.
 function AuctionatorShoppingTabFrameMixin:NormalizeVisuals()
-  -- Results panel: dark inset wraps the listing exactly like Cancelling.
-  Auctionator.Visual.NormalizeResultsPanel(self.ShoppingResultsInset, self.ResultsListing)
+  -- Search row: re-asserted here (not just OnLoad) because only now is the frame width
+  -- measured, so the input is sized to fit and Full Scan stays inside the frame.
+  AuctionatorLegacy_LayoutShoppingSearchRow(self.SearchOptions)
+
+  -- Full-width opaque dark background. Same StretchFullWidth as Selling/Cancelling, but with a
+  -- LOWER bottom (default 2 -> -48, i.e. ~50px further down). WHY: the panel's two bottom
+  -- corners showed stone "notches" -- AuctionFrame's stone frame draws over the inset there and
+  -- the inset cannot be raised above it (AuctionatorInsetTemplate has useParentLevel="true", so
+  -- SetFrameLevel on it is ignored on 3.3.5a). Extending the inset's bottom edge DOWN past the
+  -- corner ornaments simply moves its corners clear of them -- no notch, no layering fight.
+  -- Confirmed in-game. (Shopping only; Selling/Cancelling keep the default bottom and are fine,
+  -- since their bottom corners are covered by their action buttons.)
+  Auctionator.Visual.StretchFullWidth(self.ShoppingResultsInset, self, self.ResultsListing, nil, -48)
+  Auctionator.Visual.SendToBack(
+    self.ShoppingResultsInset,
+    self.ResultsListing, self.ListsContainer, self.RecentsContainer, self.ContainerTabs
+  )
   Auctionator.Visual.NormalizeHeaders(self.ResultsListing)
 
-  -- Sidebar panel: identical inset, same height as the results inset, filling the left gap.
+  -- LEFT-EDGE ROOT-CAUSE FIX (Shopping only; Selling/Cancelling untouched).
+  -- Measured: the inset frame is at AuctionFrame+18, identical to Cancelling. The remaining
+  -- left overhang is NOT the inset position but the two things that live LEFT of it on the
+  -- Shopping tab (Selling/Cancelling have no left sidebar, so they never hit this):
+  local inset = self.ShoppingResultsInset
+  --   (a) The inset's dark Bg texture is authored with relativeKey="$parent" anchors. The
+  --       3.3.5a XML parser does not reliably resolve those, so the fill can render wider
+  --       than its frame and bleed past the left edge. Pin it explicitly to the frame.
+  if inset.Bg then
+    inset.Bg:ClearAllPoints()
+    inset.Bg:SetAllPoints(inset)
+    -- Re-assert the dark fill colour deterministically (matches AuctionatorInsetTemplate).
+    inset.Bg:SetTexture(0.04, 0.04, 0.05, 1.0)
+  end
+  --   (a2) Hide the beveled border (InsetFrameTemplate4) for a flat, solid dark rectangle.
+  --        The opaque Bg already fills the whole panel, so the bevel adds nothing on this big
+  --        empty panel and its corner pieces only muddy the edges. (Shopping only --
+  --        Selling/Cancelling keep their bevel and are NOT touched.)
+  local insetBorder = select(1, inset:GetChildren())
+  if insetBorder and insetBorder.Hide then
+    insetBorder:Hide()
+  end
+  --   (b) The lists/recents sidebar is anchored to the tab frame's RAW left edge
+  --       (parent+0 = AuctionFrame+12), ~6px OUTSIDE the dark inset (AuctionFrame+18), so the
+  --       sidebar (and its content) sits over the stone border instead of inside the panel.
+  --       Re-anchor its LEFT to the inset's left so the whole sidebar lives INSIDE the panel,
+  --       matching the Selling/Cancelling model where all content stays within the inset.
+  self.ListsContainer:SetPoint("LEFT", inset, "LEFT", 4, 0)
+  self.RecentsContainer:SetPoint("LEFT", inset, "LEFT", 4, 0)
+
+  -- The lists/recents search-status text used a broken 3.3.5a anchor and floated OUTSIDE
+  -- the window (the "Searching for items in no list..." that appeared on Load more / scan);
+  -- pin it (and its spinner) to the panel centre so it stays inside.
+  local listsSpinner = self.ListsContainer and self.ListsContainer.LoadingSpinner
+  if listsSpinner then
+    listsSpinner:ClearAllPoints()
+    listsSpinner:SetPoint("CENTER", self.ShoppingResultsInset, "CENTER", 0, 0)
+  end
+  local listsText = self.ListsContainer and self.ListsContainer.ResultsText
+  if listsText then
+    listsText:ClearAllPoints()
+    listsText:SetPoint("CENTER", self.ShoppingResultsInset, "CENTER", 0, 0)
+  end
+
+  -- The separate sidebar inset and any stale theme background are no longer needed.
   local sidebarInset = Auctionator.Visual.EnsureInsetPanel(self, "SidebarInset")
-  sidebarInset:ClearAllPoints()
-  sidebarInset:SetPoint("LEFT", self, "LEFT", 4, 0)
-  sidebarInset:SetPoint("RIGHT", self.ShoppingResultsInset, "LEFT", -8, 0)
-  sidebarInset:SetPoint("TOP", self.ShoppingResultsInset, "TOP")
-  sidebarInset:SetPoint("BOTTOM", self.ShoppingResultsInset, "BOTTOM")
-  Auctionator.Visual.SendToBack(sidebarInset, self.ListsContainer, self.RecentsContainer, self.ContainerTabs)
-  -- A stale frame from the previous (mismatched) theme approach, if present, is hidden so
-  -- two backgrounds never stack.
+  sidebarInset:Hide()
   if self.SidebarBg then
     self.SidebarBg:Hide()
   end
 
-  -- Footer: one clean row, clearly below both panels.
+  -- Footer: drop the whole row onto the very bottom edge, level with the AH money display
+  -- (gold/silver/copper), to the RIGHT of it. New List anchors to AuctionFrameMoneyFrame's
+  -- right (same pattern the Selling tab uses for its History button); Import / Export /
+  -- Export Results chain off New List, so they all land on that one bottom line.
+  self.NewListButton:ClearAllPoints()
+  if AuctionFrameMoneyFrame then
+    self.NewListButton:SetPoint("LEFT", AuctionFrameMoneyFrame, "RIGHT", 20, 0)
+  else
+    self.NewListButton:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 150, 8)
+  end
   Auctionator.Visual.NormalizeFooter(
     { self.ImportButton, self.ExportButton },
     { frame = self.NewListButton, point = "BOTTOMLEFT", relPoint = "BOTTOMRIGHT", x = 12, y = 0 },
     8
   )
+  -- Export Results chains after Export so all four footer buttons form one bottom-left row
+  -- (New List | Import | Export | Export Results). The full-width panel made anchoring to
+  -- the panel's left edge collide with New List.
   self.ExportCSV:ClearAllPoints()
+  self.ExportCSV:SetPoint("LEFT", self.ExportButton, "RIGHT", 12, 0)
   self.ExportCSV:SetPoint("BOTTOM", self.NewListButton, "BOTTOM")
-  self.ExportCSV:SetPoint("RIGHT", self.ShoppingResultsInset, "RIGHT")
 
   -- Interactive controls draw above the passive insets.
   Auctionator.Visual.RaiseAbove(self.NewListButton, self.ShoppingResultsInset, sidebarInset)

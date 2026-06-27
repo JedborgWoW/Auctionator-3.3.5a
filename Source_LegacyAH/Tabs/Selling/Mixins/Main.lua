@@ -26,13 +26,15 @@ end
 -- Applied from Lua because the 3.3.5a XML parser does not reliably honour the authored
 -- (inherited / dotted) anchors. Does NOT touch posting logic or the price-input wiring.
 function AuctionatorSellingTabMixin:NormalizeVisuals()
-  -- 1. Clear gap between the price inputs and the result panel.
+  -- 1. Make the result panel as large as possible: start it just below the price inputs
+  -- (filling the dead space that used to sit above the listing) and run it to the bottom.
+  -- Its header row lands a little below the inputs; the dark inset aligns with the bag top.
   local showBag = Auctionator.Config.Get(Auctionator.Config.Options.SHOW_SELLING_BAG)
   self.BuyFrame:ClearAllPoints()
   if showBag then
-    self.BuyFrame:SetPoint("TOPLEFT", self.BagListing, "TOPRIGHT", 14, -25)
+    self.BuyFrame:SetPoint("TOPLEFT", self.BagListing, "TOPRIGHT", 14, 22)
   else
-    self.BuyFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 24, -205)
+    self.BuyFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 24, -158)
   end
   self.BuyFrame:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
 
@@ -40,6 +42,11 @@ function AuctionatorSellingTabMixin:NormalizeVisuals()
   local prices = self.BuyFrame and self.BuyFrame.CurrentPrices
   if prices then
     Auctionator.Visual.NormalizeResultsPanel(prices.Inset, prices.SearchResultsListing)
+    if not showBag then
+      -- Bag hidden -> stretch the dark panel edge to edge (full width) like Cancelling,
+      -- anchored to the wrapper (reliable) rather than the mis-sized tab frame.
+      Auctionator.Visual.StretchFullWidth(prices.Inset, self, prices.SearchResultsListing)
+    end
     Auctionator.Visual.NormalizeHeaders(prices.SearchResultsListing)
     Auctionator.Visual.RaiseAbove(prices.CancelButton, prices.Inset)
     Auctionator.Visual.RaiseAbove(prices.BuyButton, prices.Inset)

@@ -75,6 +75,7 @@ end
 function AuctionatorFullScanProgressMixin:ReceiveEvent(eventName, ...)
   if eventName == Auctionator.FullScan.Events.ScanStart then
     self.hideToken = (self.hideToken or 0) + 1 -- cancel any pending hide
+    self.CancelButton:SetText(CANCEL)
     self.CancelButton:Enable()
     self:Show()
     self:UpdateProgressText()
@@ -86,13 +87,17 @@ function AuctionatorFullScanProgressMixin:ReceiveEvent(eventName, ...)
       (p and p.auctionsProcessed) or 0,
       (p and math.floor(p.elapsed)) or 0
     ))
-    self.CancelButton:Disable()
-    self:HideAfter(6)
+    -- Scan done: turn the button into an OK that dismisses the panel (kept enabled so the
+    -- user can close it immediately instead of waiting for the auto-hide fallback).
+    self.CancelButton:SetText(OKAY)
+    self.CancelButton:Enable()
+    self:HideAfter(10)
 
   elseif eventName == Auctionator.FullScan.Events.ScanFailed then
     self.StatusText:SetText("|cffff4040Full Scan aborted|r")
-    self.CancelButton:Disable()
-    self:HideAfter(4)
+    self.CancelButton:SetText(OKAY)
+    self.CancelButton:Enable()
+    self:HideAfter(6)
   end
 end
 
@@ -125,9 +130,14 @@ function Auctionator.FullScan.InitializeProgressUI()
   frame.CancelButton:SetSize(100, 22)
   frame.CancelButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
   frame.CancelButton:SetText(CANCEL)
+  -- One button, two roles: while a scan runs it Cancels (aborts); once the scan has
+  -- finished it acts as OK and just dismisses the panel.
   frame.CancelButton:SetScript("OnClick", function()
-    if Auctionator.State.FullScanFrameRef then
-      Auctionator.State.FullScanFrameRef:Abort()
+    local engine = Auctionator.State.FullScanFrameRef
+    if engine and engine.inProgress then
+      engine:Abort()
+    else
+      frame:Hide()
     end
   end)
 

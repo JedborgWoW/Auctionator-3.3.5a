@@ -8,7 +8,7 @@
     <Size x="600" y="100" />
 
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorSaleItemMixin); self:OnLoad(); self.Icon:SetPoint("TOPLEFT", self.TitleArea, "BOTTOMLEFT", -20, -5); self.UnitPrice:SetPoint("TOPLEFT", self.Icon, "TOPRIGHT", 0, 5); self.UnitPrice:SetPoint("RIGHT", self.Icon, "RIGHT", 330, 0); self.StackPrice:SetPoint("TOPLEFT", self.UnitPrice, "BOTTOMLEFT", 0, -25); self.StackPrice:SetPoint("RIGHT", self.UnitPrice, "RIGHT"); self.Stacks:SetPoint("TOPLEFT", self.StackPrice, "BOTTOMLEFT", 112, -30); self.Stacks:SetPoint("RIGHT", self.UnitPrice, "RIGHT"); self.Duration:SetPoint("TOPLEFT", self.UnitPrice, "TOPRIGHT"); self.Duration:SetPoint("RIGHT", self.UnitPrice, "RIGHT", 200, 0); self.PostButton:SetPoint("TOPLEFT", self.Duration, "BOTTOMLEFT", 20, -19); self.SkipButton:SetPoint("TOPLEFT", self.PostButton, "TOPRIGHT"); self.PrevButton:SetPoint("TOPRIGHT", self.PostButton, "TOPLEFT"); self.BidPrice:SetPoint("TOPLEFT", self.PostButton, "BOTTOMLEFT"); self.Deposit:SetPoint("TOPLEFT", self.Duration, "TOPRIGHT", 20, 0); self.DepositPrice:SetPoint("TOPLEFT", self.Deposit, "BOTTOMLEFT"); self.Total:SetPoint("TOPLEFT", self.DepositPrice, "BOTTOMLEFT"); self.TotalPrice:SetPoint("TOPLEFT", self.Total, "BOTTOMLEFT")</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorSaleItemMixin); self:OnLoad(); AuctionatorLegacy_LayoutSaleItemFrame(self)</OnLoad>
       <OnUpdate>self:OnUpdate(elapsed)</OnUpdate>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>

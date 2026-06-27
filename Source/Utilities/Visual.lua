@@ -127,6 +127,50 @@ function Auctionator.Visual.NormalizeFooter(buttons, anchor, spacing)
   end
 end
 
+-- Stretch a dark panel edge-to-edge across the AuctionFrame interior. AuctionFrame is the
+-- actual window (a guaranteed global). This client's AH frame is ASYMMETRIC -- the left
+-- stone border is ~18px wide while the right is only ~5px -- so the insets are NOT mirrored.
+--
+-- ROOT CAUSE FIX (Shopping drifting left): the vertical used to be taken via TOP/BOTTOM
+-- anchored to the results listing. Those points also pin the panel's HORIZONTAL CENTRE to
+-- the listing's centre. On Selling/Cancelling the listing is centred, so harmless; but on
+-- Shopping the listing is only the RIGHT column block (starts ~+285), badly off-centre, so
+-- that centre constraint FOUGHT the LEFT/RIGHT edges and dragged the whole panel sideways
+-- (amount depending on width -- which is why it shifted when right changed 18 -> 5).
+-- Fix: anchor BOTH corners to AuctionFrame (centred -> no centre conflict) and DERIVE the
+-- vertical from the listing's measured top/bottom. Identical result where it already worked.
+local FW_LEFT, FW_RIGHT = 18, 5
+-- `leftInset` overrides the left margin (defaults to FW_LEFT = the same as Selling/Cancelling).
+--
+-- Both corners are anchored to AuctionFrame (centred -> no horizontal-centre conflict) and the
+-- vertical is DERIVED from the listing's measured top/bottom. The catch: at the first OnShow
+-- the listing's position can be unmeasurable (GetTop == nil). The OLD fallback then anchored
+-- TOP/BOTTOM directly to the listing -- which on Shopping (whose listing is only the off-centre
+-- RIGHT column) pinned the panel's horizontal centre to that column and dragged the whole panel
+-- LEFT, out over the stone border. That is exactly the "Shopping left not inside the frame" bug,
+-- and it was intermittent because on loads where the listing WAS measurable the clean corner
+-- path ran instead. Fix: never use the conflicting fallback -- if positions aren't ready, defer
+-- one frame and retry until they are, so every tab deterministically lands on the corner path.
+function Auctionator.Visual.StretchFullWidth(panel, tabFrame, listing, top, bottom, leftInset, _retry)
+  if panel == nil or listing == nil then
+    return
+  end
+  local frame = AuctionFrame or (tabFrame and tabFrame:GetParent()) or tabFrame
+  local lt, lb = listing:GetTop(), listing:GetBottom()
+  local ft, fb = frame:GetTop(), frame:GetBottom()
+  if lt and lb and ft and fb then
+    local L = leftInset or FW_LEFT
+    panel:ClearAllPoints()
+    panel:SetPoint("TOPLEFT", frame, "TOPLEFT", L, (lt - ft) + (top or -25))
+    panel:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -FW_RIGHT, (lb - fb) + (bottom or 2))
+    Auctionator.Visual.SendToBack(panel, listing)
+  elseif (_retry or 0) < 12 then
+    C_Timer.After(0, function()
+      Auctionator.Visual.StretchFullWidth(panel, tabFrame, listing, top, bottom, leftInset, (_retry or 0) + 1)
+    end)
+  end
+end
+
 -- Make a results listing's header row + empty-state text read consistently: header drawn
 -- above the inset, "No results" / status text gold. Safe to call repeatedly.
 function Auctionator.Visual.NormalizeHeaders(listing)

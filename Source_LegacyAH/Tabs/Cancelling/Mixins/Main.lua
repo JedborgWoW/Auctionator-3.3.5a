@@ -15,6 +15,21 @@ function AuctionatorCancellingFrameMixin:OnLoad()
   end)
 
   self:SetScript("OnUpdate", self.OnUpdate)
+
+  -- The Cancelling frame has no XML OnShow, so wire visual normalization here.
+  self:SetScript("OnShow", self.NormalizeVisuals)
+end
+
+-- Stretch the dark results panel edge to edge (full width) and keep it behind the rows,
+-- matching the Shopping/Selling tabs. The opaque fill comes from AuctionatorInsetTemplate.
+function AuctionatorCancellingFrameMixin:NormalizeVisuals()
+  local inset = self.HistoricalPriceInset
+  local listing = self.ResultsListing
+  if inset and listing then
+    -- Anchor to the wrapper (reliable content boundary), not the mis-sized tab frame.
+    Auctionator.Visual.StretchFullWidth(inset, self, listing)
+    Auctionator.Visual.NormalizeHeaders(listing)
+  end
 end
 
 function AuctionatorCancellingFrameMixin:OnUpdate()
