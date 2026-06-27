@@ -291,49 +291,60 @@ function AuctionatorShoppingTabFrameMixin:OnShow()
   self.SearchOptions:FocusSearchBox()
   Auctionator.EventBus:Register(self, EVENTBUS_EVENTS)
 
-  -- Footer layout + layering, re-asserted on every show.
-  -- The XML anchored Import/Export to RecentsContainer, which on 3.3.5a is mis-sized to
-  -- the full panel width, so they floated off the right edge (Export even overflowed the
-  -- frame). Re-anchor deterministically to the results inset: Import + Export as a LEFT
-  -- group just below the black results panel, Export Results at the RIGHT of the same
-  -- footer row -- a clean single row that does not overlap or sit behind the panel.
-  -- Footer: Import + Export are list-management actions, so group them on the bottom
-  -- LEFT next to New List ([New List] [Import] [Export]); the left of the results-panel
-  -- row is occupied by the lists panel, so anchoring there left them mid-view. Export
-  -- Results (a results action) stays at the bottom RIGHT of the panel.
-  Auctionator.Layout.SetButtonRow(
-    { self.ImportButton, self.ExportButton },
-    self.NewListButton, "LEFT", "RIGHT", 12, 0, 8
-  )
-  -- Export Results on the SAME bottom strip as New List (its right edge aligned to the
-  -- results panel), so all footer buttons share New List's height -- a clean action row.
-  self.ExportCSV:ClearAllPoints()
-  self.ExportCSV:SetPoint("BOTTOM", self.NewListButton, "BOTTOM")
-  self.ExportCSV:SetPoint("RIGHT", self.ShoppingResultsInset, "RIGHT")
-
-  -- Footer buttons must draw above the passive black inset background.
-  Auctionator.Layout.RaiseAbove(self.ImportButton, self.ResultsListing, self.ShoppingResultsInset)
-  Auctionator.Layout.RaiseAbove(self.ExportButton, self.ResultsListing, self.ShoppingResultsInset)
-  Auctionator.Layout.RaiseAbove(self.ExportCSV, self.ResultsListing, self.ShoppingResultsInset)
-
-  -- Dark sidebar background: the left list panel had no background, so the AH interior
-  -- showed through and it did not read as one panel with the dark results area. Put a
-  -- themed dark backdrop BEHIND the sidebar content (a dedicated frame -- does not touch
-  -- the working list container's own layout).
-  if not self.SidebarBg then
-    self.SidebarBg = CreateFrame("Frame", nil, self)
-    self.SidebarBg:SetFrameLevel(self:GetFrameLevel())
-    Auctionator.Theme.ApplySidebarBackdrop(self.SidebarBg)
-  end
-  self.SidebarBg:ClearAllPoints()
-  self.SidebarBg:SetPoint("TOPLEFT", self, "TOPLEFT", 6, -46)
-  self.SidebarBg:SetPoint("BOTTOMLEFT", self.NewListButton, "TOPLEFT", -6, 6)
-  self.SidebarBg:SetWidth(278)
+  self:NormalizeVisuals()
 
   if self.shouldDefaultOpenOnShow then
     self:OpenDefaultList()
     self.shouldDefaultOpenOnShow = false
   end
+end
+
+-- Force the Shopping tab to match the Cancelling tab visually (the source of truth).
+-- Cancelling reads well because ONE dark inset (AuctionatorInsetTemplate) sits behind its
+-- results listing and the frame is symmetric. Shopping has a left sidebar too, so here we:
+--   * wrap the results listing with its inset using Cancelling's exact margins;
+--   * give the sidebar an IDENTICAL inset (same fill + InsetFrameTemplate4 border) sized to
+--     the SAME top/bottom as the results inset, so left and right read as one panel system
+--     (the old code used a different colour + soft tooltip border here -> the mismatch);
+--   * lay New List / Import / Export on one bottom-left Y and Export Results bottom-right,
+--     all clearly BELOW the panels (no floating, footer separated);
+--   * keep all passive backgrounds strictly behind headers / rows / buttons.
+-- Re-asserted on every show because the 3.3.5a XML parser does not reliably honour the
+-- inherited/dotted anchors these frames were authored with.
+function AuctionatorShoppingTabFrameMixin:NormalizeVisuals()
+  -- Results panel: dark inset wraps the listing exactly like Cancelling.
+  Auctionator.Visual.NormalizeResultsPanel(self.ShoppingResultsInset, self.ResultsListing)
+  Auctionator.Visual.NormalizeHeaders(self.ResultsListing)
+
+  -- Sidebar panel: identical inset, same height as the results inset, filling the left gap.
+  local sidebarInset = Auctionator.Visual.EnsureInsetPanel(self, "SidebarInset")
+  sidebarInset:ClearAllPoints()
+  sidebarInset:SetPoint("LEFT", self, "LEFT", 4, 0)
+  sidebarInset:SetPoint("RIGHT", self.ShoppingResultsInset, "LEFT", -8, 0)
+  sidebarInset:SetPoint("TOP", self.ShoppingResultsInset, "TOP")
+  sidebarInset:SetPoint("BOTTOM", self.ShoppingResultsInset, "BOTTOM")
+  Auctionator.Visual.SendToBack(sidebarInset, self.ListsContainer, self.RecentsContainer, self.ContainerTabs)
+  -- A stale frame from the previous (mismatched) theme approach, if present, is hidden so
+  -- two backgrounds never stack.
+  if self.SidebarBg then
+    self.SidebarBg:Hide()
+  end
+
+  -- Footer: one clean row, clearly below both panels.
+  Auctionator.Visual.NormalizeFooter(
+    { self.ImportButton, self.ExportButton },
+    { frame = self.NewListButton, point = "BOTTOMLEFT", relPoint = "BOTTOMRIGHT", x = 12, y = 0 },
+    8
+  )
+  self.ExportCSV:ClearAllPoints()
+  self.ExportCSV:SetPoint("BOTTOM", self.NewListButton, "BOTTOM")
+  self.ExportCSV:SetPoint("RIGHT", self.ShoppingResultsInset, "RIGHT")
+
+  -- Interactive controls draw above the passive insets.
+  Auctionator.Visual.RaiseAbove(self.NewListButton, self.ShoppingResultsInset, sidebarInset)
+  Auctionator.Visual.RaiseAbove(self.ImportButton, self.ShoppingResultsInset, sidebarInset)
+  Auctionator.Visual.RaiseAbove(self.ExportButton, self.ShoppingResultsInset, sidebarInset)
+  Auctionator.Visual.RaiseAbove(self.ExportCSV, self.ShoppingResultsInset, sidebarInset)
 end
 
 function AuctionatorShoppingTabFrameMixin:OnHide()
