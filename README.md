@@ -4,10 +4,6 @@
 > addon, backported to run on **stock Wrath of the Lich King 3.3.5a** (interface `30300`,
 > client build `12340`) — no ClassicAPI or other compatibility addon required.
 
-![Game version](https://img.shields.io/badge/WoW-3.3.5a%20(12340)-informational)
-![Interface](https://img.shields.io/badge/Interface-30300-informational)
-![Branch](https://img.shields.io/badge/AH%20path-Legacy%20(QueryAuctionItems)-success)
-[![Auctionator Discord](https://img.shields.io/badge/discord-auctionator-blue.svg)](https://discord.gg/JabzHmzjWF)
 
 Auctionator makes buying, selling and managing auctions fast and painless: live prices in
 your tooltips, a powerful search with shopping lists, one-click reposting, and undercut
