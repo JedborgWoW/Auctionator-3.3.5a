@@ -103,9 +103,9 @@ offline XML-transform tooling lives in **[BACKPORT_NOTES.md](BACKPORT_NOTES.md)*
 
 - Original **Auctionator** by **plusmouse** and **Borjamacare** —
   [TheMouseNest/Auctionator](https://github.com/TheMouseNest/Auctionator).
-- WoW 3.3.5a (WotLK) backport by **Rikard Jedborg**
+- WoW 3.3.5a (WotLK) backport by **Jedborg**
   ([JedborgWoW](https://github.com/JedborgWoW)).
 
 Licensed **All Rights Reserved** (© 2020–2025 plusmouse, borjamacare; backport
-modifications © 2026 Rikard Jedborg) — see [LICENSE](LICENSE). Consider supporting the
+modifications © 2026 Jedborg) — see [LICENSE](LICENSE). Consider supporting the
 original authors on [Patreon](https://patreon.com/auctionator).
