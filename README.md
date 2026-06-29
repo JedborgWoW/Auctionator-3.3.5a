@@ -12,10 +12,6 @@
 > other compat addon required). Only the WotLK / Legacy-Auction-House code path
 > is kept; the retail / Cata / Classic-Era / Modern-AH versions were removed.
 
-[![Auctionator Discord](https://img.shields.io/badge/discord-auctionator-blue.svg)](https://discord.gg/JabzHmzjWF)
-[![Donate to Auctionator](https://shields.io/badge/patreon-donate-red?logo=patreon&ia=software)](https://patreon.com/auctionator)
-[![On Curseforge](https://img.shields.io/badge/download-Curseforge-orange)](https://www.curseforge.com/wow/addons/auctionator)
-[![On Wago](https://img.shields.io/badge/download-Wago-3a3a3a)](https://addons.wago.io/addons/auctionator/)
 
 Auctionator is designed for casual everyday auction house users, to make interactions easier and faster, and to provide quick access to auction prices.
 ## Key Features
