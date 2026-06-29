@@ -1,5 +1,21 @@
 AuctionatorCancellingListResultsRowMixin = CreateFromMixins(AuctionatorResultsRowTemplateMixin)
 
+-- CancelAuction is hardware-event gated on this client: it only succeeds when invoked from a
+-- real Button OnClick. The shared row template drives clicks through Frame OnMouseUp, which
+-- does NOT satisfy that gate -- the cancel was rejected with "Interface action failed because
+-- of an AddOn" (so the auction never cancelled and the throttle then timed out), even though
+-- the "Cancel Undercut" Button -- a real OnClick -- worked. Our ScrollBox creates rows as
+-- Buttons, so replace the inherited OnMouseUp trigger with a proper OnClick on both mouse
+-- buttons. Called from the row template's OnLoad (after the mixins are applied).
+function AuctionatorCancellingListResultsRowMixin:SetupClickHandler()
+  if not self.RegisterForClicks then
+    return -- not a Button on this client; keep the inherited OnMouseUp (best effort)
+  end
+  self:SetScript("OnMouseUp", nil)
+  self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+  self:SetScript("OnClick", function(row, button) row:OnClick(button) end)
+end
+
 function AuctionatorCancellingListResultsRowMixin:OnClick(button, ...)
   -- A click only cancels when the throttle is free (gate below). If a background undercut
   -- scan / pending action holds the throttle, the click is dropped here -- which is why a

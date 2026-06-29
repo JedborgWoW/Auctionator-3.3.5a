@@ -23,5 +23,5 @@
       </Layer>
     </Layers>
 
-  <Scripts><OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin); Mixin(self, AuctionatorCancellingListResultsRowMixin)</OnLoad></Scripts></Frame>
+  <Scripts><OnLoad>Mixin(self, AuctionatorResultsRowTemplateMixin); Mixin(self, AuctionatorCancellingListResultsRowMixin); self:SetupClickHandler()</OnLoad></Scripts></Frame>
 </Ui>
