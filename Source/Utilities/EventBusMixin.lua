@@ -82,6 +82,9 @@ function AuctionatorEventBusMixin:Fire(source, eventName, ...)
       -- unrelated subsystems (Buy/Post buttons never receive ThrottleUpdate, the
       -- cancel-all loop stalls, etc.). pcall keeps the bus robust to compat gaps while
       -- geterrorhandler() keeps the error VISIBLE (not silenced) for diagnosis.
+      -- NOTE: pcall (like securecall) drops the secure/hardware-event execution status, so
+      -- a hardware-event-gated PROTECTED action (e.g. CancelAuction) must NOT be routed
+      -- through the bus -- call it directly from the triggering click handler instead.
       local ok, err = pcall(listener.ReceiveEvent, listener, eventName, ...)
       if not ok then
         geterrorhandler()(err)

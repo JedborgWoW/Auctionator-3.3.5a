@@ -31,7 +31,20 @@ function AuctionatorUndercutScanMixin:OnLoad()
 end
 
 local function UndercutCheck(unitPrice, positions, maxItemsAhead, minPrice)
-  local seenItemsAhead = Auctionator.Constants.MaxResultsPerPage + 1
+  -- Must match the displayed "Undercut?" column EXACTLY (DataProviders/Cancelling.lua):
+  -- you are undercut only if someone is genuinely cheaper than you (unitPrice > minPrice)
+  -- AND the number of items ahead of your price exceeds the configured tolerance.
+  --
+  -- The price guard below was missing, and the not-found default was MaxResultsPerPage+1
+  -- (51). So whenever your price wasn't present in `positions` -- e.g. on a server where the
+  -- scan can't match your own auctions -- this returned a false "undercut" for EVERY auction.
+  -- That both kept the "Cancel Undercut" button enabled when nothing was actually undercut
+  -- and made it cancel a NON-undercut (top) auction. Defaulting to maxItemsAhead (as the
+  -- column's GetItemsAhead does) and requiring unitPrice > minPrice makes the two agree.
+  if not (minPrice and unitPrice > minPrice) then
+    return false
+  end
+  local seenItemsAhead = maxItemsAhead
   for _, p in ipairs(positions) do
     if p.unitPrice == unitPrice then
       seenItemsAhead = p.itemsAhead

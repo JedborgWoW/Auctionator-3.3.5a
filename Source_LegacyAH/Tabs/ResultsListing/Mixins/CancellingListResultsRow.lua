@@ -1,9 +1,9 @@
 AuctionatorCancellingListResultsRowMixin = CreateFromMixins(AuctionatorResultsRowTemplateMixin)
 
 function AuctionatorCancellingListResultsRowMixin:OnClick(button, ...)
-  -- Diagnostic: a left-click only cancels when the throttle is free (gate below). If a
-  -- background undercut scan / pending action holds the throttle, the click is dropped
-  -- here -- which is why row-click "did nothing" while Cancel Undercut (scan-aware) worked.
+  -- A click only cancels when the throttle is free (gate below). If a background undercut
+  -- scan / pending action holds the throttle, the click is dropped here -- which is why a
+  -- row-click "did nothing" while Cancel Undercut (scan-aware) worked.
   Auctionator.Debug.Message(
     "AuctionatorCancellingListResultsRowMixin:OnClick", button,
     "throttleReady", Auctionator.AH.IsNotThrottled(),
@@ -16,17 +16,39 @@ function AuctionatorCancellingListResultsRowMixin:OnClick(button, ...)
   elseif IsModifiedClick("CHATLINK") then
     Auctionator.Utilities.InsertLink(self.rowData.itemLink)
 
-  elseif button == "LeftButton" and Auctionator.AH.IsNotThrottled() then
-    self.rowData.cancelled = true
-    self:ApplyFade()
+  elseif (button == "LeftButton" or button == "RightButton") and Auctionator.AH.IsNotThrottled() then
+    -- Either mouse button cancels the auction (right-click added as a quick alternative to
+    -- left-click; a plain right-click no longer fires a Shopping search -- that only ever
+    -- created an unwanted "Cancelling (temporary)" shopping list).
+    --
+    -- Cancel DIRECTLY here, in the row's own mouse-click handler, instead of firing an
+    -- EventBus event for the Cancelling frame to handle. CancelAuction must run inside the
+    -- synchronous execution of the hardware click; EventBus:Fire wraps each handler in pcall
+    -- (and securecall behaves no better), which drops the hardware-event/secure status, so the
+    -- client rejects the cancel with "Interface action failed because of an AddOn" and the
+    -- auction is never cancelled. A direct call -- exactly what the native Zirco Auctionator
+    -- does from its cancel button -- keeps that status intact.
+    local auctionData = self.rowData
 
-    Auctionator.EventBus
-      :RegisterSource(self, "CancellingListResultRow")
-      :Fire(self, Auctionator.Cancelling.Events.RequestCancel, self.rowData)
-      :UnregisterSource(self)
+    -- Auctions someone has bid on cost gold to cancel; confirm first (same as the frame path).
+    local cancelCost = math.floor(((auctionData.bidAmount or 0) * (AUCTION_CANCEL_COST or 0)) / 100)
+    if cancelCost > 0 then
+      local dialog = StaticPopup_Show("AuctionatorConfirmBidPricePopupDialog")
+      if dialog then
+        dialog.data = auctionData
+        MoneyFrame_Update(dialog.moneyFrame, cancelCost)
+      end
+    else
+      auctionData.cancelled = true
+      self:ApplyFade()
+      Auctionator.AH.CancelAuction(auctionData)
+      -- Post-cancel UI refresh only (not a protected action) -- safe to route through the bus.
+      Auctionator.EventBus
+        :RegisterSource(self, "CancellingListResultRow")
+        :Fire(self, Auctionator.Cancelling.Events.CancelConfirmed, auctionData)
+        :UnregisterSource(self)
+    end
   end
-  -- (Removed: right-click no longer fires a Shopping search -- it created an unwanted
-  -- "Cancelling (temporary)" shopping list every time you right-clicked a row.)
 end
 
 function AuctionatorCancellingListResultsRowMixin:OnEnter()
