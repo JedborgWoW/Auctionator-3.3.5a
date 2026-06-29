@@ -25,23 +25,6 @@ Auctionator is designed for casual everyday auction house users, to make interac
 For a description of and usage guide for more features please see the
 [Curseforge page](https://www.curseforge.com/wow/addons/auctionator).
 
-## Contributing to Auctionator
 
-### Bugs
 
-Please report bugs on the
-[issues page](https://github.com/TheMouseNest/Auctionator/issues/new).
-The use of 
-[BugGrabber](https://www.curseforge.com/wow/addons/bug-grabber) and 
-[BugSack](https://www.curseforge.com/wow/addons/bugsack) will help tremendously
-with the debugging process.
 
-### Feature requests
-
-Ask for features either on the [Discord](https://discord.gg/JabzHmzjWF) or by
-creating a new issue on the
-[issues page](https://github.com/TheMouseNest/Auctionator/issues/new).
-
-### Donations
-
-You can also contribute to the addon by donating on [our Patreon](https://patreon.com/auctionator).
