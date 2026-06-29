@@ -3,7 +3,7 @@
 > **This is a backport of [Auctionator](https://github.com/TheMouseNest/Auctionator)
 > to the stock WotLK 3.3.5a (client build 12340) interface.**
 > Original addon by **plusmouse** and **Borjamacare**. 3.3.5a backport by
-> **Rikard Jedborg** ([JedborgWoW](https://github.com/JedborgWoW)).
+> **Jedborg** ([JedborgWoW](https://github.com/JedborgWoW)).
 >
 > The modern retail UI framework that Auctionator relies on (the ScrollBox
 > system, `mixin=`/`<OnX method>` XML, `C_*` namespaces, `Enum`, the menu/
