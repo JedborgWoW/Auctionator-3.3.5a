@@ -18,6 +18,101 @@ function AuctionatorCancellingFrameMixin:OnLoad()
 
   -- The Cancelling frame has no XML OnShow, so wire visual normalization here.
   self:SetScript("OnShow", self.NormalizeVisuals)
+
+  -- Expose this frame so the (pooled) result rows can drive the hover Cancel button, and put the
+  -- button above the rows so it is clickable. The button itself is defined in the frame's XML so
+  -- its click is allowed to call the protected CancelAuction (a pooled row's click is not).
+  Auctionator.Cancelling.frame = self
+  if self.RowCancelButton then
+    self.RowCancelButton:SetFrameStrata("HIGH")
+    self.RowCancelButton:Hide()
+  end
+end
+
+-- Show the hover Cancel button over the row the mouse is on, remembering its auction.
+function AuctionatorCancellingFrameMixin:ShowRowCancelButton(row)
+  local button = self.RowCancelButton
+  if not button or not row or not row.rowData then
+    return
+  end
+  button.auction = row.rowData
+  button.attachedRow = row
+  button:ClearAllPoints()
+  button:SetPoint("RIGHT", row, "RIGHT", -6, 0)
+  button:Show()
+end
+
+-- Hide the button shortly after the mouse leaves the row OR the button -- unless it has moved
+-- onto the other of the two (so moving from row to button doesn't make it vanish).
+function AuctionatorCancellingFrameMixin:ScheduleHideRowCancelButton()
+  local button = self.RowCancelButton
+  if not button then
+    return
+  end
+  C_Timer.After(0.1, function()
+    if button:IsShown() and not button:IsMouseOver()
+        and not (button.attachedRow and button.attachedRow:IsMouseOver()) then
+      button:Hide()
+    end
+  end)
+end
+
+-- A pooled row is being reused for a different auction -- drop the button if it was on that row
+-- so it can never act on the wrong auction.
+function AuctionatorCancellingFrameMixin:DetachRowCancelButton(row)
+  local button = self.RowCancelButton
+  if button and button.attachedRow == row then
+    button:Hide()
+    button.auction = nil
+    button.attachedRow = nil
+  end
+end
+
+-- Issue the cancel for the hovered auction. Runs from the XML button's OnClick, so the protected
+-- CancelAuction is accepted (server confirms "Auction cancelled.").
+function AuctionatorCancellingFrameMixin:CancelHoveredAuction()
+  local button = self.RowCancelButton
+  local auctionData = button and button.auction
+  if not auctionData then
+    return
+  end
+
+  -- Auctions someone has bid on cost gold to cancel -> confirm first.
+  local cancelCost = math.floor(((auctionData.bidAmount or 0) * (AUCTION_CANCEL_COST or 0)) / 100)
+  if cancelCost > 0 then
+    local dialog = StaticPopup_Show("AuctionatorConfirmBidPricePopupDialog")
+    if dialog then
+      dialog.data = auctionData
+      MoneyFrame_Update(dialog.moneyFrame, cancelCost)
+    end
+    return
+  end
+
+  -- Cancel EVERY stack of this auction (same item + quantity + buyout, no bid) in this one click,
+  -- exactly like the native Zirco Auctionator. The owned list does not reshuffle synchronously on
+  -- this server (ownerCount is unchanged right after CancelAuction), so iterating fixed indices in
+  -- a single pass is safe, and 3.3.5a allows multiple CancelAuction calls per hardware event.
+  local AII = Auctionator.Constants.AuctionItemInfo
+  local wantId = auctionData.itemLink and tonumber(auctionData.itemLink:match("item:(%d+)"))
+  for index = 1, GetNumAuctionItems("owner") do
+    local info = { GetAuctionItemInfo("owner", index) }
+    local link = GetAuctionItemLink("owner", index)
+    local id = link and tonumber(link:match("item:(%d+)"))
+    if info[AII.SaleStatus] ~= 1
+        and info[AII.Quantity] == auctionData.stackSize
+        and info[AII.Buyout] == auctionData.stackPrice
+        and (info[AII.BidAmount] or 0) == 0
+        and id == wantId then
+      CancelAuction(index)
+    end
+  end
+
+  auctionData.cancelled = true
+  button:Hide()
+  Auctionator.EventBus
+    :RegisterSource(self, "CancellingFrameRowCancel")
+    :Fire(self, Auctionator.Cancelling.Events.CancelConfirmed, auctionData)
+    :UnregisterSource(self)
 end
 
 -- Stretch the dark results panel edge to edge (full width) and keep it behind the rows,

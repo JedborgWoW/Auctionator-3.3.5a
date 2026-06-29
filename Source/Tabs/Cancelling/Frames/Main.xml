@@ -40,6 +40,18 @@
         </Anchors>
       <Scripts><OnLoad>Mixin(self, AuctionatorResultsListingMixin); self.ScrollArea:SetPoint("TOPLEFT", self.HeaderContainer, "BOTTOMLEFT", 15, -3); self.ScrollArea:SetPoint("RIGHT", self.HeaderContainer, "RIGHT", -3, 0)</OnLoad></Scripts></Frame>
 
+      <!-- One-click cancel: a hover button shown over the row the mouse is on. CancelAuction is
+           rejected from the ScrollBox-pooled row's own click on this server, but works from a
+           button defined here in the frame's XML (like the Cancel Undercut button). Driven from
+           AuctionatorCancellingFrameMixin (ShowRowCancelButton / CancelHoveredAuction). -->
+      <Button parentKey="RowCancelButton" name="AuctionatorRowCancelButton" inherits="UIPanelButtonTemplate" text="CANCEL" hidden="true">
+        <Size x="58" y="18"/>
+        <Scripts>
+          <OnClick>if Auctionator.Cancelling.frame then Auctionator.Cancelling.frame:CancelHoveredAuction() end</OnClick>
+          <OnLeave>if Auctionator.Cancelling.frame then Auctionator.Cancelling.frame:ScheduleHideRowCancelButton() end</OnLeave>
+        </Scripts>
+      </Button>
+
       <Frame parentKey="HistoricalPriceInset" inherits="AuctionatorInsetTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeKey="$parent.ResultsListing" relativePoint="TOPLEFT" x="-5" y="-25"/>
