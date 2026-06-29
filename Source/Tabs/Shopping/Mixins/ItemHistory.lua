@@ -3,9 +3,26 @@ AuctionatorItemHistoryFrameMixin = CreateFromMixins(AuctionatorEscapeToCloseMixi
 function AuctionatorItemHistoryFrameMixin:OnLoad()
   -- WotLK 3.3.5a: this dialog inherits AuctionatorSimplePanelTemplate whose rock-file
   -- background is absent (rendered GREEN) and whose metal border is invisible. Apply a
-  -- real opaque DialogBox backdrop so the frame is solid and bordered. (The inner
-  -- results listing keeps its own dark AuctionatorInsetDarkTemplate panel.)
+  -- real opaque DialogBox backdrop so the frame is solid and bordered.
   Auctionator.Theme.ApplyOpaqueDialogBackdrop(self)
+
+  -- The inner results panel (self.Inset, AuctionatorInsetDarkTemplate) has its dark Bg
+  -- texture authored with relativeKey="$parent" anchors, which the 3.3.5a XML parser does
+  -- not reliably resolve -- so the fill renders mis-sized and "bleeds". Pin it explicitly
+  -- to the inset and flatten it (hide the bevel border) for a clean solid dark panel,
+  -- matching the Shopping results panel fix.
+  local inset = self.Inset
+  if inset then
+    if inset.Bg then
+      inset.Bg:ClearAllPoints()
+      inset.Bg:SetAllPoints(inset)
+      inset.Bg:SetTexture(0.04, 0.04, 0.05, 1.0)
+    end
+    local border = select(1, inset:GetChildren())
+    if border and border.Hide then
+      border:Hide()
+    end
+  end
 end
 
 function AuctionatorItemHistoryFrameMixin:Init()

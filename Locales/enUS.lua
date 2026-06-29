@@ -244,6 +244,7 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["X_PRICE_HISTORY"] = "%s Price History"
   L["NO_ITEM_INFO_SPECIFIED"] = "No item info was specified."
   L["BUY_STACK"] = "Buy Stack"
+  L["BUY_ALL"] = "Buy All"
   L["NONE_LEFT"] = "None Left"
   L["BUY"] = "Buy"
   L["BUY_AUCTION_CHANGED"] = "Auction data changed. Refresh and try again."

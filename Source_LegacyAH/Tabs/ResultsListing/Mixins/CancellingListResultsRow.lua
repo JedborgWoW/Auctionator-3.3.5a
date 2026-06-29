@@ -24,9 +24,9 @@ function AuctionatorCancellingListResultsRowMixin:OnClick(button, ...)
       :RegisterSource(self, "CancellingListResultRow")
       :Fire(self, Auctionator.Cancelling.Events.RequestCancel, self.rowData)
       :UnregisterSource(self)
-  elseif button == "RightButton" then
-    Auctionator.API.v1.MultiSearchExact(AUCTIONATOR_L_CANCELLING_TAB, { Auctionator.Utilities.GetNameFromLink(self.rowData.itemLink) })
   end
+  -- (Removed: right-click no longer fires a Shopping search -- it created an unwanted
+  -- "Cancelling (temporary)" shopping list every time you right-clicked a row.)
 end
 
 function AuctionatorCancellingListResultsRowMixin:OnEnter()

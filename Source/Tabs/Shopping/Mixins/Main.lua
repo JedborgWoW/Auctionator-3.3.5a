@@ -429,6 +429,14 @@ function AuctionatorShoppingTabFrameMixin:NormalizeVisuals()
     listsText:SetPoint("CENTER", self.ShoppingResultsInset, "CENTER", 0, 0)
   end
 
+  -- The status text + spinner are children of the ListsContainer, so they inherit its frame
+  -- level -- which sits BELOW the results rows, so "Searching for items..." was drawn BEHIND
+  -- the results (e.g. on Load more). Raise the sidebar above the results listing (and its
+  -- ScrollBox rows) so the centred status text/spinner draw ON TOP. Safe: the lists occupy only
+  -- the left column and the results the right, so they never overlap horizontally.
+  local resultsScrollBox = self.ResultsListing.ScrollArea and self.ResultsListing.ScrollArea.ScrollBox
+  Auctionator.Visual.RaiseAbove(self.ListsContainer, self.ResultsListing, resultsScrollBox)
+
   -- The separate sidebar inset and any stale theme background are no longer needed.
   local sidebarInset = Auctionator.Visual.EnsureInsetPanel(self, "SidebarInset")
   sidebarInset:Hide()

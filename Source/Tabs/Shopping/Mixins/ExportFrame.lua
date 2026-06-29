@@ -74,13 +74,26 @@ function AuctionatorListExportFrameMixin:RefreshLists()
   Auctionator.Debug.Message("AuctionatorListExportFrameMixin:RefreshLists()")
   self.checkBoxPool:ReleaseAll()
 
+  local listing = self.ScrollBox.ListListingFrame
+  -- Make sure the scroll content has a real width, so the checkboxes (anchored to its left/right
+  -- edges) aren't laid out 1px wide before the ScrollBox has been sized.
+  local boxWidth = self.ScrollBox:GetWidth()
+  if listing and boxWidth and boxWidth > 0 then
+    listing:SetWidth(boxWidth)
+  end
+
   for index = 1, Auctionator.Shopping.ListManager:GetCount() do
     local list = Auctionator.Shopping.ListManager:GetByIndex(index)
     local checkBox = self.checkBoxPool:Acquire()
     checkBox:SetText(list:GetName())
     checkBox:SetHeight(25)
-    checkBox:SetPoint("TOPRIGHT", self.ScrollBox.ListListingFrame, "TOPRIGHT", 0, -(checkBox:GetHeight()) * (index - 1))
-    checkBox:SetPoint("TOPLEFT", self.ScrollBox.ListListingFrame, "TOPLEFT", 0, -(checkBox:GetHeight()) * (index - 1))
+    -- Drop the template's inherited LEFT/RIGHT anchors FIRST. On 3.3.5a SetPoint without
+    -- ClearAllPoints leaves those active, so the box is pinned by four conflicting points
+    -- (centre via LEFT/RIGHT + top via TOPLEFT/TOPRIGHT) and collapses/overlaps -- which is
+    -- why the export list looked empty.
+    checkBox:ClearAllPoints()
+    checkBox:SetPoint("TOPRIGHT", listing, "TOPRIGHT", 0, -(checkBox:GetHeight()) * (index - 1))
+    checkBox:SetPoint("TOPLEFT", listing, "TOPLEFT", 0, -(checkBox:GetHeight()) * (index - 1))
     checkBox:Show()
   end
 

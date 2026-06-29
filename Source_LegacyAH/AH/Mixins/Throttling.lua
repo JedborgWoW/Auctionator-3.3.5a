@@ -88,6 +88,7 @@ function AuctionatorAHThrottlingFrameMixin:OnEvent(eventName, ...)
       FrameUtil.UnregisterFrameForEvents(self, NEW_AUCTION_EVENTS)
       self.waitingForNewAuction = false
       self.waitingForStatusMessage = false
+      self.cancelOwnerCount = nil
     end
 
   elseif eventName == "AUCTION_ITEM_LIST_UPDATE" then
@@ -121,6 +122,20 @@ function AuctionatorAHThrottlingFrameMixin:OnUpdate(elapsed)
       Auctionator.Debug.Message("Throttling: sell slot emptied -> post complete")
       self.waitingForNewAuction = false
       FrameUtil.UnregisterFrameForEvents(self, NEW_AUCTION_EVENTS)
+      self.waitingForStatusMessage = false
+      FrameUtil.UnregisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
+    end
+    -- CANCEL completion: the reliable signal on stock 3.3.5a / custom servers is the OWNED
+    -- auction count dropping (the cancelled auction disappears). The "Auction removed." chat
+    -- text (ERR_AUCTION_REMOVED) is unreliable on custom servers, so the cancel otherwise
+    -- waited the full 10s ("server took too long") and left the throttle busy, blocking the
+    -- next Cancelling click. The Cancelling tab polls GetOwnerAuctionItems each frame, so the
+    -- count is live. (cancelOwnerCount is set only by AuctionCancelled, so posts -- which
+    -- INCREASE the count -- are unaffected.)
+    if self.cancelOwnerCount and GetNumAuctionItems
+        and GetNumAuctionItems("owner") < self.cancelOwnerCount then
+      Auctionator.Debug.Message("Throttling: owned auction removed -> cancel complete")
+      self.cancelOwnerCount = nil
       self.waitingForStatusMessage = false
       FrameUtil.UnregisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
     end
@@ -177,6 +192,7 @@ function AuctionatorAHThrottlingFrameMixin:ResetWaiting()
   self.multisellInProgress = false
   self.waitingOnBid = false
   self.waitingForStatusMessage = false
+  self.cancelOwnerCount = nil
   FrameUtil.UnregisterFrameForEvents(self, BID_PLACED_EVENTS)
   FrameUtil.UnregisterFrameForEvents(self, NEW_AUCTION_EVENTS)
   FrameUtil.UnregisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
@@ -198,6 +214,9 @@ end
 function AuctionatorAHThrottlingFrameMixin:AuctionCancelled()
   self:ResetTimeout()
   self.waitingForStatusMessage = true
+  -- Record the owned-auction count so OnUpdate can complete the cancel the instant the
+  -- auction actually disappears (reliable on custom servers; see OnUpdate).
+  self.cancelOwnerCount = GetNumAuctionItems and GetNumAuctionItems("owner") or nil
   self.oldReady = false
   FrameUtil.RegisterFrameForEvents(self, AUCTIONS_UPDATED_EVENTS)
 end

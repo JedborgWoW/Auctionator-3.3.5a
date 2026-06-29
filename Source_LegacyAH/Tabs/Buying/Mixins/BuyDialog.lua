@@ -76,12 +76,14 @@ function AuctionatorBuyDialogMixin:OnShow()
   local base = self:GetFrameLevel()
   self.Overlay:SetFrameLevel(base + 1)
   self.BuyStack:SetFrameLevel(base + 5)
+  self.BuyAll:SetFrameLevel(base + 5)
   self.Cancel:SetFrameLevel(base + 5)
   self.ChainBuy:SetFrameLevel(base + 5)
 end
 
 function AuctionatorBuyDialogMixin:OnHide()
   self:SetChainBuy()
+  self.buyAll = false
   FrameUtil.UnregisterFrameForEvents(self, MONEY_EVENTS)
   if self.quantityPurchased > 0 and self.auctionData ~= nil then
     Auctionator.Utilities.Message(AUCTIONATOR_L_PURCHASED_X_XX:format(self.auctionData.itemLink, self.quantityPurchased))
@@ -211,6 +213,38 @@ function AuctionatorBuyDialogMixin:UpdateButtons()
   else
     self.BuyStack:SetText(AUCTIONATOR_L_NONE_LEFT)
   end
+  if self.BuyAll then
+    self.BuyAll:SetEnabled(self.BuyStack:IsEnabled())
+  end
+
+  -- Drive an active "Buy All": keep buying THIS price point as soon as Buy Stack becomes
+  -- available again (throttle freed + the live auction was found), until it runs out, gold
+  -- runs low, or the price changes. It never rolls on to a more expensive price
+  -- automatically (that is Chain Buy's job, with its own warning). Re-entrancy guarded; each
+  -- step still re-validates the live price inside BuyStackClicked, so a moved/changed auction
+  -- can't be mis-bought.
+  if self.buyAll and not self.inBuyAllStep then
+    if self.auctionData ~= nil and self.auctionData.stackPrice == self.buyAllPrice
+        and self.BuyStack:IsEnabled() then
+      self.inBuyAllStep = true
+      self:BuyStackClicked()
+      self.inBuyAllStep = false
+    elseif self.auctionData == nil or self.auctionData.numStacks <= 0
+        or self.auctionData.stackPrice ~= self.buyAllPrice then
+      self.buyAll = false
+    end
+  end
+end
+
+function AuctionatorBuyDialogMixin:BuyAllClicked()
+  if self.auctionData == nil then
+    return
+  end
+  -- Buy every remaining stack at the CURRENT price. UpdateButtons drives the loop (one buy
+  -- each time the throttle frees), so here we just arm it and fire the first buy.
+  self.buyAll = true
+  self.buyAllPrice = self.auctionData.stackPrice
+  self:BuyStackClicked()
 end
 
 function AuctionatorBuyDialogMixin:SetChainBuy()
@@ -218,6 +252,12 @@ function AuctionatorBuyDialogMixin:SetChainBuy()
 end
 
 function AuctionatorBuyDialogMixin:BuyStackClicked()
+  -- Never buy past what's left (prevents the count going negative and a runaway Buy All).
+  if self.auctionData == nil or self.auctionData.numStacks <= 0 then
+    self.buyAll = false
+    self:UpdateButtons()
+    return
+  end
   if self.auctionData.stackPrice > GetMoney() then
     self:UpdateButtons()
     return
@@ -257,6 +297,12 @@ function AuctionatorBuyDialogMixin:BuyStackClicked()
     Auctionator.Debug.Message("BuyDialog -> PlaceAuctionBid", "list", index, liveBuyout)
     Auctionator.AH.PlaceAuctionBid(index, liveBuyout)
     self.auctionData.numStacks = self.auctionData.numStacks - 1
+    -- On this server a buyout does NOT refresh the "list", so the auction we just bought
+    -- stays in the page. Blacklist its index so the next find advances to the NEXT auction
+    -- instead of re-bidding the one we already bought (which spent no gold, timed out with
+    -- "server took too long", and drove the available count negative). When the stale page is
+    -- exhausted, the existing buyInfo==nil path re-queries a fresh list (which resets this).
+    self.blacklistedBefore = index
     Auctionator.Utilities.SetStacksText(self.auctionData)
     self.lastBuyStackSize = self.auctionData.stackSize
     self:UpdatePurchasedCount(self.quantityPurchased)

@@ -38,7 +38,15 @@ function AuctionatorGroupsViewItemMixin:SetItemInfo(info)
     )
     self.IconBorder:SetShown(not info.selected)
 
-    self.Text:SetText(info.itemCount)
+    -- Stack/quantity overlay (bottom-right of the icon). The Groups view supplies
+    -- info.itemCount; the Selling sale-item supplies info.count -- accept either so the
+    -- Selling slot shows how many are in the stack (e.g. "8"). Hidden for a single item.
+    local quantity = info.itemCount or info.count
+    if type(quantity) == "number" and quantity > 1 then
+      self.Text:SetText(quantity)
+    else
+      self.Text:SetText("")
+    end
 
     self:ApplyQualityIcon(info.itemLink)
 

@@ -53,7 +53,7 @@
   <Scripts><OnLoad>self.layoutType = "Dialog"; self.BuyStack:SetPoint("TOPRIGHT", self.Stop, "TOPLEFT")</OnLoad></Scripts></Frame>
   <Frame name="AuctionatorBuyDialogTemplate" frameStrata="DIALOG" virtual="true" enableMouse="true" movable="true" clampedToScreen="true">
     <Scripts>
-      <OnLoad>Mixin(self, AuctionatorBuyDialogMixin); self.layoutType = "Dialog"; self:OnLoad(); self.Overlay:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -10, 0); self.Overlay:SetPoint("BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, -22); self.UnitPrice:SetPoint("TOP", self.PurchaseDetails, "BOTTOM", 0, -6); self.NumberPurchased:SetPoint("TOP", self.UnitPrice, "BOTTOM", 0, -8); self.BuyStack:SetPoint("TOPRIGHT", self.Cancel, "TOPLEFT"); self.ChainBuy:SetPoint("RIGHT", self.BuyStack, "LEFT")</OnLoad>
+      <OnLoad>Mixin(self, AuctionatorBuyDialogMixin); self.layoutType = "Dialog"; self:OnLoad(); self.Overlay:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -10, 0); self.Overlay:SetPoint("BOTTOMRIGHT", self:GetParent(), "BOTTOMRIGHT", 0, -22); self.UnitPrice:SetPoint("TOP", self.PurchaseDetails, "BOTTOM", 0, -6); self.NumberPurchased:SetPoint("TOP", self.UnitPrice, "BOTTOM", 0, -8); self.BuyStack:SetPoint("TOPRIGHT", self.Cancel, "TOPLEFT"); self.BuyAll:SetText(AUCTIONATOR_L_BUY_ALL); DynamicResizeButton_Resize(self.BuyAll); self.BuyAll:SetPoint("TOPRIGHT", self.BuyStack, "TOPLEFT"); self.ChainBuy:SetPoint("RIGHT", self.BuyAll, "LEFT", -10, 0)</OnLoad>
       <OnEvent>self:OnEvent(event, ...)</OnEvent>
       <OnShow>self:OnShow()</OnShow>
       <OnHide>self:OnHide()</OnHide>
@@ -70,7 +70,7 @@
     <Anchors>
       <Anchor point="CENTER"/>
     </Anchors>
-    <Size x="400" y="140"/>
+    <Size x="500" y="140"/>
     <Frames>
       <Frame parentKey="Overlay" enableMouse="true" useParentLevel="true">
         <Anchors>
@@ -98,6 +98,16 @@
         <Scripts>
           <OnClick>
             self:GetParent():BuyStackClicked()
+          </OnClick>
+        <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
+      </Button>
+      <Button inherits="UIPanelDynamicResizeButtonTemplate" text="AUCTIONATOR_L_BUY_ALL" parentKey="BuyAll">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeKey="$parent.BuyStack" relativePoint="TOPLEFT" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            self:GetParent():BuyAllClicked()
           </OnClick>
         <OnLoad>self.dynamicResizeMinWidth = 40; DynamicResizeButton_Resize(self)</OnLoad></Scripts>
       </Button>

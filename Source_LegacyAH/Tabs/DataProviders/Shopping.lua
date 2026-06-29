@@ -88,7 +88,11 @@ function AuctionatorShoppingTabDataProviderMixin:AddDetails(entries)
     end
 
     if not entry.complete then
-      entry.totalQuantityString = AUCTIONATOR_L_UNDERCUT_UNKNOWN
+      -- A normal multi-page search stops after page 1, so the full total isn't known. Show the
+      -- count loaded so far as a lower bound ("N+") instead of an unhelpful "?" -- the user
+      -- still sees roughly how many are up. (Enable "Always load more" / use "Load more
+      -- results" to load every page and get the exact total.)
+      entry.totalQuantityString = tostring(entry.totalQuantity or 0) .. "+"
     else
       entry.totalQuantityString = tostring(entry.totalQuantity)
     end

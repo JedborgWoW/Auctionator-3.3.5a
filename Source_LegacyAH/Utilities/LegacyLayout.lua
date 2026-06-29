@@ -323,6 +323,14 @@ function AuctionatorLegacy_LayoutSaleItemFrame(frame)
   if showBid then
     AuctionatorLegacy_LayoutMoneyInput(bid)
   end
+
+  -- The "stack of" number boxes (NumStacks / StackSize) use the SAME input template as the
+  -- coin boxes, so they showed the same double-border "bleed". Give them the identical clean
+  -- solid fill + 1px border.
+  if stacks then
+    SolidifyBox(GetChild(stacks, "NumStacks", "Num", "Number"))
+    SolidifyBox(GetChild(stacks, "StackSize", "Size"))
+  end
 end
 
 -- ===========================================================================

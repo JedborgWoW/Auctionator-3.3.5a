@@ -46,17 +46,16 @@ function AuctionatorFullScanProgressMixin:UpdateProgressText()
   end
   local elapsed = math.floor(p.elapsed)
   local speed = math.floor((p.auctionsPerSec or 0) + 0.5)
-  local recent = math.floor((p.recentSpeed or 0) + 0.5)
   if p.totalAuctions > 0 then
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s avg · %d/s recent   ·   ETA: %ds|r",
+      "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s   ·   ETA: %ds|r",
       p.currentPage, p.totalPages, p.auctionsProcessed, p.totalAuctions, elapsed,
-      speed, recent, math.floor(p.eta or 0)
+      speed, math.floor(p.eta or 0)
     ))
   else
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s avg · %d/s recent|r",
-      p.currentPage, p.auctionsProcessed, elapsed, speed, recent
+      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s|r",
+      p.currentPage, p.auctionsProcessed, elapsed, speed
     ))
   end
 end
@@ -119,7 +118,16 @@ function Auctionator.FullScan.InitializeProgressUI()
       tile = true, tileSize = 32, edgeSize = 32,
       insets = { left = 11, right = 12, top = 12, bottom = 11 },
     })
+    frame:SetBackdropColor(0.05, 0.05, 0.06, 1)
+    frame:SetBackdropBorderColor(1, 1, 1, 1)
   end
+
+  -- The SetBackdrop fill still renders SEMI-TRANSPARENT on this client, so lay a guaranteed
+  -- solid dark fill behind the text (inset a little so the DialogBox border still shows).
+  frame.SolidBg = frame:CreateTexture(nil, "BACKGROUND")
+  frame.SolidBg:SetTexture(0.05, 0.05, 0.06, 1)
+  frame.SolidBg:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -8)
+  frame.SolidBg:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -8, 8)
 
   frame.StatusText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   frame.StatusText:SetPoint("TOP", frame, "TOP", 0, -14)

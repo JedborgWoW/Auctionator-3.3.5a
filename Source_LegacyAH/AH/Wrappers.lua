@@ -68,7 +68,11 @@ function Auctionator.AH.DumpAuctions(view)
 end
 
 function Auctionator.AH.CancelAuction(auction)
-  for index = 1, GetNumAuctionItems("owner") do
+  local count = GetNumAuctionItems("owner")
+  if AUCTIONATOR_CANCEL_DEBUG then
+    print("|cffffd100CancelAuction|r ownerCount", count, "wantBuyout", auction.stackPrice, "wantQty", auction.stackSize, "wantBid", auction.bidAmount, "link", auction.itemLink)
+  end
+  for index = 1, count do
     local info = { GetAuctionItemInfo("owner", index) }
 
     local stackPrice = info[Auctionator.Constants.AuctionItemInfo.Buyout]
@@ -77,10 +81,20 @@ function Auctionator.AH.CancelAuction(auction)
     local saleStatus = info[Auctionator.Constants.AuctionItemInfo.SaleStatus]
     local itemLink = GetAuctionItemLink("owner", index)
 
+    if AUCTIONATOR_CANCEL_DEBUG then
+      print("  owner["..index.."] status", tostring(saleStatus), "buyout", tostring(stackPrice), "qty", tostring(stackSize), "bid", tostring(bidAmount), tostring(itemLink))
+    end
+
     if saleStatus ~= 1 and auction.bidAmount == bidAmount and auction.stackPrice == stackPrice and auction.stackSize == stackSize and Auctionator.Search.GetCleanItemLink(itemLink) == Auctionator.Search.GetCleanItemLink(auction.itemLink) then
+      if AUCTIONATOR_CANCEL_DEBUG then
+        print("  |cff00ff00-> MATCH, CancelAuction("..index..")|r")
+      end
       Auctionator.AH.Internals.throttling:AuctionCancelled()
       CancelAuction(index)
-      break
+      return
     end
+  end
+  if AUCTIONATOR_CANCEL_DEBUG then
+    print("  |cffff4040-> NO MATCH (nothing cancelled)|r")
   end
 end
