@@ -77,7 +77,9 @@ additions, among them:
   active-tab marker, no texture bleeds).
 - Buying/cancelling completion driven by reliable 3.3.5a signals (gold change, owned-list
   change) instead of events that don't fire on this client.
-- A heavily optimized Full Scan (no end-of-scan freeze, adaptive query throttle).
+- A heavily optimized Full Scan: no end-of-scan freeze, and a stale-page recovery that
+  *polls the local result list* instead of re-querying — so a busy realm scans at the
+  server's natural page rate instead of paying a wasted round-trip per page.
 
 A deep technical write-up of the compatibility layer, the API/index differences, and the
 offline XML-transform tooling lives in **[BACKPORT_NOTES.md](BACKPORT_NOTES.md)**.
@@ -87,8 +89,10 @@ offline XML-transform tooling lives in **[BACKPORT_NOTES.md](BACKPORT_NOTES.md)*
 ## Known limitations
 
 - **Scan speed is server-bound.** 3.3.5a has no bulk `getAll` query and pages can't be
-  pipelined, so a Full Scan is paced by how fast the server answers one ~50-item page at a
-  time (roughly a ~100 auctions/sec ceiling). The engine already runs at that ceiling.
+  pipelined, so a Full Scan is ultimately paced by how fast the server answers one ~50-item
+  page at a time. The engine sends the next page the instant one lands and never re-queries a
+  page just because the update event arrived a beat early, so it runs at that natural ceiling
+  on busy and quiet realms alike — but a slow or heavily loaded server is still the floor.
 - **Custom servers vary.** Some private servers don't fire the standard auction-house
   confirmation events (post / buyout / cancel), so a few flows rely on fallback signals and
   behaviour can differ slightly between servers.

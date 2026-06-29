@@ -13,14 +13,25 @@ local FULL_SCAN_EVENTS = {
 }
 
 local PAGE_SIZE = Auctionator.Constants.MaxResultsPerPage -- 50 on 3.3.5a
--- Event-driven adaptive throttle. The old code waited a fixed 0.5s between pages
--- (CanSendAuctionQuery() is briefly false right after a query), wasting ~0.5s/page.
--- Instead poll the gate every MIN_DELAY and send the next page the instant it opens;
--- only back off toward MAX_DELAY when the server hands back a stale/duplicate page.
-local MIN_DELAY = 0.05    -- gate poll / fastest spacing
-local MAX_DELAY = 0.75    -- backoff cap when the server is busy
-local MAX_RETRIES = 12    -- give up on a single page after this many stale responses
-local STUCK_TIMEOUT = 15  -- seconds with no accepted page -> abort as stuck
+-- Pacing model, mirrored from the original native 3.3.5a Auctionator (Zirco) engine,
+-- which scans a busy server ~4x faster than a naive port.
+--
+-- The SUCCESS path is purely event-driven: the instant a page's AUCTION_ITEM_LIST_UPDATE
+-- lands we process it and fire the next query synchronously, so throughput is bounded only
+-- by how fast the server answers one page (its natural round-trip).
+--
+-- The ONLY thing that ever waits is a STALE/duplicate page. On a busy server the update
+-- event very frequently fires a beat BEFORE the queried page's data replaces the previous
+-- page in the client's local list cache. The naive fix -- re-query the page -- burns a whole
+-- extra server round-trip PER PAGE, which is exactly what made a busy-server scan take ~4x
+-- too long (33/s vs ~125/s). Instead we keep waiting and POLL the local list (no network);
+-- the real page appears on its own a fraction of a second later. Only if it never arrives
+-- within a grace window do we fall back to a hard re-query of the same page.
+local MIN_DELAY = 0.05         -- gate poll when CanSendAuctionQuery() is briefly closed
+local POLL_DELAY = 0.10        -- re-read the local list this often while a page is still settling
+local SOFT_POLL_LIMIT = 20     -- ~2s of local polling before falling back to a hard re-query
+local MAX_RETRIES = 8          -- hard re-queries of one page before accepting what we have
+local STUCK_TIMEOUT = 30       -- seconds with no accepted page -> abort as stuck
 
 local AII = Auctionator.Constants.AuctionItemInfo
 
@@ -107,8 +118,8 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   self.scanStartTime = GetTime()
   self.lastAcceptTime = GetTime()
   self.speedSamples = {}
-  self.scanDelay = MIN_DELAY
   self.retries = 0
+  self.staleReads = 0
   self.prevPageSig = nil
   self.awaitingPage = false
   self:ResetData()
@@ -264,6 +275,20 @@ function AuctionatorFullScanFrameMixin:OnEvent(event, ...)
   end
 end
 
+-- Re-read the local result list for a stale page WITHOUT issuing a new query. forPage is the
+-- page we were waiting on when this poll was scheduled; if the page has since landed (via the
+-- real update event or an earlier poll) awaitingPage is cleared / currentPage has advanced, so
+-- we simply stop -- the scan already moved on and a leftover poll must not double-process.
+function AuctionatorFullScanFrameMixin:PollStalePage(forPage)
+  if not self.inProgress then
+    return
+  end
+  if not self.awaitingPage or self.currentPage ~= forPage then
+    return
+  end
+  self:ProcessPage()
+end
+
 function AuctionatorFullScanFrameMixin:ProcessPage()
   if not self.inProgress then
     return
@@ -281,7 +306,7 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
     if self.currentPage == 0 and self.retries < MAX_RETRIES then
       self.retries = self.retries + 1
       self.awaitingPage = false
-      C_Timer.After(self.scanDelay, function() self:QueryNextPage() end)
+      C_Timer.After(MIN_DELAY, function() self:QueryNextPage() end)
       return
     end
     self.awaitingPage = false
@@ -292,17 +317,30 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   self.totalAuctions = total
   self.totalPages = math.max(1, math.ceil(total / PAGE_SIZE))
 
-  -- Duplicate/stale page guard: if the server handed back the same page contents
-  -- as last time, re-query (up to a limit) instead of accepting it.
+  -- Duplicate/stale page guard: the server handed back the same page contents as last time.
+  -- This is almost always the update event firing a beat before the queried page's data lands
+  -- in the client cache -- NOT a reason to re-query. Re-querying here costs a full server
+  -- round-trip per page and is what made busy-server scans ~4x too slow. Instead keep waiting
+  -- and POLL the local list (no network); the real page appears on its own. Only after a grace
+  -- window of fruitless polling do we hard re-query, and only after MAX_RETRIES of THAT do we
+  -- accept the page as-is rather than abort the whole scan.
   local sig = self:PageSignature(numBatch)
-  if self.prevPageSig ~= nil and sig == self.prevPageSig and self.retries < MAX_RETRIES then
-    -- Stale/duplicate page = server is behind. Back off (up to MAX_DELAY) and re-query
-    -- the SAME page, so we never hammer a busy server.
-    self.retries = self.retries + 1
-    self.scanDelay = math.min(MAX_DELAY, self.scanDelay * 1.5)
-    self.awaitingPage = false
-    C_Timer.After(self.scanDelay, function() self:QueryNextPage() end)
-    return
+  if self.prevPageSig ~= nil and sig == self.prevPageSig then
+    self.staleReads = (self.staleReads or 0) + 1
+    if self.staleReads < SOFT_POLL_LIMIT then
+      local forPage = self.currentPage
+      C_Timer.After(POLL_DELAY, function() self:PollStalePage(forPage) end)
+      return
+    end
+    -- Grace window exhausted -- the page genuinely isn't settling. Hard re-query it.
+    self.staleReads = 0
+    if self.retries < MAX_RETRIES then
+      self.retries = self.retries + 1
+      self.awaitingPage = false
+      C_Timer.After(MIN_DELAY, function() self:QueryNextPage() end)
+      return
+    end
+    -- Out of hard retries: accept this page rather than let one bad page sink a 2000-page run.
   end
 
   -- Accept the page: store RAW page data only (auction info + link). DB-key resolution
@@ -322,8 +360,7 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
 
   self.prevPageSig = sig
   self.retries = 0
-  -- Page accepted: recover the delay toward the minimum and reset the watchdog.
-  self.scanDelay = math.max(MIN_DELAY, self.scanDelay * 0.7)
+  self.staleReads = 0
   self.lastAcceptTime = GetTime()
   self.auctionsProcessed = (self.auctionsProcessed or 0) + numBatch
   self.currentPage = self.currentPage + 1
@@ -341,8 +378,8 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   if Auctionator.Debug.IsOn() and (self.currentPage % 25) == 0 then
     local p = self:GetProgressInfo()
     Auctionator.Debug.Message(string.format(
-      "FullScan page=%d wait=%.2fs process=%.3fs delay=%.2fs mem=%dKB speed=%d/s recent=%d/s",
-      self.currentPage, waitTime, GetTime() - procStart, self.scanDelay or 0,
+      "FullScan page=%d wait=%.2fs process=%.3fs mem=%dKB speed=%d/s recent=%d/s",
+      self.currentPage, waitTime, GetTime() - procStart,
       math.floor(collectgarbage("count")),
       math.floor(p.auctionsPerSec or 0), math.floor(p.recentSpeed or 0)
     ))
