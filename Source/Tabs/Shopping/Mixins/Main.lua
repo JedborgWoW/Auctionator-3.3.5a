@@ -13,7 +13,17 @@ function AuctionatorShoppingTabFrameMixin:DoSearch(terms, options)
     return
   end
 
-  if options == nil and Auctionator.Constants.IsLegacyAH and IsShiftKeyDown() then
+  -- Stock 3.3.5a cannot sort the auction house server-side by unit price
+  -- (SortAuctionSetSort is a no-op on this client), so a single AH page is NEVER
+  -- guaranteed to contain the lowest unit price -- the cheapest auction can sit on
+  -- any page. For a SINGLE-item search we therefore scan EVERY page up front, so the
+  -- results are sorted cheapest-unit-price-first from the start instead of showing
+  -- page 1's cheapest (e.g. 25s) and only revealing the true cheapest (e.g. 22s) once
+  -- the user clicks "Load higher prices". Shift-click forces it for list searches too.
+  -- (Plain multi-item LIST searches stay incremental to avoid a full scan per list
+  -- entry; drilling into any item still loads all of ITS pages -- see
+  -- AuctionatorBuyFrameMixinForShopping, which always rescans the focused item.)
+  if options == nil and Auctionator.Constants.IsLegacyAH and (IsShiftKeyDown() or self.singleSearch) then
     options = { searchAllPages = true }
   end
 

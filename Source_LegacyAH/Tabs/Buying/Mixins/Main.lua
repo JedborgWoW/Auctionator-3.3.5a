@@ -69,13 +69,24 @@ function AuctionatorBuyFrameMixinForShopping:ReceiveEvent(eventName, eventData, 
       self.HistoryPrices.RealmHistoryDataProvider:SetItemLink(nil)
       self.HistoryPrices.PostingHistoryDataProvider:SetItemLink(nil)
     end
-    self.CurrentPrices.SearchDataProvider:SetAuctions(eventData.entries)
-
-    self.CurrentPrices.SearchDataProvider:SetRequestAllResults(false)
-    if not eventData.complete and #eventData.entries < Auctionator.Constants.MaxResultsPerPage then
+    -- Always load EVERY page for the focused item before showing prices. On stock
+    -- 3.3.5a the AH cannot be sorted server-side by unit price, so the shopping rows we
+    -- were seeded with (page 1 only, unless the term was scanned in full) are NOT
+    -- guaranteed to contain the cheapest auction. Rescanning all pages here makes the
+    -- cheapest unit price show first and ensures "Load higher prices" can never reveal a
+    -- cheaper auction than what is already displayed -- which is the whole point of the
+    -- buy view (mis-ordering here is a buying hazard).
+    self.CurrentPrices.SearchDataProvider:SetRequestAllResults(true)
+    if not eventData.complete then
+      -- These rows came from a search that stopped at page 1. Do a fresh all-pages scan
+      -- of just this item and show the loading spinner meanwhile, rather than a partial
+      -- (and possibly mis-ordered) list.
       self.CurrentPrices.SearchDataProvider:RefreshQuery()
     else
-      self.CurrentPrices.gotCompleteResults = eventData.complete
+      -- The shopping search already collected every page for this term, so these entries
+      -- are the complete set -- display them (sorted cheapest-unit-price-first) directly.
+      self.CurrentPrices.SearchDataProvider:SetAuctions(eventData.entries)
+      self.CurrentPrices.gotCompleteResults = true
       self.CurrentPrices:UpdateButtons()
     end
   elseif eventName == Auctionator.Shopping.Tab.Events.SearchStart then

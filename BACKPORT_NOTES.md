@@ -103,6 +103,26 @@ which builds the tab container.
   labels sized by forcing the fontstring to its full natural width.
 - **`ContinueOnItemLoad` does not fire for an unresolvable item** → search result
   finalisation counts every key down anyway so it never hangs.
+- **Shopping showed a higher unit price as "cheapest" until "Load higher prices"**
+  (e.g. 25s/stack-of-1 first, 22s/stack-of-20 only after clicking the button).
+  Root cause: `SortAuctionSetSort("list","unitprice")` is a **no-op** on stock 3.3.5a
+  (`WotLKCompat/AuctionHouse.lua`), so each AH page comes back in arbitrary server
+  order — a single page is **never** guaranteed to hold the lowest *unit* price (the
+  native AH can at best sort by *stack* buyout, and only client-side). The search
+  aborted after page 1 (`DirectSearchProvider`/`BuyAuctions` `not searchAllPages`/
+  `not requestAllResults`), and the correct client-side unit-price sort
+  (`BuyAuctions:PopulateAuctions`) only ran over those page-1 auctions, so a cheaper
+  auction on a later page stayed hidden until "Load higher prices" rescanned all pages.
+  Fix (Shopping only): (a) `Shopping/Mixins/Main.lua:DoSearch` forces
+  `searchAllPages=true` for **single-item** searches; (b)
+  `Buying/Mixins/Main.lua AuctionatorBuyFrameMixinForShopping:ReceiveEvent` always sets
+  `requestAllResults=true` and rescans **every page** of the focused item before showing
+  prices (showing the loading spinner, not a partial list). The buy path is unaffected:
+  `BuyDialog:FindAuctionOnCurrentPage`/`BuyStackClicked` re-resolve the live `"list"`
+  index by itemLink+stackPrice+stackSize before bidding, so the display sort can't
+  mis-target a buy. Tradeoff: a broad single search (e.g. "copper") now scans all
+  matching pages up front (spinner), which is the only way to guarantee cheapest-first
+  without a server-side unit-price sort.
 
 ---
 
@@ -128,6 +148,10 @@ which builds the tab container.
 4. Selling → place item in sell slot → price list loads; undercut fills Unit/Stack.
 5. Post button enables only when valid (item, qty>0, price>0); posting succeeds.
 6. Cancelling → owned auctions list populates; Undercut Scan does not error.
+7. Shopping → search a stackable with mixed stack sizes (e.g. "Copper Bar"): the
+   cheapest **unit** price is shown first immediately (a 22s/stack-of-20 must beat a
+   25s/stack-of-1). Clicking "Load higher prices" must only add more EXPENSIVE rows —
+   it must never surface a cheaper auction than what is already shown.
 7. `/atr scan` runs a full page-by-page scan with progress.
 8. Close/reopen AH → no taint, frames rebuild.
 
