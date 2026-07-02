@@ -21,9 +21,9 @@ AUCTIONATOR_LOCALES.enUS = function()
   L["CONFIG_AUTOSCAN_INTERVAL"] = "Set to the number of minutes to wait between autoscans"
   L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_HEADER"] = "Autoscan Delay Interval"
   L["CONFIG_AUTOSCAN_INTERVAL_TOOLTIP_TEXT"] = "By default an scan doesn't happen every time you open the Auction House. It waits until a fixed time has elapsed since the last scan."
-  L["CONFIG_ALTERNATE_SCAN"] = "Use alternate slower scan mode by default"
+  L["CONFIG_ALTERNATE_SCAN"] = "Full Scan: use the slower page-by-page scan"
   L["CONFIG_ALTERNATE_SCAN_HEADER"] = "Alternate Scan Mode"
-  L["CONFIG_ALTERNATE_SCAN_TEXT"] = "The fast scan mode can cause disconnections on busy servers. This setting uses a slower and less likely to disconnect, scan method."
+  L["CONFIG_ALTERNATE_SCAN_TEXT"] = "By default Full Scan fetches the whole auction house in one getAll query (seconds instead of an hour), which can cause disconnections on some servers with very large auction houses. Enable this to always scan page by page instead: much slower, but never disconnects."
 
   L["CONFIG_DEVELOPER"] = "Developer Settings"
   L["CONFIG_DEBUG"] = "Toggle debug output."

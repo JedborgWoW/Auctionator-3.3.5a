@@ -1,11 +1,21 @@
 AuctionatorFullScanFrameMixin = {}
 
--- Stock 3.3.5a (client 12340) has NO getAll auction query (that was added in
--- Cataclysm). The whole-AH scan must therefore walk the result list PAGE BY PAGE
--- and merge the lowest prices itself -- the technique the original native 3.3.5a
--- Auctionator (Zirco) used. The 3.3.5a server also occasionally returns a stale
--- (duplicate) page for a query, so each page is checked against the previous one
--- and re-queried if identical.
+-- Whole-AH scan for stock 3.3.5a (client 12340). TWO engines:
+--
+-- 1) getAll (preferred): QueryAuctionItems(..., getAll=true) HAS existed since
+--    patch 2.3 and returns the ENTIRE auction list in one response (numBatch ==
+--    total). Availability is the second return of CanSendAuctionQuery() -- the
+--    server enforces a 15 min cooldown, and some cores disable it entirely. One
+--    round trip replaces ~total/50 page queries, so a 130k-auction AH scans in
+--    seconds instead of an hour. The huge result is read and merged in
+--    time-budgeted chunks across frames so the client never freezes.
+--
+-- 2) Page-by-page (fallback): used automatically when getAll is unavailable
+--    (cooldown / disabled / no response). Walks the result list page by page --
+--    the technique the original native 3.3.5a Auctionator (Zirco) used. The
+--    3.3.5a server also occasionally returns a stale (duplicate) page for a
+--    query, so each page is checked against the previous one and re-queried if
+--    identical.
 
 local FULL_SCAN_EVENTS = {
   "AUCTION_ITEM_LIST_UPDATE",
@@ -27,13 +37,16 @@ local PAGE_SIZE = Auctionator.Constants.MaxResultsPerPage -- 50 on 3.3.5a
 -- too long (33/s vs ~125/s). Instead we keep waiting and POLL the local list (no network);
 -- the real page appears on its own a fraction of a second later. Only if it never arrives
 -- within a grace window do we fall back to a hard re-query of the same page.
-local MIN_DELAY = 0.05         -- gate poll when CanSendAuctionQuery() is briefly closed
-local POLL_DELAY = 0.10        -- re-read the local list this often while a page is still settling
-local SOFT_POLL_LIMIT = 20     -- ~2s of local polling before falling back to a hard re-query
+-- With the C_Timer shim's next-frame semantics, After(0) fires on the next frame:
+-- both polls below are frame-paced (~16ms), which shaves 30-80ms off every page
+-- versus the old fixed 50/100ms timers. The polls are 3 cheap local reads, no network.
+local MIN_DELAY = 0            -- gate poll when CanSendAuctionQuery() is briefly closed
+local POLL_DELAY = 0           -- re-read the local list while a page is still settling
+local SOFT_POLL_LIMIT = 120    -- ~2s of frame-paced polling before falling back to a hard re-query
 local MAX_RETRIES = 8          -- hard re-queries of one page before accepting what we have
 local STUCK_TIMEOUT = 30       -- seconds with no accepted page -> abort as stuck
-
-local AII = Auctionator.Constants.AuctionItemInfo
+local GETALL_TIMEOUT = 30      -- seconds to wait for the getAll response before paging instead
+local PROCESS_BUDGET_MS = 25   -- per-frame time budget while chunk-reading/merging results
 
 -- Link-only DB-key resolver for the full scan. The shared Auctionator.Utilities.DBKeyFromLink
 -- calls IsGear() -> C_Item.GetItemInfoInstant() -> GetItemInfo() PER ROW; on 3.3.5a that shim
@@ -89,10 +102,11 @@ function AuctionatorFullScanFrameMixin:ResetData()
   self.scanData = {}
 end
 
--- On 3.3.5a a full scan is just a normal query repeated per page, so all we need
--- is the ability to send a query (no getAll, no server-side 15 min cooldown).
+-- All we need to start is the ability to send a query; whether getAll is also
+-- available (second return, 15 min server cooldown) is decided in InitiateScan.
+-- NOTE: 3.3.5a APIs return 1/nil rather than true/false, so test truthiness.
 function AuctionatorFullScanFrameMixin:CanInitiate()
-  return CanSendAuctionQuery() == true and not self.inProgress
+  return not not CanSendAuctionQuery() and not self.inProgress
 end
 
 function AuctionatorFullScanFrameMixin:InitiateScan()
@@ -124,8 +138,23 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   self.awaitingPage = false
   self:ResetData()
 
+  -- getAll availability: second return of CanSendAuctionQuery (1/nil on 3.3.5a).
+  -- The Advanced option "alternate slower scan mode" (REPLICATE_SCAN -- same
+  -- fast-but-may-disconnect vs slow-but-safe toggle it is on retail) forces the
+  -- page engine for servers where a huge getAll response disconnects the client.
+  local forcePages = Auctionator.Config.Get(Auctionator.Config.Options.REPLICATE_SCAN)
+  local _, canGetAll = CanSendAuctionQuery()
+  self.getAllMode = not not canGetAll and not forcePages
+
   self:RegisterForEvents()
   Auctionator.Utilities.Message(AUCTIONATOR_L_STARTING_FULL_SCAN)
+  if self.getAllMode then
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r using getAll -- fetching the whole AH in one query.")
+  elseif forcePages then
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r scanning page by page (alternate scan mode is enabled in the options).")
+  else
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r getAll unavailable (15 min cooldown or disabled) -- scanning page by page.")
+  end
 
   -- Patch to prevent an error from the classic AH code path for unknown qualities
   if not ITEM_QUALITY_COLORS[-1] then
@@ -136,7 +165,11 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   SortAuctionClearSort("list")
 
   Auctionator.EventBus:Fire(self, Auctionator.FullScan.Events.ScanProgress, 0.01)
-  self:QueryNextPage()
+  if self.getAllMode then
+    self:QueryGetAll()
+  else
+    self:QueryNextPage()
+  end
 end
 
 -- Live progress snapshot for the scan progress UI.
@@ -239,7 +272,7 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
     self.awaitingPage = true
     self.lastQueryTime = GetTime() -- for the per-page wait/process profile
     -- 3.3.5a signature: (name, minLevel, maxLevel, invType, class, subclass,
-    --                    page, isUsable, qualityIndex) -- no getAll.
+    --                    page, isUsable, qualityIndex, getAll) -- plain page query here.
     Auctionator.Debug.Message("FullScan: QueryAuctionItems page", self.currentPage)
     QueryAuctionItems("", nil, nil, nil, nil, nil, self.currentPage, nil, nil)
   else
@@ -268,10 +301,113 @@ function AuctionatorFullScanFrameMixin:OnEvent(event, ...)
   Auctionator.Debug.Message("FullScan: event", event, "inProgress", self.inProgress, "awaiting", self.awaitingPage)
   if event == "AUCTION_ITEM_LIST_UPDATE" then
     if self.inProgress and self.awaitingPage then
-      self:ProcessPage()
+      if self.getAllMode then
+        self:ProcessGetAll()
+      else
+        self:ProcessPage()
+      end
     end
   elseif event == "AUCTION_HOUSE_CLOSED" then
     self:Abort()
+  end
+end
+
+-- ---------------------------------------------------------------------------
+-- getAll engine
+-- ---------------------------------------------------------------------------
+
+function AuctionatorFullScanFrameMixin:QueryGetAll()
+  self.awaitingPage = true
+  self.lastQueryTime = GetTime()
+  Auctionator.Debug.Message("FullScan: QueryAuctionItems getAll")
+  QueryAuctionItems("", nil, nil, nil, nil, nil, 0, nil, nil, true)
+
+  -- Watchdog: streaming a huge AH takes a while, but if the response NEVER comes
+  -- (core silently drops getAll) fall back to the page engine instead of hanging.
+  local token = (self.getAllToken or 0) + 1
+  self.getAllToken = token
+  C_Timer.After(GETALL_TIMEOUT, function()
+    if self.inProgress and self.getAllMode and self.awaitingPage and self.getAllToken == token then
+      Auctionator.Utilities.Message("|cffffd100Auctionator:|r no getAll response after " .. GETALL_TIMEOUT .. "s -- falling back to page-by-page scan.")
+      self.getAllMode = false
+      self.awaitingPage = false
+      self.lastAcceptTime = GetTime()
+      self:QueryNextPage()
+    end
+  end)
+end
+
+function AuctionatorFullScanFrameMixin:ProcessGetAll()
+  local numBatch, total = GetNumAuctionItems("list")
+  Auctionator.Debug.Message("FullScan: ProcessGetAll numBatch", numBatch, "total", total)
+
+  -- A real getAll response has numBatch == total. Anything else is either a plain
+  -- page (core ignored the getAll flag) or a stray update for the previous browse
+  -- list -- in both cases restart cleanly on the page engine; its own page-0 query
+  -- sorts out which it was.
+  if numBatch == nil or total == nil or numBatch < total then
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r server did not honour getAll -- falling back to page-by-page scan.")
+    self.getAllMode = false
+    self.awaitingPage = false
+    self.lastAcceptTime = GetTime()
+    self:QueryNextPage()
+    return
+  end
+
+  self.awaitingPage = false
+  self.totalAuctions = total
+  self.totalPages = 1
+  self.currentPage = 1
+  self.getAllBatch = numBatch
+  self.readIndex = 0
+  self:ContinueGetAllRead()
+end
+
+-- Read the (huge) local result list in PROCESS_BUDGET_MS chunks, one chunk per
+-- frame, so 100k+ rows never freeze the client. Pure local reads, no network.
+function AuctionatorFullScanFrameMixin:ContinueGetAllRead()
+  if not self.inProgress then
+    return
+  end
+  -- If the list was replaced under us (a browse search mid-read) the row indexes
+  -- no longer address the getAll snapshot -- abort rather than store garbage.
+  local nowBatch = GetNumAuctionItems("list")
+  if nowBatch ~= self.getAllBatch then
+    Auctionator.Utilities.Message("|cffff4040Auctionator:|r result list changed while reading (was a search run?) -- scan aborted.")
+    self:Abort()
+    return
+  end
+
+  local numBatch = self.getAllBatch
+  local budgetEnd = debugprofilestop() + PROCESS_BUDGET_MS
+  local scanData = self.scanData
+  local n = #scanData
+  local i = self.readIndex
+  while i < numBatch and debugprofilestop() < budgetEnd do
+    i = i + 1
+    local link = GetAuctionItemLink("list", i)
+    -- Rows whose item is not in the local item cache can lack a link during a
+    -- getAll snapshot; skip them (same policy as the page engine).
+    if link then
+      local _, _, count, _, _, _, _, _, buyout = GetAuctionItemInfo("list", i)
+      n = n + 1
+      scanData[n] = { count = count, buyout = buyout, itemLink = link }
+    end
+  end
+  self.readIndex = i
+  self.auctionsProcessed = i
+
+  Auctionator.EventBus:Fire(
+    self,
+    Auctionator.FullScan.Events.ScanProgress,
+    math.min(0.99, i / math.max(1, numBatch))
+  )
+
+  if i >= numBatch then
+    self.lastAcceptTime = GetTime()
+    self:EndProcessing()
+  else
+    C_Timer.After(0, function() self:ContinueGetAllRead() end)
   end
 end
 
@@ -299,6 +435,17 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
 
   local numBatch, total = GetNumAuctionItems("list")
   Auctionator.Debug.Message("FullScan: ProcessPage page", self.currentPage, "numBatch", numBatch, "total", total)
+
+  -- A getAll-sized response can still land AFTER the watchdog fell back to paging
+  -- (slow stream). Never walk 100k rows synchronously here -- hand it to the
+  -- chunked getAll reader instead.
+  if numBatch ~= nil and total ~= nil and numBatch == total and numBatch > PAGE_SIZE then
+    Auctionator.Debug.Message("FullScan: late getAll response detected; switching to chunked read")
+    self.getAllMode = true
+    self.awaitingPage = true
+    self:ProcessGetAll()
+    return
+  end
 
   -- Empty response: on page 0 the server may just be slow -> retry; otherwise we
   -- have run off the end of the list.
@@ -343,18 +490,21 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
     -- Out of hard retries: accept this page rather than let one bad page sink a 2000-page run.
   end
 
-  -- Accept the page: store RAW page data only (auction info + link). DB-key resolution
-  -- is deferred to EndProcessing -- DBKeyFromLink calls GetItemInfo per row, which for
-  -- uncached items queues a client-side item query; doing that 31000x interleaved with
-  -- the scan floods the client's item-query queue and progressively slows the scan.
-  -- Deferring keeps per-page cost flat (cheap AH reads only).
+  -- Accept the page: store RAW row data only (count + buyout + link -- the merge
+  -- needs nothing else, and a slim 3-field table is far cheaper than the old
+  -- 13-value auctionInfo array when a getAll snapshot holds 100k+ rows). DB-key
+  -- resolution is deferred to the merge -- DBKeyFromLink calls GetItemInfo per row,
+  -- which for uncached items queues a client-side item query; doing that 31000x
+  -- interleaved with the scan floods the client's item-query queue and
+  -- progressively slows the scan. Deferring keeps per-page cost flat.
   local scanData = self.scanData
   local n = #scanData -- hoist the length search out of the per-row loop (O(1) append)
   for x = 1, numBatch do
     local link = GetAuctionItemLink("list", x)
     if link then
+      local _, _, count, _, _, _, _, _, buyout = GetAuctionItemInfo("list", x)
       n = n + 1
-      scanData[n] = { auctionInfo = { GetAuctionItemInfo("list", x) }, itemLink = link }
+      scanData[n] = { count = count, buyout = buyout, itemLink = link }
     end
   end
 
@@ -398,17 +548,34 @@ function AuctionatorFullScanFrameMixin:ProcessPage()
   end
 end
 
--- Resolve DB keys and merge to lowest-buyout-per-key in a SINGLE pass over the raw scan data.
--- Uses the link-only resolver (no GetItemInfo), so even ~31000 rows stay cheap and never touch
--- the client item-query queue. Folding resolve + merge together also avoids materialising a
--- per-row dbKeys table for every auction (less GC churn on a big scan).
-local function MergeInfo(scanData)
-  local allInfo = {}
-  for index = 1, #scanData do
-    local entry = scanData[index]
-    local auctionInfo = entry.auctionInfo
-    local available = auctionInfo[AII.Quantity]
-    local buyoutPrice = auctionInfo[AII.Buyout]
+-- Resolve DB keys and merge to lowest-buyout-per-key over the raw scan data, in
+-- PROCESS_BUDGET_MS chunks per frame -- a synchronous pass over a 130k-row getAll
+-- snapshot would freeze the client for a second or more. Uses the link-only
+-- resolver (no GetItemInfo), so the rows never touch the client item-query queue.
+function AuctionatorFullScanFrameMixin:EndProcessing()
+  if not self.inProgress then
+    return
+  end
+  self.mergeIndex = 0
+  self.mergeInfo = {}
+  self:ContinueMerge()
+end
+
+function AuctionatorFullScanFrameMixin:ContinueMerge()
+  if not self.inProgress then
+    return
+  end
+
+  local budgetEnd = debugprofilestop() + PROCESS_BUDGET_MS
+  local scanData = self.scanData
+  local allInfo = self.mergeInfo
+  local total = #scanData
+  local i = self.mergeIndex
+  while i < total and debugprofilestop() < budgetEnd do
+    i = i + 1
+    local entry = scanData[i]
+    local available = entry.count
+    local buyoutPrice = entry.buyout
     if available and available > 0 and buyoutPrice and buyoutPrice ~= 0 then
       local dbKeys = ResolveDBKeysFast(entry.itemLink)
       if dbKeys then
@@ -425,20 +592,23 @@ local function MergeInfo(scanData)
       end
     end
   end
-  return allInfo
+  self.mergeIndex = i
+
+  if i >= total then
+    self:FinishProcessing()
+  else
+    C_Timer.After(0, function() self:ContinueMerge() end)
+  end
 end
 
-function AuctionatorFullScanFrameMixin:EndProcessing()
-  if not self.inProgress then
-    return
-  end
-
+function AuctionatorFullScanFrameMixin:FinishProcessing()
   local rawFullScan = self.scanData
 
   -- ProcessScan returns the number of DISTINCT items priced (e.g. ~2453), which is
   -- confusing next to the ~31000 auctions the panel reported. Show both so the count is
   -- unambiguous and consistent with the progress panel.
-  local count = Auctionator.Database:ProcessScan(MergeInfo(self.scanData))
+  local count = Auctionator.Database:ProcessScan(self.mergeInfo)
+  self.mergeInfo = nil
   Auctionator.Utilities.Message(string.format(
     "|cffffd100Auctionator:|r Full Scan complete -- %d auctions scanned, %d items priced.",
     self.auctionsProcessed or 0, count
@@ -459,6 +629,11 @@ function AuctionatorFullScanFrameMixin:Abort()
   if self.inProgress then
     self.inProgress = false
     self.awaitingPage = false
+    -- Invalidate any pending getAll watchdog and drop chunk state; the chunked
+    -- read/merge continuations check inProgress and stop on their own.
+    self.getAllToken = (self.getAllToken or 0) + 1
+    self.getAllMode = false
+    self.mergeInfo = nil
     self:ResetData()
     Auctionator.Utilities.Message(
       AUCTIONATOR_L_FULL_SCAN_FAILED .. " " .. self:NextScanMessage()

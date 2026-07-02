@@ -48,7 +48,7 @@ The AH backend is abstracted in `Source_LegacyAH/AH/` and uses **only legacy API
 
 | Used by the addon | 3.3.5a call | Notes |
 |---|---|---|
-| search/scan | `QueryAuctionItems(name, minLevel, maxLevel, invType, classIndex, subclassIndex, page, isUsable, qualityIndex)` | **9 args, NO `getAll`.** `getAll` does not exist on 3.3.5a (Cataclysm+). |
+| search/scan | `QueryAuctionItems(name, minLevel, maxLevel, invType, classIndex, subclassIndex, page, isUsable, qualityIndex, getAll)` | `getAll` (10th arg) HAS existed since 2.3; availability = 2nd return of `CanSendAuctionQuery()` (15 min server cooldown, some cores disable it). Full Scan uses it when available. |
 | read a page | `GetNumAuctionItems("list")`, `GetAuctionItemInfo("list", i)`, `GetAuctionItemLink("list", i)`, `GetAuctionItemTimeLeft("list", i)` | see index table below |
 | owned auctions | `GetNumAuctionItems("owner")`, `GetAuctionItemInfo("owner", i)` | Cancelling tab |
 | sell slot | `GetAuctionSellItemInfo()`, `ClickAuctionSellItemButton()`, `PickupContainerItem(bag,slot)` | item must be placed in the sell slot before posting |
@@ -87,8 +87,10 @@ which builds the tab container.
   (no rows, Price column outside the frame). Fix: add an EXPLICIT `parentKey` to each
   concrete `<Frame inherits="T">` instance whose template `T` declared the parentKey.
   `parentKey` on a concrete element (incl. inherited children) works fine.
-- **`getAll` absent** → the whole-AH scan is page-by-page with duplicate-page
-  detection (`Source_LegacyAH/FullScan/Mixins/Frame.lua`); trigger `/atr scan`.
+- **Whole-AH scan** → uses `getAll` when the server allows it (whole AH in one
+  response, read/merged in per-frame time-budgeted chunks) and falls back to
+  page-by-page with duplicate-page detection otherwise
+  (`Source_LegacyAH/FullScan/Mixins/Frame.lua`); trigger `/atr scan`.
 - **`tDeleteItem` is native and returns nothing** → a guarded shim never applied and
   `tDeleteItem(...) > 0` errored, blocking every results update. Fixed at the call
   site (`TableBuilder:RemoveRow`).
