@@ -156,7 +156,7 @@ function AuctionatorCancellingFrameMixin:IsAuctionShown(auctionInfo)
     local exact = searchString:match("^\"(.*)\"$")
     local name = string.lower(Auctionator.Utilities.GetNameFromLink(auctionInfo.itemLink))
     if exact then
-      return name == exact
+      return name == string.lower(exact)
     else
       return string.find(name, string.lower(searchString), 1, true)
     end

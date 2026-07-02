@@ -46,6 +46,18 @@ function AuctionatorAHScanFrameMixin:OnEvent(eventName, ...)
     -- processes the page regardless and simply accepts nil owners.
     if not self:GotAllOwners() and (self.ownerWaits or 0) < 2 then
       self.ownerWaits = (self.ownerWaits or 0) + 1
+      -- The extra ticks above only advance when ANOTHER list update fires; if the
+      -- server sends no further event the search would hang forever. Force the page
+      -- through after a short grace period so a search can never get stuck here.
+      local pageWaited = self.nextPage
+      C_Timer.After(0.3, function()
+        if self.scanRunning and self.waitingOnPage and self.sentQuery
+            and self.nextPage == pageWaited then
+          self.ownerWaits = 0
+          self.waitingOnPage = false
+          self:ProcessSearchResults()
+        end
+      end)
       return
     end
     self.ownerWaits = 0

@@ -171,7 +171,7 @@ function AuctionatorUndercutScanMixin:ReceiveEvent(eventName, ...)
 end
 
 function AuctionatorUndercutScanMixin:SearchForUndercuts(auction)
-  Auctionator.Debug.Message("undercut scan: searching", name)
+  Auctionator.Debug.Message("undercut scan: searching", auction.itemLink)
 
   Auctionator.AH.AbortQuery()
 

@@ -9,6 +9,12 @@ if not C_Timer then
   local driver = CreateFrame("Frame")
   local timers = {}       -- list of { at = GetTime()+delay, callback, ticker }
   local total = 0
+  -- Serial of the OnUpdate pass currently running. Timers scheduled DURING a pass
+  -- (i.e. from another timer's callback) must not fire until the NEXT frame --
+  -- retail's C_Timer.After(0, ...) always defers to the next frame. Without this,
+  -- chained After(0) work loops (Shopping import, CSV export) collapse into a
+  -- single frame and freeze the client.
+  local tickSerial = 0
 
   -- Tickers/cancellable timers return a handle with :Cancel() and :IsCancelled().
   local TimerMixin = {}
@@ -26,6 +32,7 @@ if not C_Timer then
     handle._delay = delay
     handle._iterations = iterations   -- nil = run forever (ticker), number = count, false = single shot
     handle._next = GetTime() + delay
+    handle._scheduledTick = tickSerial
     timers[#timers + 1] = handle
     driver:Show()
     return handle
@@ -38,12 +45,16 @@ if not C_Timer then
       return
     end
 
+    tickSerial = tickSerial + 1
     local now = GetTime()
     local i = 1
     while i <= #timers do
       local handle = timers[i]
       if handle._cancelled then
         table.remove(timers, i)
+      elseif handle._scheduledTick == tickSerial then
+        -- Scheduled during THIS pass (from a timer callback): fire next frame.
+        i = i + 1
       elseif now >= handle._next then
         local cb = handle._callback
         -- Single-shot timer: remove before firing so a re-entrant Cancel is safe.

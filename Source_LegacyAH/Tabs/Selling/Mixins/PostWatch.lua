@@ -1,4 +1,4 @@
-SYSTEM_EVENTS = {
+local SYSTEM_EVENTS = {
   "CHAT_MSG_SYSTEM", --ERR_AUCTION_STARTED "Auction created"
   "UI_ERROR_MESSAGE", --ERR_AUCTION_DATABASE_ERROR "Internal auction error"
 }
@@ -35,7 +35,8 @@ function AuctionatorPostWatchMixin:OnEvent(eventName, eventData1, eventData2)
       self:StopWatching()
       Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.PostSuccessful, details)
     end
-  elseif eventName == "UI_ERROR_MESSAGE" and eventData2 == ERR_AUCTION_DATABASE_ERROR then
+  -- 3.3.5a passes the message as the FIRST arg (no errorType like retail/Classic).
+  elseif eventName == "UI_ERROR_MESSAGE" and eventData1 == ERR_AUCTION_DATABASE_ERROR then
     Auctionator.Debug.Message("fail blizz internal auction error", self.details.itemInfo.itemLink)
     local details = self.details
     self:StopWatching()

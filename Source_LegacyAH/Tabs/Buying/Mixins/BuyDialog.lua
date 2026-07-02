@@ -43,7 +43,10 @@ function AuctionatorBuyDialogMixin:OnEvent(eventName, ...)
   if eventName == "PLAYER_MONEY" then
     self:UpdateButtons()
   elseif eventName == "UI_ERROR_MESSAGE" then
-    local _, message = ...
+    -- 3.3.5a passes the message as the FIRST arg (no errorType like retail/Classic),
+    -- so reading the second arg made this never match and a sold-out auction was
+    -- never blacklisted/refreshed.
+    local message = ...
     if message == ERR_ITEM_NOT_FOUND and self.buyInfo ~= nil then
       Auctionator.Debug.Message("AuctionatorBuyDialogMixin", "failed purchase", self.buyInfo.index, self.lastBuyStackSize)
       self.lastBuyStackSize = 0
