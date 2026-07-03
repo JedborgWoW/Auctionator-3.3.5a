@@ -11,6 +11,33 @@ detection — all wrapped in a clean UI that fits the WotLK auction house.
 
 ---
 
+## Screenshots
+
+**Shopping** — shopping lists, recent searches and cheapest-first results:
+
+![Shopping tab](Screenshots/Shopping.png)
+
+**Buying** — click a result for the live auctions, then buy a stack, **Buy All** at the
+current price, or chain-buy onto the next price:
+
+![Buy view](Screenshots/BuyView.png)
+
+![Buy All dialog](Screenshots/BuyAll.png)
+
+**Selling** — unit/stack pricing with deposit and total shown, current competition below:
+
+![Selling tab](Screenshots/Selling.png)
+
+**Cancelling** — your auctions with undercut status and one-click cancel:
+
+![Cancelling tab](Screenshots/Cancelling.png)
+
+**Full Scan** — the whole AH in one `getAll` query (33k auctions in 28 s here):
+
+![Full Scan complete](Screenshots/FullScanComplete.png)
+
+---
+
 ## Installation
 
 1. Download / clone this repository.
