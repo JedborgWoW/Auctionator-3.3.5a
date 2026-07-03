@@ -28,8 +28,11 @@ survives updates.
 
 ### Tooltips & pricing
 - **Auction price in item tooltips** — current AH value and a disenchant estimate.
-- **Full Scan** — a fast, page-by-page scan of the entire auction house to refresh the
-  price database, with a live progress panel (page, count, speed, ETA) and a cancel button.
+- **Full Scan** — refreshes the price database for the entire auction house. Uses the
+  bulk **`getAll`** query when the server allows it (the whole AH in **one** response —
+  tens of thousands of auctions in seconds) and falls back to a fast page-by-page scan
+  otherwise, with a phase-aware live progress panel (waiting / reading / processing /
+  page progress with speed and ETA) and a cancel button.
 
 ### Shopping
 - **Search with rich filters** — name, exact match, item class, level/item-level ranges,
@@ -77,9 +80,11 @@ additions, among them:
   active-tab marker, no texture bleeds).
 - Buying/cancelling completion driven by reliable 3.3.5a signals (gold change, owned-list
   change) instead of events that don't fire on this client.
-- A heavily optimized Full Scan: no end-of-scan freeze, and a stale-page recovery that
-  *polls the local result list* instead of re-querying — so a busy realm scans at the
-  server's natural page rate instead of paying a wasted round-trip per page.
+- A heavily optimized Full Scan: a **`getAll` engine** that fetches the whole AH in one
+  query and reads/merges 100k+ rows in per-frame time-budgeted chunks (no client freeze),
+  with automatic fallback to an optimized page-by-page engine — frame-paced polling, no
+  end-of-scan freeze, and a stale-page recovery that *polls the local result list* instead
+  of re-querying, so a busy realm scans at the server's natural page rate.
 
 A deep technical write-up of the compatibility layer, the API/index differences, and the
 offline XML-transform tooling lives in **[BACKPORT_NOTES.md](BACKPORT_NOTES.md)**.
@@ -88,11 +93,25 @@ offline XML-transform tooling lives in **[BACKPORT_NOTES.md](BACKPORT_NOTES.md)*
 
 ## Known limitations
 
-- **Scan speed is server-bound.** 3.3.5a has no bulk `getAll` query and pages can't be
-  pipelined, so a Full Scan is ultimately paced by how fast the server answers one ~50-item
-  page at a time. The engine sends the next page the instant one lands and never re-queries a
+- **`getAll` availability is up to the server.** The bulk `getAll` query has a **15-minute
+  cooldown** enforced by the server, and some cores disable it or — worse — **silently drop**
+  the request instead of answering with an error (the client-side availability flag resets on
+  every relog, so it can't be trusted). Auctionator handles all of this automatically: an
+  unanswered `getAll` is remembered per realm for 24 hours and scans go page-by-page there
+  (`/atr getallretry` re-enables it early, e.g. after a server restart), and a `getAll` that
+  answers again clears the flag by itself. One quirk cannot be worked around: on cores that
+  drop `getAll`, the unanswered request **locks the AH query gate** — the addon detects this,
+  aborts cleanly and tells you to close and reopen the auction house.
+- **Page-scan speed is server-bound.** When `getAll` isn't available, pages can't be
+  pipelined: a Full Scan is paced by how fast the server answers one ~50-item page at a time
+  (the client also enforces a ~0.3s minimum between queries, so ~150–165 auctions/s is the
+  hard ceiling). The engine sends the next page the instant one lands and never re-queries a
   page just because the update event arrived a beat early, so it runs at that natural ceiling
   on busy and quiet realms alike — but a slow or heavily loaded server is still the floor.
+- **Huge `getAll` responses are the server's call.** Streaming a very large AH (100k+
+  auctions) in one response has historically disconnected clients on some cores. If that
+  happens on your server, enable the *alternate scan mode* in **Advanced options** to force
+  page-by-page scanning.
 - **Custom servers vary.** Some private servers don't fire the standard auction-house
   confirmation events (post / buyout / cancel), so a few flows rely on fallback signals and
   behaviour can differ slightly between servers.
