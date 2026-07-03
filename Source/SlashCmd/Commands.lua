@@ -1,7 +1,8 @@
 local SLASH_COMMAND_DESCRIPTIONS = {
   {commands = "p, post", message = "Posts the chosen item from the \"Selling\" tab." },
   {commands = "cu, cancelundercut", message = "Cancels the next undercut auction in the \"Cancelling\" tab." },
-  {commands = "scan, fullscan", message = "Scan the whole auction house (page by page) to update prices. Open the AH first." },
+  {commands = "scan, fullscan", message = "Scan the whole auction house to update prices (getAll when available, else page by page). Open the AH first." },
+  {commands = "getallretry", message = "Forget that getAll never answered on this realm and try it again on the next full scan."},
   {commands = "ra, resetall", message = "Reset database and full scan timer." },
   {commands = "rdb, resetdatabase", message = "Reset Auctionator database."},
   {commands = "rt, resettimer", message = "Reset full scan timer."},
@@ -45,6 +46,19 @@ function Auctionator.SlashCmd.ResetDatabase()
     Auctionator.Variables.InitializeDatabase()
   else
     Auctionator.Utilities.Message("Requires debug mode.")
+  end
+end
+
+-- Clear the "getAll never answered on this realm" memory that the Full Scan
+-- records after an unanswered getAll (see FullScan/Mixins/Frame.lua), so the
+-- next scan attempts getAll again.
+function Auctionator.SlashCmd.GetAllRetry()
+  local realms = Auctionator.SavedState.GetAllUnresponsiveRealms
+  if realms and realms[GetRealmName()] then
+    realms[GetRealmName()] = nil
+    Auctionator.Utilities.Message("getAll will be attempted again on the next full scan on this realm.")
+  else
+    Auctionator.Utilities.Message("getAll is not marked as unresponsive on this realm -- nothing to reset.")
   end
 end
 

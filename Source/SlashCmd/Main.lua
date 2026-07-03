@@ -16,6 +16,7 @@ local SLASH_COMMANDS = {
   ["cancelundercut"] = Auctionator.SlashCmd.CancelUndercut,
   ["scan"] = Auctionator.SlashCmd.FullScan,
   ["fullscan"] = Auctionator.SlashCmd.FullScan,
+  ["getallretry"] = Auctionator.SlashCmd.GetAllRetry,
   ["ui"] = Auctionator.SlashCmd.UIDump,
   ["ra"] = Auctionator.SlashCmd.CleanReset,
   ["resetall"] = Auctionator.SlashCmd.CleanReset,

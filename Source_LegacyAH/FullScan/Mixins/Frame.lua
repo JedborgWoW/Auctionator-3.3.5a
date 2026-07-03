@@ -143,8 +143,21 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
   -- fast-but-may-disconnect vs slow-but-safe toggle it is on retail) forces the
   -- page engine for servers where a huge getAll response disconnects the client.
   local forcePages = Auctionator.Config.Get(Auctionator.Config.Options.REPLICATE_SCAN)
+  -- Realm memory: if a getAll on this realm recently got NO answer (the query
+  -- gate can then stay locked until the AH is reopened, killing the page fallback
+  -- too), skip getAll here from the start. The flag auto-expires after 24h --
+  -- the server-side getAll window can reopen (restart, cooldown passing; the
+  -- CLIENT cooldown resets on relog, so canGetAll alone cannot be trusted) and a
+  -- working getAll response also clears it immediately (see ProcessGetAll).
+  -- /atr getallretry clears it manually.
+  local unresponsiveAt = self.state.GetAllUnresponsiveRealms
+    and self.state.GetAllUnresponsiveRealms[GetRealmName()]
+  local unresponsive = unresponsiveAt ~= nil and (time() - unresponsiveAt) < 24 * 60 * 60
   local _, canGetAll = CanSendAuctionQuery()
-  self.getAllMode = not not canGetAll and not forcePages
+  self.getAllMode = not not canGetAll and not forcePages and not unresponsive
+  self.getAllTimedOut = false
+  -- scanMode drives the progress panel: getall-wait / getall-read / merge / page.
+  self.scanMode = self.getAllMode and "getall-wait" or "page"
 
   self:RegisterForEvents()
   Auctionator.Utilities.Message(AUCTIONATOR_L_STARTING_FULL_SCAN)
@@ -152,6 +165,8 @@ function AuctionatorFullScanFrameMixin:InitiateScan()
     Auctionator.Utilities.Message("|cffffd100Auctionator:|r using getAll -- fetching the whole AH in one query.")
   elseif forcePages then
     Auctionator.Utilities.Message("|cffffd100Auctionator:|r scanning page by page (alternate scan mode is enabled in the options).")
+  elseif unresponsive then
+    Auctionator.Utilities.Message("|cffffd100Auctionator:|r getAll never answered on this realm recently -- scanning page by page. (retried automatically after 24h; /atr getallretry to retry now)")
   else
     Auctionator.Utilities.Message("|cffffd100Auctionator:|r getAll unavailable (15 min cooldown or disabled) -- scanning page by page.")
   end
@@ -199,6 +214,7 @@ function AuctionatorFullScanFrameMixin:GetProgressInfo()
   end
   return {
     inProgress = self.inProgress == true,
+    mode = self.scanMode or "page",
     currentPage = self.currentPage or 0,
     totalPages = self.totalPages or 0,
     totalAuctions = total,
@@ -208,6 +224,8 @@ function AuctionatorFullScanFrameMixin:GetProgressInfo()
     recentSpeed = recentSpeed,
     pagesPerSec = elapsed > 0 and ((self.currentPage or 0) / elapsed) or 0,
     eta = eta,
+    mergeProcessed = self.mergeIndex or 0,
+    mergeTotal = (self.scanData and #self.scanData) or 0,
   }
 end
 
@@ -264,6 +282,12 @@ function AuctionatorFullScanFrameMixin:QueryNextPage()
       "|cffff4040Auctionator:|r Full Scan aborted -- stuck on page %d (AH query throttle).",
       self.currentPage
     ))
+    if self.getAllTimedOut then
+      -- Observed on cores that drop getAll: the query gate stays locked after the
+      -- unanswered getAll, so the page fallback starves too. Only reopening the AH
+      -- clears it; the realm is already flagged so the next scan goes page-first.
+      Auctionator.Utilities.Message("|cffffd100Auctionator:|r the unanswered getAll locked the AH query gate -- close and reopen the auction house, then run Full Scan again.")
+    end
     self:Abort()
     return
   end
@@ -329,10 +353,26 @@ function AuctionatorFullScanFrameMixin:QueryGetAll()
   C_Timer.After(GETALL_TIMEOUT, function()
     if self.inProgress and self.getAllMode and self.awaitingPage and self.getAllToken == token then
       Auctionator.Utilities.Message("|cffffd100Auctionator:|r no getAll response after " .. GETALL_TIMEOUT .. "s -- falling back to page-by-page scan.")
+      Auctionator.Utilities.Message("|cffffd100Auctionator:|r getAll will be skipped on this realm from now on (/atr getallretry re-enables it).")
+      -- Remember: an unanswered getAll on this realm means the server drops it;
+      -- skip straight to the page engine on future scans here.
+      self.state.GetAllUnresponsiveRealms = self.state.GetAllUnresponsiveRealms or {}
+      self.state.GetAllUnresponsiveRealms[GetRealmName()] = time()
+      self.getAllTimedOut = true
       self.getAllMode = false
+      self.scanMode = "page"
       self.awaitingPage = false
       self.lastAcceptTime = GetTime()
-      self:QueryNextPage()
+      -- After 30s idle a healthy query gate is always open (normal queries recharge
+      -- in ~0.3s). Closed here means the unanswered getAll LOCKED it (observed on
+      -- cores that drop getAll; only reopening the AH clears it) -- a page fallback
+      -- would just starve for STUCK_TIMEOUT and die, so abort with the fix instead.
+      if CanSendAuctionQuery() then
+        self:QueryNextPage()
+      else
+        Auctionator.Utilities.Message("|cffffd100Auctionator:|r the unanswered getAll locked the AH query gate -- close and reopen the auction house, then run Full Scan again (it will scan page by page).")
+        self:Abort()
+      end
     end
   end)
 end
@@ -348,13 +388,21 @@ function AuctionatorFullScanFrameMixin:ProcessGetAll()
   if numBatch == nil or total == nil or numBatch < total then
     Auctionator.Utilities.Message("|cffffd100Auctionator:|r server did not honour getAll -- falling back to page-by-page scan.")
     self.getAllMode = false
+    self.scanMode = "page"
     self.awaitingPage = false
     self.lastAcceptTime = GetTime()
     self:QueryNextPage()
     return
   end
 
+  -- getAll answered: clear any 'unresponsive' memory for this realm (self-heals
+  -- if the flag was set by a one-off hiccup or a late-but-working response).
+  if self.state.GetAllUnresponsiveRealms then
+    self.state.GetAllUnresponsiveRealms[GetRealmName()] = nil
+  end
+
   self.awaitingPage = false
+  self.scanMode = "getall-read"
   self.totalAuctions = total
   self.totalPages = 1
   self.currentPage = 1
@@ -556,6 +604,7 @@ function AuctionatorFullScanFrameMixin:EndProcessing()
   if not self.inProgress then
     return
   end
+  self.scanMode = "merge"
   self.mergeIndex = 0
   self.mergeInfo = {}
   self:ContinueMerge()

@@ -46,7 +46,26 @@ function AuctionatorFullScanProgressMixin:UpdateProgressText()
   end
   local elapsed = math.floor(p.elapsed)
   local speed = math.floor((p.auctionsPerSec or 0) + 0.5)
-  if p.totalAuctions > 0 then
+
+  -- Mode-aware text: the page counters are meaningless while waiting on /
+  -- reading a getAll response or merging prices, so describe the actual phase
+  -- instead of showing "Page 0 - 0 auctions - 0/s".
+  if p.mode == "getall-wait" then
+    self.StatusText:SetText(string.format(
+      "|cffffd100Full Scan running|r\nFetching the whole AH in one query (getAll)\n|cffaaaaaaWaiting for the server response...   ·   %ds|r",
+      elapsed
+    ))
+  elseif p.mode == "getall-read" then
+    self.StatusText:SetText(string.format(
+      "|cffffd100Full Scan running|r\nReading results: %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s|r",
+      p.auctionsProcessed, p.totalAuctions, elapsed, speed
+    ))
+  elseif p.mode == "merge" then
+    self.StatusText:SetText(string.format(
+      "|cffffd100Full Scan running|r\nProcessing prices: %d / %d rows   ·   %ds\n|cffaaaaaaAlmost done...|r",
+      p.mergeProcessed, p.mergeTotal, elapsed
+    ))
+  elseif p.totalAuctions > 0 then
     self.StatusText:SetText(string.format(
       "|cffffd100Full Scan running|r\nPage %d / %d   ·   %d / %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s   ·   ETA: %ds|r",
       p.currentPage, p.totalPages, p.auctionsProcessed, p.totalAuctions, elapsed,
@@ -54,7 +73,7 @@ function AuctionatorFullScanProgressMixin:UpdateProgressText()
     ))
   else
     self.StatusText:SetText(string.format(
-      "|cffffd100Full Scan running|r\nPage %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s|r",
+      "|cffffd100Full Scan running|r\nScanning page by page: page %d   ·   %d auctions   ·   %ds\n|cffaaaaaaSpeed: %d/s|r",
       p.currentPage, p.auctionsProcessed, elapsed, speed
     ))
   end
