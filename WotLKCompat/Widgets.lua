@@ -23,7 +23,11 @@ local function AddMethods(sample, methods)
   end
   for name, fn in pairs(methods) do
     if index[name] == nil then
-      index[name] = fn
+      -- rawset, not index[name] = fn: on this client the frame-type __index
+      -- table carries a __newindex guard that silently drops a plain assignment
+      -- for a NEW key, so the shim would never install. rawset bypasses it; the
+      -- index[name] == nil check above keeps us from shadowing a native.
+      rawset(index, name, fn)
     end
   end
 end
@@ -229,11 +233,11 @@ if GameTooltip and not GameTooltip.SetItemByID then
   local mt = getmetatable(GameTooltip)
   local index = mt and mt.__index
   if type(index) == "table" and index.SetItemByID == nil then
-    index.SetItemByID = function(self, itemID)
+    rawset(index, "SetItemByID", function(self, itemID)
       if itemID then
         self:SetHyperlink("item:" .. itemID)
       end
-    end
+    end)
   end
 end
 
