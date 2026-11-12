@@ -17,12 +17,10 @@ detection — all wrapped in a clean UI that fits the WotLK auction house.
 
 ![Shopping tab](Screenshots/Shopping.png)
 
-**Buying** — click a result for the live auctions, then buy a stack, **Buy All** at the
-current price, or chain-buy onto the next price:
+**Buying** — click a result for the live auctions, then click **Buy Stack** for each
+stack. Chain buy selects the next price for your next click:
 
 ![Buy view](Screenshots/BuyView.png)
-
-![Buy All dialog](Screenshots/BuyAll.png)
 
 **Selling** — unit/stack pricing with deposit and total shown, current competition below:
 
@@ -71,9 +69,10 @@ survives updates.
 
 ### Buying
 - Click a result to open the buy view with the live auctions, item icon and tooltip.
-- **Buy Stack** — buy a single stack, or **Buy All** — buy *every* stack at the current
-  price in one click (throttle-paced and gold-safe; it never rolls onto a higher price).
-- **Chain buy** to continue onto the next-cheapest price (with a price-jump warning).
+- **Buy Stack** — buy one stack per click, with a live item, quantity and price check.
+- **Chain buy** selects the next-cheapest price (with a price-jump warning); buying
+  still requires another click. Automatic Buy All is unavailable because some 3.3.5a
+  clients require a hardware click for every bid.
 
 ### Selling
 - Place an item in the sell slot and post with unit/stack pricing and a duration choice;
@@ -99,7 +98,6 @@ paths were removed.
 On top of the port, this fork includes a number of 3.3.5a-specific fixes and quality-of-life
 additions, among them:
 
-- **Buy All** button for buying out a whole price point at once.
 - Stack-count overlay on the Selling slot icon.
 - Solid, readable dialogs (Search Options, Price History, Full Scan, Import/Export) — the
   retail backgrounds render transparent/green on this client.
