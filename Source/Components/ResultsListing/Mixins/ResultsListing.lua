@@ -238,11 +238,11 @@ end
 function AuctionatorResultsListingMixin:EnableSpinner()
   self.ScrollArea.ResultsText:Show()
   self.ScrollArea.LoadingSpinner:Show()
-  self.ScrollArea.SpinnerAnim:Play()
+  self.ScrollArea.LoadingSpinner.SpinnerAnim:Play()
 end
 
 function AuctionatorResultsListingMixin:DisableSpinner()
   self.ScrollArea.ResultsText:Hide()
+  self.ScrollArea.LoadingSpinner.SpinnerAnim:Stop()
   self.ScrollArea.LoadingSpinner:Hide()
-  self.ScrollArea.SpinnerAnim:Stop()
 end

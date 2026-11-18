@@ -5,7 +5,7 @@ local EVENTBUS_EVENTS = {
   Auctionator.Shopping.Tab.Events.ListSearchRequested,
   Auctionator.Shopping.Tab.Events.ShowHistoricalPrices,
   Auctionator.Shopping.Tab.Events.UpdateSearchTerm,
-  Auctionator.Shopping.Tab.Events.BuyScreenShown,
+  Auctionator.Shopping.Tab.Events.BuyScreenOpening,
 }
 
 function AuctionatorShoppingTabFrameMixin:DoSearch(terms, options)
@@ -31,8 +31,8 @@ function AuctionatorShoppingTabFrameMixin:DoSearch(terms, options)
 
   self.searchRunning = true
   Auctionator.EventBus:Fire(self, Auctionator.Shopping.Tab.Events.SearchStart, terms)
-  self.SearchProvider:Search(terms, options or {})
   self:StartSpinner()
+  self.SearchProvider:Search(terms, options or {})
 end
 
 function AuctionatorShoppingTabFrameMixin:StopSearch()
@@ -66,13 +66,13 @@ function AuctionatorShoppingTabFrameMixin:LoadAllPages(terms)
 
   self.searchRunning = true
   -- Note: intentionally no SearchStart fire here (that would Reset/blank the panel).
-  self.SearchProvider:Search(terms, { searchAllPages = true })
   self:StartSpinner()
+  self.SearchProvider:Search(terms, { searchAllPages = true })
 end
 
 function AuctionatorShoppingTabFrameMixin:StartSpinner()
-  self.ListsContainer.SpinnerAnim:Play()
   self.ListsContainer.LoadingSpinner:Show()
+  self.ListsContainer.LoadingSpinner.SpinnerAnim:Play()
   self.ListsContainer.ResultsText:SetText(Auctionator.Locales.Apply("LIST_SEARCH_START", self:GetAppropriateListSearchName()))
   self.ListsContainer.ResultsText:Show()
 end
@@ -156,7 +156,7 @@ function AuctionatorShoppingTabFrameMixin:SetupSearchProvider()
     function(results)
       self.searchRunning = false
       Auctionator.EventBus:Fire(self, Auctionator.Shopping.Tab.Events.SearchEnd, results)
-      self.ListsContainer.SpinnerAnim:Stop()
+      self.ListsContainer.LoadingSpinner.SpinnerAnim:Stop()
       self.ListsContainer.LoadingSpinner:Hide()
       self.ListsContainer.ResultsText:Hide()
     end,
@@ -320,7 +320,7 @@ function AuctionatorShoppingTabFrameMixin:ReceiveEvent(eventName, eventData)
   elseif eventName == Auctionator.Shopping.Tab.Events.UpdateSearchTerm then
     self.SearchOptions:SetSearchTerm(eventData)
 
-  elseif eventName == Auctionator.Shopping.Tab.Events.BuyScreenShown then
+  elseif eventName == Auctionator.Shopping.Tab.Events.BuyScreenOpening then
     self:StopSearch()
   end
 end
@@ -434,9 +434,9 @@ function AuctionatorShoppingTabFrameMixin:NormalizeVisuals()
     listsSpinner:SetPoint("CENTER", self.ShoppingResultsInset, "CENTER", 0, 0)
   end
   local listsText = self.ListsContainer and self.ListsContainer.ResultsText
-  if listsText then
+  if listsText and listsSpinner then
     listsText:ClearAllPoints()
-    listsText:SetPoint("CENTER", self.ShoppingResultsInset, "CENTER", 0, 0)
+    listsText:SetPoint("TOP", listsSpinner, "BOTTOM", 0, -4)
   end
 
   -- The status text + spinner are children of the ListsContainer, so they inherit its frame

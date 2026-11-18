@@ -20,11 +20,11 @@ function AuctionatorShoppingResultsRowMixin:OnClick(button, ...)
       :Fire(self, Auctionator.Shopping.Tab.Events.UpdateSearchTerm, Auctionator.Utilities.GetNameFromLink(self.rowData.itemLink))
       :UnregisterSource(self)
   else
-
+    -- Stop the Shopping query before the buy view starts using the shared scanner.
     Auctionator.EventBus
       :RegisterSource(self, "ShoppingResultsRowMixin")
+      :Fire(self, Auctionator.Shopping.Tab.Events.BuyScreenOpening)
       :Fire(self, Auctionator.Buying.Events.ShowForShopping, self.rowData)
-      :Fire(self, Auctionator.Shopping.Tab.Events.BuyScreenShown)
       :UnregisterSource(self)
   end
 end
